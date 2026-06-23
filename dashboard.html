@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>RUDEDOG FAIR — Live Command Center</title>
+<style>
+  :root{
+    --ink:#17120E; --ink-2:#1d1711; --ink-3:#241c14;
+    --paper:#F2E9D6; --muted:#b6a892; --faint:#8a7c6b;
+    --red:#E23A1E; --red-deep:#B62A12;
+    --gold:#E2A638; --ok:#2E9E5B; --sky:#5C94FC; --brick:#C8500C; --violet:#9B6DD8;
+    --line:rgba(226,166,56,.16); --line-2:rgba(255,255,255,.06);
+    --r:16px;
+    --ff:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",system-ui,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:var(--ff); color:var(--paper); min-height:100vh;
+    background:radial-gradient(120% 80% at 50% -10%, #2a2016 0%, #120d09 55%, #0c0805 100%);
+    -webkit-font-smoothing:antialiased; padding:16px; line-height:1.4;
+    font-variant-numeric:tabular-nums;
+  }
+  .wrap{max-width:1320px;margin:0 auto;}
+  .tabular{font-variant-numeric:tabular-nums;}
+
+  /* ---------- top bar ---------- */
+  .topbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:12px 16px;border:1px solid var(--line);border-radius:var(--r);
+    background:linear-gradient(180deg,rgba(226,58,30,.10),rgba(29,23,17,.6));margin-bottom:14px;}
+  .wordmark{font-weight:900;letter-spacing:.5px;font-size:20px;display:flex;align-items:center;gap:8px;}
+  .wordmark .r{color:var(--red);} .wordmark .g{color:var(--gold);}
+  .wordmark small{font-weight:700;font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;}
+  .tb-spacer{flex:1;}
+  .live{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;
+    padding:6px 11px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.25);}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 0 rgba(46,158,91,.6);animation:pulse 1.8s infinite;}
+  .live.off .dot{background:var(--red);animation:none;}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(46,158,91,.55)}70%{box-shadow:0 0 0 9px rgba(46,158,91,0)}100%{box-shadow:0 0 0 0 rgba(46,158,91,0)}}
+  .meta{font-size:12px;color:var(--muted);}
+  .meta b{color:var(--paper);}
+  .iconbtn{font-family:var(--ff);cursor:pointer;border:1px solid var(--line);background:rgba(0,0,0,.25);
+    color:var(--paper);border-radius:10px;padding:7px 11px;font-size:13px;font-weight:700;}
+  .iconbtn:hover{border-color:var(--gold);}
+
+  /* ---------- section ---------- */
+  .sec{margin:20px 0 10px;display:flex;align-items:center;gap:10px;}
+  .sec h2{font-size:14px;font-weight:800;letter-spacing:.5px;color:var(--paper);text-transform:uppercase;}
+  .lens{font-size:10px;font-weight:800;letter-spacing:1px;color:var(--ink);background:var(--gold);
+    padding:3px 8px;border-radius:6px;text-transform:uppercase;}
+  .lens.ceo{background:var(--red);color:#fff;} .lens.coo{background:var(--sky);color:#06122b;}
+  .lens.cmo{background:var(--gold);} .lens.cfo{background:var(--ok);color:#fff;}
+  .lens.cto{background:var(--violet);color:#fff;} .lens.acct{background:var(--brick);color:#fff;}
+  .sec .hint{font-size:11.5px;color:var(--faint);font-weight:600;}
+
+  .grid{display:grid;gap:14px;}
+  .g4{grid-template-columns:repeat(4,1fr);}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:1080px){.g4{grid-template-columns:repeat(2,1fr);}.g3{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:680px){.g4,.g3,.g2{grid-template-columns:1fr;}}
+
+  .card{background:linear-gradient(180deg,var(--ink-3),var(--ink-2));border:1px solid var(--line);
+    border-radius:var(--r);padding:16px 17px;box-shadow:0 8px 24px rgba(0,0,0,.28);position:relative;overflow:hidden;}
+  .card .k{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.3px;display:flex;align-items:center;gap:6px;}
+  .card .big{font-size:46px;font-weight:900;line-height:1.05;margin-top:6px;letter-spacing:-1px;}
+  .card .sub{font-size:12.5px;color:var(--faint);margin-top:5px;font-weight:600;}
+  .card.hero{border-color:rgba(226,58,30,.55);background:linear-gradient(180deg,rgba(226,58,30,.16),var(--ink-2));}
+  .card.hero .big{font-size:60px;color:#fff;}
+  .card.hero .k{color:#ffd9cf;}
+  .card.accent-gold{border-color:rgba(226,166,56,.45);}
+  .pill{font-size:11px;font-weight:800;padding:2px 7px;border-radius:6px;background:rgba(255,255,255,.08);color:var(--paper);}
+  .up{color:var(--ok);} .flat{color:var(--muted);}
+
+  /* progress */
+  .prog{height:14px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px;border:1px solid var(--line-2);}
+  .prog > i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--red));border-radius:999px;transition:width .6s;}
+  .prog-row{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:7px;font-weight:600;}
+  .goal-input{width:74px;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--paper);
+    border-radius:7px;padding:3px 7px;font-family:var(--ff);font-weight:700;text-align:right;}
+
+  /* bars */
+  .bar-row{display:grid;grid-template-columns:118px 1fr 78px;align-items:center;gap:10px;margin:9px 0;}
+  .bar-label{font-size:13px;font-weight:600;color:var(--paper);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar-track{height:13px;background:rgba(255,255,255,.07);border-radius:999px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:999px;transition:width .6s;min-width:3px;}
+  .bar-val{font-size:13px;font-weight:800;text-align:right;}
+  .bar-pc{font-size:11px;color:var(--faint);font-weight:700;margin-left:3px;}
+  .empty{color:var(--faint);font-size:13px;padding:14px 0;text-align:center;font-weight:600;}
+
+  /* donut */
+  .donut-wrap{display:flex;align-items:center;gap:18px;}
+  .donut{width:128px;height:128px;flex:none;}
+  .donut-top{font-size:30px;font-weight:900;fill:#fff;text-anchor:middle;}
+  .donut-bot{font-size:11px;font-weight:700;fill:var(--muted);text-anchor:middle;letter-spacing:.5px;}
+  .legend{display:flex;flex-direction:column;gap:9px;}
+  .lg{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;}
+  .sw{width:13px;height:13px;border-radius:4px;flex:none;}
+  .lg b{font-weight:900;}
+
+  /* timeline */
+  .tl{display:flex;align-items:flex-end;gap:3px;height:120px;padding-top:8px;}
+  .tl-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end;}
+  .tl-bar{width:100%;max-width:18px;background:linear-gradient(180deg,var(--gold),var(--brick));border-radius:4px 4px 0 0;min-height:2px;transition:height .5s;}
+  .tl-bar.peak{background:linear-gradient(180deg,#ff7a5e,var(--red));}
+  .tl-h{font-size:9px;color:var(--faint);font-weight:700;}
+
+  /* scan placement */
+  .scan-row{display:grid;grid-template-columns:90px 1fr;gap:12px;align-items:center;margin:12px 0;}
+  .scan-name{font-size:13px;font-weight:700;}
+  .scan-name small{display:block;color:var(--faint);font-weight:600;font-size:11px;}
+  .dual{display:flex;flex-direction:column;gap:5px;}
+  .dual .seg{height:11px;border-radius:999px;background:rgba(255,255,255,.07);overflow:hidden;}
+  .dual .seg > i{display:block;height:100%;border-radius:999px;}
+  .dual .lab{font-size:11px;color:var(--muted);font-weight:600;display:flex;justify-content:space-between;}
+
+  /* cfo */
+  .assume{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
+  .assume label{font-size:11px;color:var(--muted);font-weight:700;display:flex;flex-direction:column;gap:3px;}
+  .assume input{width:96px;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--paper);
+    border-radius:7px;padding:5px 8px;font-family:var(--ff);font-weight:700;}
+  .note{font-size:11.5px;color:var(--faint);font-weight:600;margin-top:9px;line-height:1.5;}
+  .est{font-size:10px;font-weight:800;color:var(--gold);letter-spacing:.5px;}
+
+  /* data health */
+  .health{display:flex;flex-direction:column;gap:11px;}
+  .hl-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600;}
+  .hl-row .v{font-weight:900;}
+  .badge{font-size:11px;font-weight:800;padding:3px 9px;border-radius:999px;}
+  .b-ok{background:rgba(46,158,91,.18);color:#7fe0a6;border:1px solid rgba(46,158,91,.4);}
+  .b-warn{background:rgba(226,166,56,.16);color:var(--gold);border:1px solid rgba(226,166,56,.4);}
+  .b-bad{background:rgba(226,58,30,.16);color:#ff8a72;border:1px solid rgba(226,58,30,.4);}
+
+  .banner{display:none;margin-bottom:14px;padding:12px 15px;border-radius:12px;font-size:13px;font-weight:700;
+    background:rgba(226,166,56,.12);border:1px solid rgba(226,166,56,.45);color:var(--gold);}
+  .banner.show{display:block;}
+  .foot{margin:26px 0 6px;text-align:center;color:var(--faint);font-size:11.5px;font-weight:600;line-height:1.6;}
+
+  /* velocity (rolling 5-min) */
+  .velo-box{margin-top:10px;}
+  .velo-box svg.velo{width:100%;height:auto;display:block;}
+  .velo-foot{display:flex;justify-content:space-between;font-size:10px;color:var(--faint);font-weight:700;margin-top:4px;}
+  .mo{font-size:13px;font-weight:800;padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.07);border:1px solid var(--line);white-space:nowrap;}
+  .mo small{font-weight:600;color:var(--muted);font-size:11px;margin-left:4px;}
+  .mo.up{color:#7fe0a6;border-color:rgba(46,158,91,.45);background:rgba(46,158,91,.12);}
+  .mo.down{color:#ff8a72;border-color:rgba(226,58,30,.45);background:rgba(226,58,30,.12);}
+  .mo.flat{color:var(--muted);}
+
+  /* 100% stacked share */
+  .stack{display:flex;height:24px;border-radius:8px;overflow:hidden;border:1px solid var(--line-2);margin:7px 0 11px;background:rgba(255,255,255,.04);}
+  .st-seg{height:100%;transition:width .6s;min-width:1px;}
+  .st-legend{display:flex;flex-direction:column;gap:7px;}
+  .st-lg{display:grid;grid-template-columns:14px 1fr auto auto;align-items:center;gap:9px;font-size:13px;font-weight:600;}
+  .st-lb{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .st-lg b{font-size:15px;font-weight:900;min-width:38px;text-align:right;}
+  .st-raw{font-size:11px;color:var(--faint);font-weight:700;min-width:30px;text-align:right;}
+  .mini-cap{display:flex;flex-wrap:wrap;gap:5px 10px;font-size:10.5px;color:var(--muted);font-weight:700;}
+  .mini-cap i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:3px;vertical-align:middle;}
+  .scan-lbl{font-size:12px;color:var(--muted);font-weight:700;margin:8px 0 0;}
+
+  /* compare 2 groups (door vs in-event) */
+  .cmp-toggle{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 14px;}
+  .chip-t{font-family:var(--ff);font-size:12px;font-weight:700;color:var(--muted);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:999px;padding:6px 13px;cursor:pointer;}
+  .chip-t:hover{border-color:var(--gold);} .chip-t.on{color:#fff;background:var(--red);border-color:var(--red);}
+  .cmp-head{display:flex;flex-wrap:wrap;gap:18px;margin-bottom:12px;font-size:12.5px;font-weight:700;color:var(--muted);}
+  .cmp-tag{display:inline-flex;align-items:center;gap:7px;} .cmp-tag i{width:11px;height:11px;border-radius:3px;display:inline-block;} .cmp-tag b{color:var(--paper);font-weight:900;}
+  .cmp-row{display:grid;grid-template-columns:100px 1fr;gap:13px;align-items:center;margin:11px 0;}
+  .cmp-lb{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .cmp-bars{display:flex;flex-direction:column;gap:5px;}
+  .cmp-bar{display:flex;align-items:center;gap:9px;}
+  .cmp-bar > i{height:12px;border-radius:999px;min-width:2px;transition:width .5s;}
+  .cmp-bar > span{font-size:12px;font-weight:800;min-width:34px;}
+  .cmp-bar .dlt{font-size:11px;font-weight:800;}
+
+  /* gate */
+  .gate{position:fixed;inset:0;background:radial-gradient(120% 80% at 50% 0%,#2a2016,#0c0805);
+    display:flex;align-items:center;justify-content:center;z-index:99;padding:24px;}
+  .gate.hidden{display:none;}
+  .gate .box{background:var(--ink-2);border:1px solid var(--line);border-radius:18px;padding:28px;max-width:340px;width:100%;text-align:center;}
+  .gate h3{font-size:18px;font-weight:900;margin-bottom:6px;}
+  .gate p{font-size:12.5px;color:var(--muted);margin-bottom:16px;}
+  .gate input{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--line);color:var(--paper);
+    border-radius:10px;padding:11px;font-family:var(--ff);font-weight:700;font-size:15px;text-align:center;margin-bottom:12px;}
+  .gate button{width:100%;background:var(--red);color:#fff;border:none;border-radius:10px;padding:12px;
+    font-family:var(--ff);font-weight:800;font-size:15px;cursor:pointer;}
+  .gate .err{color:#ff8a72;font-size:12px;font-weight:700;height:16px;margin-bottom:8px;}
+</style>
+</head>
+<body>
+
+<!-- soft gate (obfuscation only, ไม่ใช่ระบบความปลอดภัยจริง) -->
+<div class="gate" id="gate">
+  <div class="box">
+    <div class="wordmark" style="justify-content:center;margin-bottom:4px;">🐶 <span class="r">RUDE</span><span class="g">DOG</span></div>
+    <h3>Live Command Center</h3>
+    <p>ใส่รหัสทีมงานเพื่อดูแดชบอร์ดเรียลไทม์</p>
+    <div class="err" id="gateErr"></div>
+    <input id="gateInput" type="password" inputmode="text" placeholder="รหัสทีมงาน" autocomplete="off">
+    <button id="gateBtn">เข้าสู่แดชบอร์ด</button>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+
+  <div class="topbar">
+    <div class="wordmark">🐶 <span class="r">RUDE</span><span class="g">DOG</span> FAIR <small id="evName">Command Center</small></div>
+    <div class="tb-spacer"></div>
+    <span class="meta">อัปเดต <b id="ago">—</b> · รีเฟรชใน <b id="cd">—</b></span>
+    <span class="live" id="live"><span class="dot"></span><span id="liveTx">เชื่อมต่อ…</span></span>
+    <button class="iconbtn" id="refreshBtn" title="รีเฟรชทันที">↻</button>
+    <button class="iconbtn" id="fsBtn" title="เต็มจอ">⛶</button>
+  </div>
+
+  <div class="banner" id="banner"></div>
+
+  <!-- ============ CEO ============ -->
+  <div class="sec"><span class="lens ceo">CEO</span><h2>ภาพรวม &amp; เป้าหมาย</h2><span class="hint">ตัวเลขคนเข้างาน = สแกนหน้าประตู (น่าเชื่อถือสุด)</span></div>
+  <div class="grid g4">
+    <div class="card hero">
+      <div class="k">👥 คนเข้างาน (หัวคน · หน้าประตู)</div>
+      <div class="big tabular" id="kpiHeads">—</div>
+      <div class="sub" id="kpiHeadsSub">— กลุ่มที่สแกนประตู</div>
+    </div>
+    <div class="card">
+      <div class="k">📝 ลงทะเบียนทั้งหมด</div>
+      <div class="big tabular" id="kpiReg">—</div>
+      <div class="sub" id="kpiRegSub">— หัวคนรวมทุกจุด</div>
+    </div>
+    <div class="card">
+      <div class="k">⚡ ความเร็ว (ชั่วโมงล่าสุด)</div>
+      <div class="big tabular" id="kpiPace">—</div>
+      <div class="sub" id="kpiPaceSub">— ใน 15 นาทีล่าสุด</div>
+    </div>
+    <div class="card accent-gold">
+      <div class="k">🔁 ลูกค้าใหม่ vs ขาประจำ</div>
+      <div class="donut-wrap" style="margin-top:8px">
+        <div id="visitDonut"></div>
+        <div class="legend" id="visitLegend"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="k" style="display:flex;justify-content:space-between;align-items:center">
+      <span>🎯 ความคืบหน้าสู่เป้าคนเข้างาน</span>
+      <span class="meta">เป้า <input class="goal-input tabular" id="goalInput" type="number" min="1" value="500"> คน</span>
+    </div>
+    <div class="prog"><i id="goalBar" style="width:0%"></i></div>
+    <div class="prog-row"><span id="goalNow">—</span><span id="goalPct">0%</span></div>
+  </div>
+
+  <!-- ============ COO ============ -->
+  <div class="sec"><span class="lens coo">COO</span><h2>หน้างาน &amp; จังหวะคนเข้า</h2><span class="hint">เทียบช่วงต่อช่วง — เฉลี่ยเลื่อน 5 นาที</span></div>
+
+  <div class="card">
+    <div class="k" style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+      <span>⚡ อัตราคนเข้า — เฉลี่ยเลื่อน 5 นาที (60 นาทีล่าสุด)</span>
+      <span class="mo" id="momoBadge">—</span>
+    </div>
+    <div id="velocity" class="velo-box"></div>
+    <div class="velo-foot"><span>-60 นาที</span><span>-45</span><span>-30</span><span>-15</span><span>ตอนนี้</span></div>
+  </div>
+
+  <div class="grid g4" style="margin-top:14px">
+    <div class="card hero" style="border-color:rgba(92,148,252,.5);background:linear-gradient(180deg,rgba(92,148,252,.16),var(--ink-2))">
+      <div class="k" style="color:#cfe0ff">👣 คนเข้างานวันนี้ (หัวคน)</div>
+      <div class="big tabular" id="kpiToday">—</div>
+      <div class="sub" id="kpiTodaySub">— ลงทะเบียนวันนี้</div>
+    </div>
+    <div class="card">
+      <div class="k">👨‍👩‍👧 ขนาดกลุ่มเฉลี่ย</div>
+      <div class="big tabular" id="kpiGroup">—</div>
+      <div class="sub">คน/สแกน · สัดส่วนกลุ่ม:</div>
+      <div id="groupDist" style="margin-top:6px"></div>
+    </div>
+    <div class="card">
+      <div class="k">⛰️ ชั่วโมงพีควันนี้</div>
+      <div class="big tabular" id="kpiPeak">—</div>
+      <div class="sub" id="kpiPeakSub">—</div>
+    </div>
+    <div class="card">
+      <div class="k">🕒 เข้ามา 15 นาทีล่าสุด</div>
+      <div class="big tabular" id="kpiLast15">—</div>
+      <div class="sub" id="kpiLast15Sub">—</div>
+    </div>
+  </div>
+
+  <div class="grid g2" style="margin-top:14px">
+    <div class="card">
+      <div class="k">📊 ภาพรวมรายชั่วโมง (วันนี้) · ปริมาณ</div>
+      <div class="tl" id="timeline"></div>
+    </div>
+    <div class="card">
+      <div class="k">🚪 สัดส่วนตามจุดสแกน (door = คนเข้างาน)</div>
+      <div class="scan-lbl">หัวคน</div><div id="scanHeads"></div>
+      <div class="scan-lbl">การสแกน (กลุ่ม)</div><div id="scanParties"></div>
+    </div>
+  </div>
+
+  <!-- ============ CMO ============ -->
+  <div class="sec"><span class="lens cmo">CMO</span><h2>การตลาด &amp; ดาต้า</h2><span class="hint">เน้น % ส่วนแบ่งเทียบกัน · ตัวเลขดิบเป็นพระรอง</span></div>
+  <div class="grid g3">
+    <div class="card"><div class="k">📣 รู้จักงานจากช่องทางไหน</div><div id="channelBars" style="margin-top:8px"></div></div>
+    <div class="card accent-gold">
+      <div class="k">✅ ยินยอม PDPA (ลิสต์ที่ใช้ยิงแอดได้)</div>
+      <div class="donut-wrap" style="margin-top:8px">
+        <div id="consentDonut"></div>
+        <div class="legend" id="consentLegend"></div>
+      </div>
+    </div>
+    <div class="card"><div class="k">🛍️ สนใจสินค้าหมวด</div><div id="interestBars" style="margin-top:8px"></div></div>
+    <div class="card"><div class="k">🎨 สไตล์ลูกค้า</div><div id="styleBars" style="margin-top:8px"></div></div>
+    <div class="card"><div class="k">🎁 ซื้อให้ใคร</div><div id="forwhoBars" style="margin-top:8px"></div></div>
+    <div class="card"><div class="k">📍 จังหวัดยอดนิยม (Top 12)</div><div id="provBars" style="margin-top:8px"></div></div>
+  </div>
+
+  <!-- ============ COMPARE: door vs in-event ============ -->
+  <div class="sec"><span class="lens cmo">CMO</span><span class="lens ceo">CEO</span><h2>เทียบ 2 กลุ่ม: หน้าประตู vs ในงาน</h2><span class="hint">เทียบ % ภายในกลุ่ม — คนแต่ละกลุ่มต่างกันยังไง</span></div>
+  <div class="card">
+    <div class="cmp-toggle" id="cmpToggle"></div>
+    <div class="cmp-head" id="cmpHead"></div>
+    <div id="cmpChart"></div>
+    <div class="note" id="cmpNote"></div>
+  </div>
+
+  <!-- ============ CFO ============ -->
+  <div class="sec"><span class="lens cfo">CFO</span><h2>มูลค่า &amp; ความเสี่ยง</h2><span class="est">★ ตัวเลขประมาณการ — ปรับสมมติฐานได้</span></div>
+  <div class="card" style="margin-bottom:14px">
+    <div class="assume">
+      <label>มูลค่า/ลีด (฿)<input id="aLeadVal" type="number" min="0" value="25"></label>
+      <label>อัตราปิดการขาย (%)<input id="aConv" type="number" min="0" step="0.5" value="8"></label>
+      <label>ยอดเฉลี่ย/บิล (฿)<input id="aAov" type="number" min="0" value="600"></label>
+      <label>ต้นทุนน้ำหอม/ชิ้น (฿)<input id="aPerf" type="number" min="0" value="60"></label>
+    </div>
+  </div>
+  <div class="grid g3">
+    <div class="card">
+      <div class="k">💎 มูลค่าลิสต์ (first-party data)</div>
+      <div class="big tabular" id="cfoListVal">—</div>
+      <div class="note" id="cfoListNote">consented leads × มูลค่า/ลีด</div>
+    </div>
+    <div class="card">
+      <div class="k">💰 ยอดขายต่อยอดที่คาดได้</div>
+      <div class="big tabular" id="cfoRev">—</div>
+      <div class="note" id="cfoRevNote">consented × อัตราปิด × ยอด/บิล</div>
+    </div>
+    <div class="card">
+      <div class="k">⚠️ ภาระของแถม (เพดานสูงสุด)</div>
+      <div class="big tabular" id="cfoLiab">—</div>
+      <div class="note">ถ้าผู้ลงทะเบียน "ทุกคน" รับน้ำหอม → ยังไม่ track การ redeem จริง = ประมาณการสูงสุด</div>
+    </div>
+  </div>
+
+  <!-- ============ CTO + Chief Accountant ============ -->
+  <div class="sec"><span class="lens cto">CTO</span><span class="lens acct">ACCT</span><h2>สุขภาพดาต้า &amp; ความถูกต้อง</h2></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="k">🩺 สถานะระบบ &amp; ดาต้า</div>
+      <div class="health" style="margin-top:10px">
+        <div class="hl-row"><span>การเชื่อมต่อ endpoint</span><span id="hConn" class="badge b-warn">—</span></div>
+        <div class="hl-row"><span>ความสดของข้อมูล</span><span class="v" id="hFresh">—</span></div>
+        <div class="hl-row"><span>ครอบคลุมการแท็กจุดสแกน</span><span class="v" id="hTag">—</span></div>
+        <div class="hl-row"><span>เวลาบันทึกล่าสุด (asOf)</span><span class="v tabular" id="hAsof">—</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="k">🧮 ตัวเลขที่ต้องตรวจ (Chief Accountant)</div>
+      <div class="health" style="margin-top:10px">
+        <div class="hl-row"><span>อัตรายินยอม PDPA</span><span id="aConsent" class="badge b-ok">—</span></div>
+        <div class="hl-row"><span>คะแนนเฉลี่ย (engagement)</span><span class="v tabular" id="aScore">—</span></div>
+        <div class="hl-row"><span>สแกนที่ยังไม่ระบุจุด (other)</span><span class="v tabular" id="aOther">—</span></div>
+      </div>
+      <div class="note">⚠️ "คนเข้างาน (door)" เป็น <b>ขั้นต่ำ</b>: กฎ 1 เบอร์/วันข้ามทุก QR → คนที่ลงทะเบียนก่อนถึงประตูจะไม่ถูกนับซ้ำที่ประตู · "6+" คิดเป็น 6 → เป็นการนับแบบ<b>อนุรักษ์นิยม ไม่เฟ้อ</b></div>
+    </div>
+  </div>
+
+  <div class="foot">
+    RUDEDOG FAIR 2026 — โกดังแตก · แดชบอร์ดเรียลไทม์ดึงจาก Google Sheet (ไม่มีชื่อ/เบอร์ออกนอกระบบ)<br>
+    เปิดทิ้งไว้บนจอหน้างานได้เลย · รีเฟรชอัตโนมัติทุก <span id="footEvery"></span> วินาที
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+var CONFIG = {
+  endpoint: "https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
+  refreshMs: 12000,
+  eventName: "2026 — โกดังแตก",
+  // ----- soft gate (กันคนนอกเห็นเฉยๆ ไม่ใช่ security จริง — เปลี่ยนรหัสได้) -----
+  gate: { on: true, key: "rdfair26" }
+};
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+var $ = function(id){ return document.getElementById(id); };
+function fmt(n){ n = Number(n)||0; return Math.round(n).toLocaleString("en-US"); }
+function baht(n){ n = Number(n)||0; if(n>=1e6) return "฿"+(n/1e6).toFixed(2)+"M"; if(n>=1e3) return "฿"+(n/1e3).toFixed(1)+"k"; return "฿"+fmt(n); }
+function pct(x){ return Math.round((Number(x)||0)*100)+"%"; }
+
+var PAL = ["var(--red)","var(--gold)","var(--sky)","var(--ok)","var(--brick)","var(--violet)"];
+
+var LABEL = {
+  channel:{ tiktok:"TikTok", facebook:"Facebook", signage:"ป้ายหน้าโกดัง", wom_other:"เพื่อนชวน / อื่นๆ", other:"ไม่ระบุ" },
+  style:{ minimal:"มินิมอล", street:"สตรีท", sporty:"สปอร์ต", boss:"สายบอส", other:"ไม่ระบุ" },
+  interest:{ apparel:"เสื้อผ้า", cap:"หมวก", perfume:"น้ำหอม", bag:"กระเป๋า", other:"ไม่ระบุ" },
+  forwho:{ self:"ตัวเอง", partner:"แฟน/คนคุย", family:"ครอบครัว", gift:"เพื่อน/ของฝาก", other:"ไม่ระบุ" },
+  source:{ door:"หน้าประตู", table:"โต๊ะ/บูธ", poster:"โปสเตอร์", other:"ไม่ระบุ/อื่นๆ" }
+};
+
+function ent(obj, map){
+  obj = obj || {};
+  return Object.keys(obj).map(function(k){
+    return { key:k, label:(map&&map[k])||k, value:Number(obj[k])||0 };
+  }).filter(function(e){ return e.value>0; }).sort(function(a,b){ return b.value-a.value; });
+}
+
+function bars(el, entries, share){
+  el = (typeof el==="string")?$(el):el;
+  if(!entries.length){ el.innerHTML='<div class="empty">ยังไม่มีข้อมูล</div>'; return; }
+  var sum = entries.reduce(function(a,e){return a+e.value;},0) || 1;
+  var denom = share ? sum : (Math.max.apply(null, entries.map(function(e){return e.value;})) || 1);
+  el.innerHTML = entries.map(function(e,i){
+    var w = (e.value/denom*100).toFixed(1);
+    var p = Math.round(e.value/sum*100);
+    var col = e.color || PAL[i%PAL.length];
+    return '<div class="bar-row"><div class="bar-label" title="'+e.label+'">'+e.label+'</div>'+
+      '<div class="bar-track"><div class="bar-fill" style="width:'+w+'%;background:'+col+'"></div></div>'+
+      '<div class="bar-val tabular">'+fmt(e.value)+'<span class="bar-pc">'+p+'%</span></div></div>';
+  }).join("");
+}
+
+function donut(segments, topTxt, botTxt){
+  var r=54, c=2*Math.PI*r, total=segments.reduce(function(a,s){return a+s.value;},0)||1, off=0;
+  var arcs = segments.map(function(s){
+    var len = s.value/total*c;
+    var el = '<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="'+s.color+'" stroke-width="16" '+
+      'stroke-dasharray="'+len.toFixed(2)+' '+(c-len).toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'" '+
+      'transform="rotate(-90 70 70)" stroke-linecap="butt"/>';
+    off += len; return el;
+  }).join("");
+  return '<svg viewBox="0 0 140 140" class="donut"><circle cx="70" cy="70" r="'+r+'" fill="none" '+
+    'stroke="rgba(255,255,255,.07)" stroke-width="16"/>'+arcs+
+    '<text x="70" y="66" class="donut-top">'+topTxt+'</text>'+
+    '<text x="70" y="88" class="donut-bot">'+botTxt+'</text></svg>';
+}
+function legend(items){
+  return items.map(function(it){
+    return '<div class="lg"><span class="sw" style="background:'+it.color+'"></span>'+it.label+' <b class="tabular">'+fmt(it.value)+'</b></div>';
+  }).join("");
+}
+
+// 100% stacked share bar — เน้นสัดส่วน % (เปรียบเทียบ) ตัวเลขดิบเป็นพระรอง
+function stackBar(elId, entries){
+  var el = $(elId);
+  entries = entries.filter(function(e){ return e.value>0; });
+  if(!entries.length){ el.innerHTML='<div class="empty">ยังไม่มีข้อมูล</div>'; return; }
+  var sum = entries.reduce(function(a,e){ return a+e.value; },0) || 1;
+  entries.forEach(function(e,i){ e.color=e.color||PAL[i%PAL.length]; e.pc=e.value/sum*100; });
+  var seg = entries.map(function(e){
+    return '<span class="st-seg" style="width:'+e.pc.toFixed(1)+'%;background:'+e.color+'" title="'+e.label+' '+Math.round(e.pc)+'%"></span>';
+  }).join("");
+  var leg = entries.map(function(e){
+    return '<div class="st-lg"><span class="sw" style="background:'+e.color+'"></span>'+
+      '<span class="st-lb">'+e.label+'</span><b class="tabular">'+Math.round(e.pc)+'%</b>'+
+      '<span class="st-raw tabular">'+fmt(e.value)+'</span></div>';
+  }).join("");
+  el.innerHTML = '<div class="stack">'+seg+'</div><div class="st-legend">'+leg+'</div>';
+}
+
+// mini stacked bar (ไม่มี legend เต็ม — ใช้ caption บรรทัดเดียว) สำหรับการกระจายขนาดกลุ่ม
+function stackMini(elId, entries){
+  var el=$(elId); entries=entries.filter(function(e){return e.value>0;});
+  if(!entries.length){ el.innerHTML=""; return; }
+  var sum=entries.reduce(function(a,e){return a+e.value;},0)||1;
+  entries.forEach(function(e,i){ e.color=e.color||PAL[i%PAL.length]; e.pc=e.value/sum*100; });
+  el.innerHTML='<div class="stack" style="height:16px;margin:4px 0 6px">'+
+    entries.map(function(e){ return '<span class="st-seg" style="width:'+e.pc.toFixed(1)+'%;background:'+e.color+'" title="'+e.label+' '+Math.round(e.pc)+'%"></span>'; }).join("")+
+    '</div><div class="mini-cap">'+
+    entries.map(function(e){ return '<span><i style="background:'+e.color+'"></i>'+e.label+' '+Math.round(e.pc)+'%</span>'; }).join("")+'</div>';
+}
+
+// กราฟเส้น/พื้นที่ อัตราคนเข้า "เฉลี่ยเลื่อน 5 นาที" (rolling) — เปรียบเทียบช่วงต่อช่วง
+function velocity(elId, perMin){
+  perMin = (perMin||[]).slice();
+  while(perMin.length<60) perMin.unshift(0);
+  if(perMin.length>60) perMin = perMin.slice(perMin.length-60);
+  var roll=[]; for(var i=0;i<60;i++){ var s=0; for(var j=Math.max(0,i-4);j<=i;j++) s+=perMin[j]; roll.push(s); }
+  var el=$(elId);
+  var totalRecent = perMin.reduce(function(a,b){return a+b;},0);
+  if(totalRecent===0){ el.innerHTML='<div class="empty">ยังไม่มีคนเข้าใน 60 นาทีล่าสุด</div>'; return roll; }
+  var W=700, H=150, pad=8, top=16;
+  var max=Math.max.apply(null,roll)||1;
+  var X=function(i){ return pad + i/59*(W-2*pad); };
+  var Y=function(v){ return (H-pad) - v/max*(H-pad-top); };
+  var pts=roll.map(function(v,i){ return X(i).toFixed(1)+","+Y(v).toFixed(1); });
+  var line="M"+pts.join(" L");
+  var area=line+" L"+X(59).toFixed(1)+","+(H-pad)+" L"+X(0).toFixed(1)+","+(H-pad)+" Z";
+  var lx=X(59).toFixed(1), ly=Y(roll[59]).toFixed(1);
+  el.innerHTML='<svg viewBox="0 0 '+W+' '+H+'" class="velo">'+
+    '<defs><linearGradient id="vg" x1="0" y1="0" x2="0" y2="1">'+
+    '<stop offset="0%" stop-color="#E2A638" stop-opacity=".5"/><stop offset="100%" stop-color="#E2A638" stop-opacity="0"/></linearGradient></defs>'+
+    '<path d="'+area+'" fill="url(#vg)"/>'+
+    '<path d="'+line+'" fill="none" stroke="#E2A638" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+
+    '<circle cx="'+lx+'" cy="'+ly+'" r="4.5" fill="#fff" stroke="#E23A1E" stroke-width="2.5"/>'+
+    '<text x="'+lx+'" y="'+Math.max(12,Y(roll[59])-9).toFixed(1)+'" text-anchor="end" fill="#fff" font-size="13" font-weight="800">'+roll[59]+' คน/5น.</text>'+
+    '</svg>';
+  return roll;
+}
+
+function momentum(roll){
+  var last5 = roll[59]||0, prev5 = roll[54]||0, diff = last5-prev5;
+  var p = prev5>0 ? Math.round(diff/prev5*100) : (last5>0?100:0);
+  var dir = diff>0?"up":diff<0?"down":"flat", arrow = diff>0?"▲":diff<0?"▼":"→";
+  var el=$("momoBadge"); el.className="mo "+dir;
+  el.innerHTML = arrow+" "+(diff>=0?"+":"")+p+'% <small>5 นาทีล่าสุด ('+last5+' คน) เทียบช่วงก่อน</small>';
+}
+
+function renderPeak(tl){
+  if(!tl.length){ $("kpiPeak").textContent="—"; return; }
+  var max=Math.max.apply(null,tl), idx=tl.indexOf(max);
+  if(max<=0){ $("kpiPeak").textContent="—"; $("kpiPeakSub").textContent="ยังไม่มีข้อมูลวันนี้"; return; }
+  $("kpiPeak").textContent=(idx<10?"0":"")+idx+":00";
+  $("kpiPeakSub").textContent=fmt(max)+" คน/ชม. (สูงสุด)";
+}
+
+// ---- เทียบ 2 กลุ่ม: หน้าประตู vs ในงาน (% ภายในกลุ่ม) ----
+var CMPDIMS = [
+  { key:"channel",  label:"ช่องทาง",     map:LABEL.channel },
+  { key:"interest", label:"สินค้า",      map:LABEL.interest },
+  { key:"style",    label:"สไตล์",       map:LABEL.style },
+  { key:"forwho",   label:"ซื้อให้ใคร",  map:LABEL.forwho },
+  { key:"visit",    label:"ใหม่/ประจำ",  map:{first:"มาครั้งแรก",loyal:"ขาประจำ",unknown:"ไม่ระบุ"} }
+];
+function compareBars(elId, a, b, map){
+  a=a||{}; b=b||{};
+  var keys={}; Object.keys(a).forEach(function(k){keys[k]=1;}); Object.keys(b).forEach(function(k){keys[k]=1;});
+  var sa=Object.keys(a).reduce(function(s,k){return s+a[k];},0)||1;
+  var sb=Object.keys(b).reduce(function(s,k){return s+b[k];},0)||1;
+  var arr=Object.keys(keys).map(function(k){ return {label:(map&&map[k])||k, a:a[k]||0, b:b[k]||0, tot:(a[k]||0)+(b[k]||0)}; });
+  arr=arr.filter(function(e){return e.tot>0;}).sort(function(x,y){return y.tot-x.tot;});
+  var el=$(elId);
+  if(!arr.length){ el.innerHTML='<div class="empty">ยังไม่มีข้อมูล</div>'; return; }
+  el.innerHTML=arr.map(function(e){
+    var pa=e.a/sa*100, pb=e.b/sb*100, dd=Math.round(pa-pb);
+    var dtxt = dd>0?'<span class="dlt up">▲'+dd+'</span>':dd<0?'<span class="dlt down">▼'+Math.abs(dd)+'</span>':'';
+    return '<div class="cmp-row"><div class="cmp-lb" title="'+e.label+'">'+e.label+'</div><div class="cmp-bars">'+
+      '<div class="cmp-bar"><i style="width:'+pa.toFixed(1)+'%;background:var(--red)"></i><span>'+Math.round(pa)+'%</span>'+dtxt+'</div>'+
+      '<div class="cmp-bar"><i style="width:'+pb.toFixed(1)+'%;background:var(--sky)"></i><span>'+Math.round(pb)+'%</span></div>'+
+      '</div></div>';
+  }).join("");
+}
+function renderCompare(){
+  var d=state.data||{}; var seg=d.seg||{};
+  var door=seg.door||{}, ine=seg.inEvent||{};
+  var dim=CMPDIMS[0]; for(var i=0;i<CMPDIMS.length;i++){ if(CMPDIMS[i].key===state.cmpDim){ dim=CMPDIMS[i]; break; } }
+  $("cmpToggle").innerHTML = CMPDIMS.map(function(x){ return '<button class="chip-t '+(x.key===state.cmpDim?'on':'')+'" data-k="'+x.key+'">'+x.label+'</button>'; }).join("");
+  $("cmpHead").innerHTML = '<span class="cmp-tag"><i style="background:var(--red)"></i>หน้าประตู <b>'+fmt(door.n||0)+'</b> คน</span>'+
+    '<span class="cmp-tag"><i style="background:var(--sky)"></i>ในงาน (โต๊ะ+โปสเตอร์) <b>'+fmt(ine.n||0)+'</b> คน</span>';
+  compareBars("cmpChart", door[dim.key], ine[dim.key], dim.map);
+  $("cmpNote").textContent = '▲▼ = ส่วนต่างจุด% ของ "หน้าประตู" เทียบ "ในงาน" · เทียบสัดส่วนภายในกลุ่ม (กลุ่มคนละขนาดกัน)';
+}
+
+/* ============================================================
+   STATE + FETCH LOOP
+   ============================================================ */
+var state = { data:null, lastOk:0, nextAt:0, err:null, timer:null, cmpDim:"channel" };
+
+function setLive(ok){
+  var el=$("live");
+  el.className = "live"+(ok?"":" off");
+  $("liveTx").textContent = ok ? "LIVE" : "ขาดการเชื่อมต่อ";
+  $("hConn").textContent = ok ? "เชื่อมต่อปกติ" : "ล้มเหลว";
+  $("hConn").className = "badge "+(ok?"b-ok":"b-bad");
+}
+
+function tick(){
+  var url = CONFIG.endpoint + "?stats=1&t=" + (state.lastOk||0) + Math.floor(performance.now());
+  fetch(url, { cache:"no-store" })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      state.data=d; state.lastOk=Date.now(); state.err=null;
+      setLive(true);
+      $("banner").className="banner"+( (d && d.ok)?"":" show");
+      if(!(d && d.ok)) $("banner").textContent="⚠️ endpoint ยังไม่ได้อัปเดต ?stats=1 — กรุณา redeploy Apps Script (ตอนนี้ดึงได้แค่ยอดรวม)";
+      render(d||{});
+    })
+    .catch(function(e){ state.err=e; setLive(false); })
+    .then(function(){ state.nextAt = Date.now()+CONFIG.refreshMs; });
+}
+
+function startLoop(){
+  tick();
+  state.timer = setInterval(function(){ if(!document.hidden) tick(); }, CONFIG.refreshMs);
+  setInterval(ticker, 1000);
+}
+function ticker(){
+  if(state.lastOk){
+    var s = Math.round((Date.now()-state.lastOk)/1000);
+    $("ago").textContent = s<60 ? (s+" วิ ที่แล้ว") : (Math.floor(s/60)+" นาทีที่แล้ว");
+  }
+  var cd = Math.max(0, Math.round((state.nextAt-Date.now())/1000));
+  $("cd").textContent = cd+" วิ";
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function render(d){
+  var att = d.attendance||{parties:0,people:0};
+  var today = d.today||{count:0,heads:0};
+  var pace = d.pace||{lastHour:0,last15:0};
+
+  // ---- CEO ----
+  $("kpiHeads").textContent = fmt(att.people);
+  $("kpiHeadsSub").textContent = fmt(att.parties)+" กลุ่มที่สแกนประตู";
+  $("kpiReg").textContent = fmt(d.count);
+  $("kpiRegSub").textContent = fmt(d.heads)+" หัวคนรวมทุกจุด";
+  $("kpiPace").textContent = fmt(pace.lastHour)+" /ชม.";
+  $("kpiPaceSub").textContent = fmt(pace.last15)+" ใน 15 นาทีล่าสุด";
+
+  var v = d.visit||{first:0,loyal:0,unknown:0};
+  $("visitDonut").innerHTML = donut(
+    [{value:v.first,color:"var(--red)"},{value:v.loyal,color:"var(--gold)"},{value:v.unknown,color:"rgba(255,255,255,.15)"}],
+    pct((v.first+v.loyal)?(v.loyal/(v.first+v.loyal)):0), "ขาประจำ");
+  $("visitLegend").innerHTML = legend([
+    {label:"มาครั้งแรก",color:"var(--red)",value:v.first},
+    {label:"ขาประจำ",color:"var(--gold)",value:v.loyal}
+  ]) + (v.unknown?('<div class="lg"><span class="sw" style="background:rgba(255,255,255,.15)"></span>ไม่ระบุ <b>'+fmt(v.unknown)+'</b></div>'):"");
+
+  renderGoal(att.people);
+
+  // ---- COO ----
+  $("kpiToday").textContent = fmt(today.heads);
+  $("kpiTodaySub").textContent = fmt(today.count)+" ลงทะเบียนวันนี้";
+  var avg = d.count ? (d.heads/d.count) : 0;
+  $("kpiGroup").textContent = avg ? avg.toFixed(1) : "—";
+  var GORDER=["1","2","3","4","5","6+"];
+  stackMini("groupDist", GORDER.map(function(k,i){ return {label:k, value:(d.group||{})[k]||0, color:PAL[i%PAL.length]}; }));
+  var roll = velocity("velocity", d.perMin||[]);
+  momentum(roll);
+  $("kpiLast15").textContent = fmt(pace.last15);
+  $("kpiLast15Sub").textContent = "ชั่วโมงนี้รวม "+fmt(pace.lastHour)+" คน";
+  renderPeak(d.timeline||[]);
+  renderTimeline(d.timeline||[]);
+  renderScan(d.bySource||{});
+
+  // ---- CMO (เน้นสัดส่วน % เทียบกัน) ----
+  stackBar("channelBars", ent(d.channel, LABEL.channel));
+  stackBar("interestBars", ent(d.interest, LABEL.interest));
+  stackBar("styleBars", ent(d.style, LABEL.style));
+  stackBar("forwhoBars", ent(d.forwho, LABEL.forwho));
+  bars("provBars", (d.provinceTop||[]).map(function(p,i){ return {label:p.name,value:p.n,color:PAL[i%PAL.length]}; }), true);
+  renderCompare();
+
+  var con = d.consent||{yes:0,total:0,rate:0};
+  $("consentDonut").innerHTML = donut(
+    [{value:con.yes,color:"var(--ok)"},{value:Math.max(0,con.total-con.yes),color:"rgba(255,255,255,.12)"}],
+    pct(con.rate), "ยินยอม");
+  $("consentLegend").innerHTML = legend([
+    {label:"ยินยอม (ใช้ได้)",color:"var(--ok)",value:con.yes},
+    {label:"ไม่ยินยอม",color:"rgba(255,255,255,.3)",value:Math.max(0,con.total-con.yes)}
+  ]);
+
+  // ---- CFO ----
+  computeCFO();
+
+  // ---- CTO / ACCT ----
+  var tagged = (d.bySource? (d.bySource.door.parties+d.bySource.table.parties+d.bySource.poster.parties):0);
+  var other = (d.bySource? d.bySource.other.parties:0);
+  $("hTag").textContent = d.count ? Math.round(tagged/d.count*100)+"% ("+fmt(tagged)+"/"+fmt(d.count)+")" : "—";
+  $("hAsof").textContent = d.asOf||"—";
+  if(d.asOf){
+    var fresh = Math.round((Date.now()-state.lastOk)/1000);
+    $("hFresh").textContent = (fresh<30?"สด ✓":"~"+fresh+" วิ");
+  }
+  $("aConsent").textContent = pct(con.rate);
+  $("aConsent").className = "badge "+(con.rate>=0.7?"b-ok":con.rate>=0.4?"b-warn":"b-bad");
+  $("aScore").textContent = d.score? (Number(d.score.avg).toFixed(1)) : "—";
+  $("aOther").textContent = fmt(other);
+}
+
+function renderGoal(now){
+  var target = Math.max(1, Number($("goalInput").value)||500);
+  var p = Math.min(100, now/target*100);
+  $("goalBar").style.width = p.toFixed(1)+"%";
+  $("goalNow").textContent = fmt(now)+" / "+fmt(target)+" คน";
+  $("goalPct").textContent = Math.round(now/target*100)+"%";
+}
+
+function renderTimeline(arr){
+  var el=$("timeline");
+  if(!arr.length || arr.reduce(function(a,b){return a+b;},0)===0){ el.innerHTML='<div class="empty">ยังไม่มีข้อมูลวันนี้</div>'; return; }
+  var max = Math.max.apply(null, arr)||1;
+  el.innerHTML = arr.map(function(v,h){
+    var ht = v>0 ? Math.max(4,(v/max*100)) : 0;
+    var peak = (v===max && v>0);
+    var lab = (h%3===0) ? h : "";
+    return '<div class="tl-col"><div class="tl-bar '+(peak?'peak':'')+'" style="height:'+ht.toFixed(0)+'%" title="'+h+':00 — '+v+' คน"></div><div class="tl-h">'+lab+'</div></div>';
+  }).join("");
+}
+
+function renderScan(bs){
+  var cols={door:"var(--red)",table:"var(--gold)",poster:"var(--sky)",other:"rgba(255,255,255,.3)"};
+  var order=["door","table","poster","other"];
+  stackBar("scanHeads",   order.map(function(k){ return {label:LABEL.source[k], value:(bs[k]||{}).people||0,  color:cols[k]}; }));
+  stackBar("scanParties", order.map(function(k){ return {label:LABEL.source[k], value:(bs[k]||{}).parties||0, color:cols[k]}; }));
+}
+
+/* ============================================================
+   CFO (editable assumptions, persisted)
+   ============================================================ */
+function computeCFO(){
+  var d = state.data||{};
+  var con = d.consent||{yes:0,total:0};
+  var leadVal = Number($("aLeadVal").value)||0;
+  var conv = (Number($("aConv").value)||0)/100;
+  var aov = Number($("aAov").value)||0;
+  var perf = Number($("aPerf").value)||0;
+
+  var listVal = con.yes * leadVal;
+  var rev = con.yes * conv * aov;
+  var liab = (d.count||0) * perf;
+
+  $("cfoListVal").textContent = baht(listVal);
+  $("cfoListNote").textContent = fmt(con.yes)+" consented × "+baht(leadVal)+"/ลีด";
+  $("cfoRev").textContent = baht(rev);
+  $("cfoRevNote").textContent = fmt(con.yes)+" × "+(conv*100).toFixed(1)+"% × "+baht(aov);
+  $("cfoLiab").textContent = baht(liab);
+
+  saveCfg();
+}
+
+/* ============================================================
+   PERSIST (localStorage)
+   ============================================================ */
+var LS="rdfair_dash";
+function saveCfg(){
+  try{ localStorage.setItem(LS, JSON.stringify({
+    goal:$("goalInput").value, leadVal:$("aLeadVal").value, conv:$("aConv").value, aov:$("aAov").value, perf:$("aPerf").value
+  })); }catch(e){}
+}
+function loadCfg(){
+  try{
+    var c = JSON.parse(localStorage.getItem(LS)||"{}");
+    if(c.goal) $("goalInput").value=c.goal;
+    if(c.leadVal) $("aLeadVal").value=c.leadVal;
+    if(c.conv) $("aConv").value=c.conv;
+    if(c.aov) $("aAov").value=c.aov;
+    if(c.perf) $("aPerf").value=c.perf;
+  }catch(e){}
+}
+
+/* ============================================================
+   INIT + GATE
+   ============================================================ */
+function boot(){
+  $("evName").textContent = CONFIG.eventName;
+  $("footEvery").textContent = Math.round(CONFIG.refreshMs/1000);
+  loadCfg();
+
+  ["aLeadVal","aConv","aAov","aPerf"].forEach(function(id){ $(id).addEventListener("input", computeCFO); });
+  $("goalInput").addEventListener("input", function(){ if(state.data) renderGoal((state.data.attendance||{}).people||0); saveCfg(); });
+  $("cmpToggle").addEventListener("click", function(e){ var b=e.target.closest&&e.target.closest(".chip-t"); if(b){ state.cmpDim=b.getAttribute("data-k"); renderCompare(); } });
+
+  $("refreshBtn").addEventListener("click", tick);
+  $("fsBtn").addEventListener("click", function(){
+    if(!document.fullscreenElement) document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();
+    else document.exitFullscreen&&document.exitFullscreen();
+  });
+  document.addEventListener("visibilitychange", function(){ if(!document.hidden) tick(); });
+
+  $("app").style.display="block";
+  startLoop();
+}
+
+function unlock(){ $("gate").className="gate hidden"; boot(); }
+function tryKey(k){ return !CONFIG.gate.on || (k===CONFIG.gate.key); }
+
+(function gateInit(){
+  // bookmark-friendly: ...dashboard.html#key=rdfair26
+  var hk=null; if(location.hash){ var m=location.hash.match(/key=([^&]+)/); if(m) hk=decodeURIComponent(m[1]); }
+  var saved=null; try{ saved=sessionStorage.getItem("rdfair_gate"); }catch(e){}
+  if(!CONFIG.gate.on || tryKey(hk) || tryKey(saved)){ unlock(); return; }
+  $("gateBtn").addEventListener("click", function(){
+    var k=$("gateInput").value.trim();
+    if(tryKey(k)){ try{ sessionStorage.setItem("rdfair_gate",k); }catch(e){} unlock(); }
+    else { $("gateErr").textContent="รหัสไม่ถูกต้อง"; }
+  });
+  $("gateInput").addEventListener("keydown", function(e){ if(e.key==="Enter") $("gateBtn").click(); });
+  $("gateInput").focus();
+})();
+</script>
+</body>
+</html>
