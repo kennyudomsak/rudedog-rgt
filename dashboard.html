@@ -292,10 +292,22 @@
   .ai-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .ai-consensus{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);padding:12px;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:10px}
   .ai-consensus div{border-right:1px solid rgba(255,255,255,.06);padding-right:10px}
-  .ai-consensus div:last-child{border-right:0;padding-right:0}
-  .ai-consensus small{display:block;color:var(--muted);font-size:11px;font-weight:950;letter-spacing:.05em;margin-bottom:5px}
-  .ai-consensus b{display:block;color:var(--text);font-size:15px;font-weight:950;line-height:1.25}
-  .ai-card{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.42);padding:13px;min-height:210px}
+	  .ai-consensus div:last-child{border-right:0;padding-right:0}
+	  .ai-consensus small{display:block;color:var(--muted);font-size:11px;font-weight:950;letter-spacing:.05em;margin-bottom:5px}
+	  .ai-consensus b{display:block;color:var(--text);font-size:15px;font-weight:950;line-height:1.25}
+	  .ai-arbiter{border:1px solid rgba(43,132,255,.24);border-radius:10px;background:rgba(43,132,255,.06);padding:11px;display:grid;gap:9px}
+	  .arbiter-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+	  .arbiter-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+	  .arbiter-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+	  .arbiter-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+	  .arbiter-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.22);padding:9px;min-height:74px}
+	  .arbiter-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;margin-bottom:5px}
+	  .arbiter-cell b{display:block;color:var(--text);font-size:14px;font-weight:950;line-height:1.15}
+	  .arbiter-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;line-height:1.3;margin-top:4px}
+	  .arbiter-cell.good b{color:var(--green)}
+	  .arbiter-cell.warn b{color:var(--gold)}
+	  .arbiter-cell.bad b{color:var(--red)}
+	  .ai-card{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.42);padding:13px;min-height:210px}
   .ai-card h3{margin:0 0 10px;font-size:18px;font-weight:950;color:var(--text);display:flex;align-items:center;gap:8px}
   .ai-card h3 i{color:var(--cyan)}
   .ai-card p{margin:0 0 10px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.45}
@@ -480,6 +492,7 @@
     .kpis{grid-template-columns:1fr}
 	    .source-strip,.action-lanes,.ai-compare,.ads-summary{grid-template-columns:1fr}
 	    .ads-decision-grid{grid-template-columns:1fr 1fr}
+	    .arbiter-grid{grid-template-columns:1fr 1fr}
     .sales-kpis,.sales-body{grid-template-columns:1fr}
     .sales-chart-card{grid-column:span 1}
     .sale-stat b{font-size:24px}
@@ -801,8 +814,8 @@
   .mission-badge.watch{color:#a86f00;border-color:rgba(243,166,31,.32);background:#fff6dc}
   .mission-badge.hold{color:#c82e42;border-color:rgba(231,70,88,.28);background:#ffe8ec}
   .mission-buttons button.on{background:#0d4d91;border-color:#0d4d91;color:white}
-  .mission-check,.decision-row,.ai-consensus div{border-color:rgba(112,139,170,.14)}
-  .mission-check i,.decision-row i{background:#e8f3ff;color:#1687e8}
+	  .mission-check,.decision-row,.ai-consensus div{border-color:rgba(112,139,170,.14)}
+	  .mission-check i,.decision-row i{background:#e8f3ff;color:#1687e8}
   .mission-check.good i{background:#e7fbf1;color:#16b86b}
   .mission-check.bad i{background:#ffe8ec;color:#e74658}
   .operator-brief-snapshot{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
@@ -872,14 +885,19 @@
   }
   .lane h3,.ad-platform h3,.ad-table h3,.ai-list div,.action-card,.campaign-row{border-color:rgba(112,139,170,.14)}
   .ad-metric{border-color:rgba(112,139,170,.12);background:rgba(255,255,255,.56)}
-  .readonly-badge{
-    border-color:rgba(112,139,170,.20);
-    background:rgba(255,255,255,.62);
-    color:#40546d;
-  }
-  .readonly-badge.good{border-color:rgba(22,184,107,.28);color:#168a54}
+	  .readonly-badge{
+	    border-color:rgba(112,139,170,.20);
+	    background:rgba(255,255,255,.62);
+	    color:#40546d;
+	  }
+	  .readonly-badge.good{border-color:rgba(22,184,107,.28);color:#168a54}
+	  .ai-arbiter{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
+	  .arbiter-head b,.arbiter-cell b{color:#172238}
+	  .arbiter-head small,.arbiter-cell small{color:#63748c}
+	  .arbiter-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+	  .arbiter-cell span{color:#8b9bb1}
 
-  .gate{
+	  .gate{
     background:
       radial-gradient(900px 520px at 50% 0%,rgba(255,255,255,.92),transparent 64%),
       linear-gradient(135deg,#eaf3ff,#dcecff);
@@ -1170,12 +1188,21 @@
             <article class="ai-card" id="codexLens"></article>
             <article class="ai-card" id="claudeLens"></article>
           </div>
-          <div class="ai-consensus" id="aiConsensus">
-            <div><small>CONSENSUS</small><b>รอสัญญาณ</b></div>
-            <div><small>DIFFERENCE</small><b>รอ Codex / Claude lens</b></div>
-            <div><small>CONFIDENCE</small><b>—</b></div>
-          </div>
-          <div class="ad-warning" id="aiNote">Codex / Claude Lens ตอนนี้เป็น local rule-simulated lens เพื่อเทียบมุมคิด ก่อนต่อ AI endpoint จริง</div>
+	          <div class="ai-consensus" id="aiConsensus">
+	            <div><small>CONSENSUS</small><b>รอสัญญาณ</b></div>
+	            <div><small>DIFFERENCE</small><b>รอ Codex / Claude lens</b></div>
+	            <div><small>CONFIDENCE</small><b>—</b></div>
+	          </div>
+	          <div class="ai-arbiter" id="aiDecisionArbiter">
+	            <div class="arbiter-head"><small>AI DECISION ARBITER</small><b>WATCH · รอ Codex / Claude</b></div>
+	            <div class="arbiter-grid">
+	              <div class="arbiter-cell warn"><small>Codex Push</small><b>รอ action</b><span>รอสัญญาณ QR/Beam</span></div>
+	              <div class="arbiter-cell warn"><small>Claude Guard</small><b>ตรวจ risk</b><span>รอข้อมูลครบ</span></div>
+	              <div class="arbiter-cell warn"><small>Operator Call</small><b>WATCH</b><span>คนคุมงานยืนยัน</span></div>
+	              <div class="arbiter-cell good"><small>Stop Rule</small><b>HUMAN LOCK</b><span>No auto action</span></div>
+	            </div>
+	          </div>
+	          <div class="ad-warning" id="aiNote">Codex / Claude Lens ตอนนี้เป็น local rule-simulated lens เพื่อเทียบมุมคิด ก่อนต่อ AI endpoint จริง</div>
         </div>
       </section>
     </section>
@@ -2439,28 +2466,56 @@ function normalizeAiLenses(raw,fallback){
     warnings:Array.isArray(raw&&raw.warnings)?raw.warnings:[]
   };
 }
-function aiConfidence(d,sales,ads,actions){
-  if(state.cacheFallback)return "LOW · LAST GOOD ไม่ใช่ live";
-  var requiredRisk=sourceState("qr")==="bad"||sourceState("sales")==="bad";
-  if(requiredRisk)return "LOW · สัญญาณหลักเสี่ยง";
-  if(!(d.count||0))return "LOW · รอข้อมูลจริง";
-  if(actions.some(function(a){return a.lane==="critical"}))return "MEDIUM · มี critical action";
-  if(sourceState("qr")==="good"&&sourceState("sales")==="good")return "HIGH · QR/Beam สด";
-  return "MEDIUM · ใช้พร้อม Signal Guard";
-}
-function renderAiConsensus(lenses,actions,d,sales,ads){
-  if(!$("aiConsensus"))return;
-  var top=firstAction(actions)||{};
+	function aiConfidence(d,sales,ads,actions){
+	  if(state.cacheFallback)return "LOW · LAST GOOD ไม่ใช่ live";
+	  var requiredRisk=sourceState("qr")==="bad"||sourceState("sales")==="bad";
+	  if(requiredRisk)return "LOW · สัญญาณหลักเสี่ยง";
+	  if(!(d.count||0))return "LOW · รอข้อมูลจริง";
+	  if(actions.some(function(a){return a.lane==="critical"}))return "MEDIUM · มี critical action";
+	  if(sourceState("qr")==="good"&&sourceState("sales")==="good")return "HIGH · QR/Beam สด";
+	  return "MEDIUM · ใช้พร้อม Signal Guard";
+	}
+	function arbiterCell(label,item){
+	  item=item||{};
+	  return '<div class="arbiter-cell '+esc(item.cls||"warn")+'"><small>'+esc(label)+'</small><b>'+esc(item.status||"WATCH")+'</b><span>'+esc(item.detail||"รอข้อมูล")+'</span></div>';
+	}
+	function buildAiArbiter(lenses,actions,d,sales,ads){
+	  lenses=lenses||{};actions=actions||[];
+	  var top=firstAction(actions)||{}, critical=actions.some(function(a){return a.lane==="critical"});
+	  var confidence=aiConfidence(d,sales,ads,actions), signalRisk=sourceState("qr")==="bad"||sourceState("sales")==="bad";
+	  var codex={cls:top.lane==="critical"?"bad":top.title?"good":"warn",status:top.title||((lenses.codex||{}).verdict)||"รอ action",detail:(lenses.codex||{}).next||top.body||"รอข้อมูลรอบถัดไป"};
+	  var claude={cls:signalRisk||state.cacheFallback?"bad":critical?"warn":"good",status:signalRisk?"SIGNAL RISK":state.cacheFallback?"LAST GOOD":critical?"CHECK RISK":"GUARD OK",detail:(lenses.claude||{}).risk||"ตรวจ QR/Beam/Ads ก่อน action หนัก"};
+	  var operator={cls:signalRisk||state.cacheFallback?"bad":confidence.indexOf("HIGH")===0&&!critical?"good":"warn",status:signalRisk||state.cacheFallback?"HOLD":confidence.indexOf("HIGH")===0&&!critical?"GO":"WATCH",detail:critical?"ใช้ reversible action และให้คนคุมงานยืนยัน":confidence};
+	  var stop={cls:"good",status:"HUMAN LOCK",detail:"No auto action · No ad mutation"};
+	  return {head:operator.status+" · Codex/Claude cross-check",codex:codex,claude:claude,operator:operator,stop:stop};
+	}
+	function renderAiArbiter(lenses,actions,d,sales,ads){
+	  var el=$("aiDecisionArbiter");if(!el)return;
+	  var a=buildAiArbiter(lenses,actions,d,sales,ads);
+	  el.innerHTML=[
+	    '<div class="arbiter-head"><small>AI DECISION ARBITER</small><b>'+esc(a.head)+'</b></div>',
+	    '<div class="arbiter-grid">',
+	    arbiterCell("Codex Push",a.codex),
+	    arbiterCell("Claude Guard",a.claude),
+	    arbiterCell("Operator Call",a.operator),
+	    arbiterCell("Stop Rule",a.stop),
+	    '</div>'
+	  ].join("");
+	}
+	function renderAiConsensus(lenses,actions,d,sales,ads){
+	  if(!$("aiConsensus"))return;
+	  var top=firstAction(actions)||{};
   var critical=actions.filter(function(a){return a.lane==="critical"}).length;
   var diff=critical?"Codex เร่ง action · Claude เน้น risk guard":"มุมคิดใกล้กัน ใช้ action เดียวกันได้";
   var spend=platformSpend(ads);
   if(spend>0&&!(sales.summary||{}).paidAmountToday)diff="Ads มี spend แต่ Beam ยังไม่ยืนยันยอดขาย";
-  $("aiConsensus").innerHTML=[
-    '<div><small>CONSENSUS</small><b>'+esc(top.title||lenses.codex.verdict||"รอสัญญาณ")+'</b></div>',
-    '<div><small>DIFFERENCE</small><b>'+esc(diff)+'</b></div>',
-    '<div><small>CONFIDENCE</small><b>'+esc(aiConfidence(d,sales,ads,actions))+'</b></div>'
-  ].join("");
-}
+	  $("aiConsensus").innerHTML=[
+	    '<div><small>CONSENSUS</small><b>'+esc(top.title||lenses.codex.verdict||"รอสัญญาณ")+'</b></div>',
+	    '<div><small>DIFFERENCE</small><b>'+esc(diff)+'</b></div>',
+	    '<div><small>CONFIDENCE</small><b>'+esc(aiConfidence(d,sales,ads,actions))+'</b></div>'
+	  ].join("");
+	  renderAiArbiter(lenses,actions,d,sales,ads);
+	}
 function loadAiLenses(d,mo,sales,ads,actions){
   var fallback=buildAiLenses(d,mo,sales,ads,actions);
   if(!CONFIG.aiEndpoint){
