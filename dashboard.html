@@ -1357,7 +1357,11 @@ function loadAds(d){
   if(!CONFIG.adsEndpoint){markSource("ads",false,"read-only / รอเชื่อม");return Promise.resolve(embedded)}
   var joiner=CONFIG.adsEndpoint.indexOf("?")>=0?"&":"?";
   return fetchJson(CONFIG.adsEndpoint+joiner+"range=today&t="+Date.now(),CONFIG.requestTimeoutMs)
-    .then(function(s){markSource("ads",true,"สด");return normalizeAds(s)})
+    .then(function(s){
+      var normalized=normalizeAds(s), spend=platformSpend(normalized);
+      markSource("ads",true,spend>0?"สด":"สด / รอ official connector");
+      return normalized;
+    })
     .catch(function(err){
       markSource("ads",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้");
       return embedded;
@@ -1479,7 +1483,7 @@ function renderAds(d){
   setText("adsSpend",spend?baht(spend):"—");
   setText("adsRevenue",revenue?baht(revenue):"—");
   setText("adsCostPct",spend&&revenue?pc(pct):"—");
-  setText("adsConn",spend?(ads.source==="demo"?"DEMO":"พร้อมแสดง"):(CONFIG.adsEndpoint?"รอข้อมูล":"รอ official connector"));
+  setText("adsConn",spend?(ads.source==="demo"?"DEMO":"พร้อมแสดง"):(CONFIG.adsEndpoint?"รอ official connector":"รอ official connector"));
   $("adsConn").style.color=spend?"var(--green)":"var(--gold)";
   setText("metaStatus",ads.meta.status||"display only");
   setText("tiktokStatus",ads.tiktok.status||"display only");

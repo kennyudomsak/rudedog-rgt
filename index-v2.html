@@ -39,7 +39,7 @@ body{
     radial-gradient(circle at 16% 12%,rgba(255,255,255,.95) 0 18px,rgba(255,255,255,.62) 19px 32px,transparent 33px),
     radial-gradient(circle at 84% 18%,rgba(255,255,255,.88) 0 15px,rgba(255,255,255,.5) 16px 27px,transparent 28px),
     linear-gradient(180deg,#5C94FC 0%,#75B7FF 56%,#9CD7FF 100%);
-  min-height:100dvh; display:flex; align-items:flex-start; justify-content:center; padding:18px 12px;
+  min-height:100dvh; display:flex; align-items:flex-start; justify-content:center; padding:0;
   overflow-x:hidden;
 }
 .px{font-family:"Press Start 2P","Space Mono",monospace;}
@@ -52,15 +52,16 @@ body{
 /* ============================================================
    FRAME / PANEL  (cream UI panel sitting on the sky — blocky)
    ============================================================ */
-#stage{width:100%;max-width:390px;position:relative;z-index:2;}
+#stage{width:100%;max-width:430px;position:relative;z-index:2;}
 .ticket{
-  background:linear-gradient(180deg,#5C94FC,#9CD7FF); border:3px solid var(--cream-edge); border-radius:24px;
-  overflow:hidden; position:relative; box-shadow:0 0 0 4px rgba(0,0,0,.75),0 24px 60px rgba(0,0,0,.48);
-  min-height:min(844px,calc(100dvh - 36px));
+  background:linear-gradient(180deg,#5C94FC,#9CD7FF);
+  border:0;border-radius:0;box-shadow:none;
+  overflow:hidden; position:relative;
+  min-height:100dvh;
 }
 #app{position:relative;}
 .screen{
-  width:100%;min-height:min(844px,calc(100dvh - 42px));position:relative;overflow:hidden;
+  width:100%;min-height:100dvh;position:relative;overflow:hidden;
   background:linear-gradient(180deg,#5C94FC 0%,#67B7FF 55%,#9FD9FF 100%);
 }
 .pad{padding:20px 18px 24px;}
