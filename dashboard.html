@@ -1513,6 +1513,7 @@ function renderDoorSplit(d){
 }
 function renderTraffic(d,mo){
   var tl=(d.timeline||[]).slice(0,24),per=mo.roll||[];
+  while(tl.length<24)tl.push(0);
   var has=tl.reduce(function(a,b){return a+b},0)>0 || per.reduce(function(a,b){return a+b},0)>0;
   var W=820,H=270,L=52,R=18,T=16,B=34;
   var vals=tl.map(function(v){return Number(v)||0});
