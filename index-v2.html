@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#111827">
+<meta name="theme-color" content="#5C94FC">
 <title>RUDEDOG FAIR 2026 — Game UI V2</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,9 +36,9 @@ body{
   font-family:var(--ff);
   color:var(--ink);
   background:
-    radial-gradient(circle at 20% 10%,rgba(92,148,252,.18),transparent 30%),
-    radial-gradient(circle at 80% 80%,rgba(226,58,30,.13),transparent 28%),
-    linear-gradient(180deg,#09111b,#141b26 55%,#08101a);
+    radial-gradient(circle at 16% 12%,rgba(255,255,255,.95) 0 18px,rgba(255,255,255,.62) 19px 32px,transparent 33px),
+    radial-gradient(circle at 84% 18%,rgba(255,255,255,.88) 0 15px,rgba(255,255,255,.5) 16px 27px,transparent 28px),
+    linear-gradient(180deg,#5C94FC 0%,#75B7FF 56%,#9CD7FF 100%);
   min-height:100dvh; display:flex; align-items:flex-start; justify-content:center; padding:18px 12px;
   overflow-x:hidden;
 }
@@ -54,12 +54,15 @@ body{
    ============================================================ */
 #stage{width:100%;max-width:390px;position:relative;z-index:2;}
 .ticket{
-  background:#0e141c; border:3px solid var(--cream-edge); border-radius:24px;
+  background:linear-gradient(180deg,#5C94FC,#9CD7FF); border:3px solid var(--cream-edge); border-radius:24px;
   overflow:hidden; position:relative; box-shadow:0 0 0 4px rgba(0,0,0,.75),0 24px 60px rgba(0,0,0,.48);
   min-height:min(844px,calc(100dvh - 36px));
 }
 #app{position:relative;}
-.screen{width:100%;min-height:min(844px,calc(100dvh - 42px));position:relative;overflow:hidden;}
+.screen{
+  width:100%;min-height:min(844px,calc(100dvh - 42px));position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#5C94FC 0%,#67B7FF 55%,#9FD9FF 100%);
+}
 .pad{padding:20px 18px 24px;}
 .center{text-align:center;}
 
@@ -275,7 +278,7 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
   background:linear-gradient(#49a642 0 12px,#257425 12px 24px),repeating-linear-gradient(90deg,var(--brick) 0 38px,var(--brick-d) 39px 42px);
   border-top:3px solid #0b3614;z-index:0;
 }
-.contact .hud{padding-top:64px;color:#fff;}
+.contact .hud{padding-top:82px;color:#fff;}
 .contact .hud::before{
   content:"ภารกิจสำเร็จ!";
   position:absolute;left:30px;right:30px;top:18px;
@@ -286,7 +289,7 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 }
 .contact .mission-ttl,.contact .coinhud,.contact .mtrack,.contact .mleft{display:none;}
 .contact .pad{
-  position:relative;z-index:1;margin:0 18px 72px;padding:28px 20px 22px;
+  position:relative;z-index:1;margin:0 18px 72px;padding:22px 20px 22px;
   background:linear-gradient(#fff2cf,#f4d69a);
   border:3px solid #79551f;border-radius:4px;
   box-shadow:0 5px 0 rgba(0,0,0,.58);
@@ -327,9 +330,54 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 /* ============================================================
    V2 AMBIENT GAME MOTION + FLOATING SELLING WORDS
    ============================================================ */
+.welcome,.quiz,.contact,.success{
+  background:linear-gradient(180deg,#5C94FC 0%,#6FBEFF 58%,#A8DEFF 100%);
+}
+.welcome::after,.quiz::after,.contact::after{display:none;}
 .ambient{
   position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;
 }
+.sky-motion{position:absolute;inset:0;z-index:0;overflow:hidden;}
+.sky-sun{
+  position:absolute;right:32px;top:62px;width:58px;height:58px;border-radius:50%;
+  background:#fff3a8;border:4px solid rgba(23,18,14,.24);
+  box-shadow:0 0 0 8px rgba(255,243,168,.22),0 8px 0 rgba(0,0,0,.12);
+  animation:sunBob 5s ease-in-out infinite;
+}
+.sky-cloud{
+  --s:1;
+  position:absolute;left:-150px;width:96px;height:28px;background:#fff;border:4px solid rgba(23,18,14,.18);
+  border-radius:0;box-shadow:26px -13px 0 5px #fff,55px -5px 0 2px #fff,3px 6px 0 rgba(0,0,0,.08);
+  image-rendering:pixelated;animation:cloudSlide 24s linear infinite;
+}
+.sky-cloud.c2{--s:.78;top:135px;width:76px;animation-duration:18s;animation-delay:-8s;opacity:.92;}
+.sky-cloud.c3{--s:.62;top:248px;width:88px;animation-duration:31s;animation-delay:-17s;opacity:.74;}
+.sky-cloud.c1{top:74px;}
+.sky-hill{
+  --s:1;
+  position:absolute;bottom:56px;width:210px;height:92px;border-radius:110px 110px 0 0;
+  background:#49B542;border:4px solid rgba(23,18,14,.2);box-shadow:inset 18px 0 0 rgba(255,255,255,.14);
+  animation:hillSlide 14s linear infinite;
+}
+.sky-hill.h1{left:-220px;}
+.sky-hill.h2{--s:.72;left:40px;animation-duration:20s;animation-delay:-8s;opacity:.78;}
+.sky-ground{
+  position:absolute;left:0;right:0;bottom:0;height:74px;
+  background:
+    linear-gradient(#54BB43 0 12px,#2F8B31 12px 22px,transparent 22px),
+    repeating-linear-gradient(90deg,var(--brick) 0 35px,var(--brick-d) 35px 39px),
+    repeating-linear-gradient(0deg,transparent 0 18px,rgba(0,0,0,.38) 18px 21px);
+  border-top:4px solid #1c611f;
+  animation:groundSlide 1.2s linear infinite;
+}
+.sky-brick{
+  position:absolute;top:205px;width:34px;height:34px;background:#E2A638;border:4px solid #17120E;
+  box-shadow:0 4px 0 rgba(0,0,0,.42),44px 0 0 #E2A638,44px 0 0 4px #17120E;
+  animation:blockFloat 3s ease-in-out infinite;
+}
+.sky-brick.b1{right:56px;}
+.sky-brick.b2{left:48px;top:300px;transform:scale(.72);animation-delay:-1.5s;opacity:.72;}
+.sky-motion,.sky-sun,.sky-cloud,.sky-hill,.sky-ground,.sky-brick{will-change:transform;}
 .topbar,.welcome .pad,.hud,.quiz .pad,.contact .pad,.success .pad{position:relative;z-index:2;}
 .welcome::before{display:none;}
 .pixel-dog{
@@ -358,6 +406,11 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .coin-float{position:absolute;width:15px;height:22px;border:3px solid #7d4d00;border-radius:50%;background:linear-gradient(90deg,#ffd84a,#fff1a6,#e7a900);box-shadow:0 0 0 2px rgba(0,0,0,.18);animation:coinBob 2.4s ease-in-out infinite}
 .coin-float.c1{left:9%;bottom:190px}.coin-float.c2{right:8%;bottom:250px;animation-delay:-.9s}.coin-float.c3{left:72%;bottom:146px;animation-delay:-1.5s}
 @keyframes coinBob{0%,100%{transform:translateY(0) rotateY(0deg)}50%{transform:translateY(-12px) rotateY(60deg)}}
+@keyframes sunBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes cloudSlide{0%{transform:translateX(-170px) scale(var(--s))}100%{transform:translateX(600px) scale(var(--s))}}
+@keyframes hillSlide{0%{transform:translateX(-260px) scale(var(--s))}100%{transform:translateX(680px) scale(var(--s))}}
+@keyframes groundSlide{0%{background-position:0 0,0 0,0 0}100%{background-position:0 0,-39px 0,-39px 0}}
+@keyframes blockFloat{0%,100%{translate:0 0}50%{translate:0 -8px}}
 .sales-headline{
   --headline-mark:#ffd21d;--headline-strip:#f23519;--headline-ink:#080808;--headline-sub:#090909;--tilt:0deg;
   position:relative;z-index:3;display:block;text-align:left;color:var(--headline-ink);
@@ -388,7 +441,7 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .welcome .pad{padding-bottom:34px}
 .quiz .sales-headline{color:#fff;margin:14px 34px 6px}
 .quiz .sales-headline b{font-size:38px}.quiz .sales-headline small{font-size:27px}
-.contact .sales-headline{color:#080808;margin:10px 34px 0}
+.contact .sales-headline{color:#080808;margin:6px 34px 8px}
 .contact .sales-headline b{font-size:31px}.contact .sales-headline small{font-size:23px}
 .success .sales-headline{color:#fff;margin:6px 0 18px}
 .success .sales-headline b{font-size:31px}.success .sales-headline small{font-size:23px}
@@ -400,7 +453,7 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .prize,.prize::after,.eyebrow .blink,.mcell.cur,.pixel-dog,.pd-tail,.pd-leg-a,.pd-leg-b,.coin-float,.sales-headline,.sales-headline b,.sales-headline small{animation:none!important;}
+  .prize,.prize::after,.eyebrow .blink,.mcell.cur,.pixel-dog,.pd-tail,.pd-leg-a,.pd-leg-b,.coin-float,.sky-sun,.sky-cloud,.sky-hill,.sky-ground,.sky-brick,.sales-headline,.sales-headline b,.sales-headline small{animation:none!important;}
 }
 </style>
 </head>
@@ -753,6 +806,17 @@ const SALES_HEADLINES = [
 function ambientLayer(){
   return `
     <div class="ambient" aria-hidden="true">
+      <div class="sky-motion">
+        <span class="sky-sun"></span>
+        <span class="sky-cloud c1"></span>
+        <span class="sky-cloud c2"></span>
+        <span class="sky-cloud c3"></span>
+        <span class="sky-hill h1"></span>
+        <span class="sky-hill h2"></span>
+        <span class="sky-brick b1"></span>
+        <span class="sky-brick b2"></span>
+        <span class="sky-ground"></span>
+      </div>
       <span class="coin-float c1"></span>
       <span class="coin-float c2"></span>
       <span class="coin-float c3"></span>
