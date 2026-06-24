@@ -1181,6 +1181,7 @@ var CONFIG={
   aiEndpoint:"",
   requestTimeoutMs:9000,
   latencyWarnMs:5000,
+  signalHistoryMaxAgeMs:21600000,
   staleWarnMs:45000,
   staleFailMs:180000,
   lastGoodMaxAgeMs:21600000,
@@ -1232,6 +1233,7 @@ function markSource(name,ok,message,responseMs){
   src.history=src.history||[];
   src.history.push({ok:!!ok,responseMs:Number(responseMs)||0,t:Date.now()});
   if(src.history.length>10)src.history=src.history.slice(-10);
+  if(name==="qr"||name==="sales")saveSignalHistory();
 }
 function sourceAge(name){
   var src=state.sources[name];if(!src||!src.lastOk)return "ยังไม่สด";
@@ -1284,6 +1286,10 @@ function cacheKey(){
   var d=new Date();
   return "rdfair_last_good_v1_"+d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 }
+function signalHistoryKey(){
+  var d=new Date();
+  return "rdfair_signal_history_v1_"+d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+}
 function stripRuntimeKeys(obj){
   if(!obj||typeof obj!=="object")return obj;
   if(Array.isArray(obj))return obj.map(stripRuntimeKeys);
@@ -1312,6 +1318,46 @@ function loadLastGood(){
     payload.data.__cacheSavedAt=Number(payload.savedAt);
     return payload;
   }catch(e){return null}
+}
+function cleanSignalHistory(rows){
+  rows=Array.isArray(rows)?rows:[];
+  return rows.slice(-10).map(function(row){
+    return {
+      ok:!!(row&&row.ok),
+      responseMs:Math.max(0,Math.round(Number(row&&row.responseMs)||0)),
+      t:Math.max(0,Number(row&&row.t)||Date.now()),
+      recovered:!!(row&&row.recovered)
+    };
+  }).filter(function(row){return row.t>0});
+}
+function saveSignalHistory(){
+  try{
+    var payload={
+      savedAt:Date.now(),
+      qr:cleanSignalHistory((state.sources.qr||{}).history),
+      sales:cleanSignalHistory((state.sources.sales||{}).history)
+    };
+    localStorage.setItem(signalHistoryKey(),JSON.stringify(payload));
+  }catch(e){}
+}
+function loadSignalHistory(){
+  try{
+    var raw=localStorage.getItem(signalHistoryKey());
+    if(!raw)return false;
+    var payload=JSON.parse(raw);
+    if(!payload||!payload.savedAt)return false;
+    if(Date.now()-Number(payload.savedAt)>CONFIG.signalHistoryMaxAgeMs)return false;
+    ["qr","sales"].forEach(function(name){
+      if(!state.sources[name])return;
+      var rows=cleanSignalHistory(payload[name]).map(function(row){row.recovered=true;return row});
+      state.sources[name].history=rows;
+      if(rows.length&&!state.sources[name].lastTry){
+        state.sources[name].message="recovered history";
+        state.sources[name].responseMs=rows[rows.length-1].responseMs||0;
+      }
+    });
+    return true;
+  }catch(e){return false}
 }
 function renderLastGood(reason){
   var cached=loadLastGood();
@@ -1727,12 +1773,12 @@ function recorderSummary(name){
   var slow=hist.filter(function(row){return row.ok&&row.responseMs>=(CONFIG.latencyWarnMs||5000)}).length;
   var pass=hist.length-fail;
   if(!hist.length)return "standby";
-  return pass+"/"+hist.length+" pass · "+slow+" slow · "+fail+" fail";
+  return pass+"/"+hist.length+" pass · "+slow+" slow · "+fail+" fail"+(hist.some(function(row){return row.recovered})?" · recovered":"");
 }
 function recorderPulse(row){
   if(!row)return '<i class="pulse empty"></i>';
   var cls=!row.ok?"bad":row.responseMs>=(CONFIG.latencyWarnMs||5000)?"slow":"good";
-  var title=row.ok?(row.responseMs?row.responseMs+"ms":"pass"):"fail";
+  var title=(row.recovered?"recovered · ":"")+(row.ok?(row.responseMs?row.responseMs+"ms":"pass"):"fail");
   return '<i class="pulse '+cls+'" title="'+esc(title)+'"></i>';
 }
 function recorderTrack(name,label){
@@ -1744,6 +1790,8 @@ function renderSignalRecorder(){
   var el=$("signalRecorder");if(!el)return;
   var q=qualityStats(["qr","sales"]);
   var head=q.samples?(q.samples+" samples · "+Math.round(q.passRate*100)+"% pass · "+q.flaps+" flaps"):"รอ QR + Beam samples";
+  var recovered=["qr","sales"].some(function(name){return ((state.sources[name]||{}).history||[]).some(function(row){return row.recovered})});
+  if(recovered&&!state.sources.qr.lastTry&&!state.sources.sales.lastTry)head+=" · recovered same-day";
   el.innerHTML=[
     '<div class="recorder-head"><small>SIGNAL FLIGHT RECORDER</small><b>'+esc(head)+'</b></div>',
     '<div class="recorder-grid">',
@@ -2224,11 +2272,13 @@ function boot(){
   try{var r=Number(localStorage.getItem("rdfair_cmd_refresh"));if([15000,60000,300000].indexOf(r)>=0)state.refreshMs=r}catch(e){}
   loadSuiteCfg();
   loadControlCfg();
+  loadSignalHistory();
   bindMissionControl();
   setText("refreshLabel",state.refreshMs===15000?"15 วินาที":state.refreshMs===60000?"1 นาที":"5 นาที");
   document.querySelector("#refreshTabs").addEventListener("click",function(e){var b=e.target.closest("button[data-ms]");if(b)setRefresh(Number(b.dataset.ms))});
   ["suiteGoal","suiteLeadVal","suiteConv","suiteAov","suitePerf"].forEach(function(id){$(id).addEventListener("input",function(){if(state.data)renderSuite(state.data,calcMomentum(state.data.perMin||[]))})});
   document.addEventListener("visibilitychange",function(){if(!document.hidden)tick()});
+  renderSignalGuard();
   clockTick();startLoop();
 }
 (function initGate(){
