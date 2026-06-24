@@ -1125,11 +1125,12 @@ var CONFIG={
   requestTimeoutMs:9000,
   staleWarnMs:45000,
   staleFailMs:180000,
+  lastGoodMaxAgeMs:21600000,
   refreshMs:15000,
   gate:{on:true,key:"rdfair26"}
 };
 var state={
-  data:null,lastOk:0,lastRenderAt:0,nextAt:0,timer:null,ticker:null,refreshMs:CONFIG.refreshMs,
+  data:null,lastOk:0,lastRenderAt:0,nextAt:0,timer:null,ticker:null,refreshMs:CONFIG.refreshMs,cacheFallback:false,cacheSavedAt:0,
   sources:{
     qr:{ok:false,lastOk:0,lastTry:0,message:"รอสัญญาณ",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
     sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
@@ -1218,13 +1219,56 @@ function pageParam(name){
   var hash=(location.hash||"").replace(/^#/,"");
   return new URLSearchParams(hash).get(name);
 }
+function cacheKey(){
+  var d=new Date();
+  return "rdfair_last_good_v1_"+d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+}
+function stripRuntimeKeys(obj){
+  if(!obj||typeof obj!=="object")return obj;
+  if(Array.isArray(obj))return obj.map(stripRuntimeKeys);
+  var out={};
+  Object.keys(obj).forEach(function(k){
+    if(k.indexOf("__")===0)return;
+    out[k]=stripRuntimeKeys(obj[k]);
+  });
+  return out;
+}
+function saveLastGood(d){
+  if(!d||!d.ok)return;
+  try{
+    var payload={savedAt:Date.now(),data:stripRuntimeKeys(d)};
+    localStorage.setItem(cacheKey(),JSON.stringify(payload));
+  }catch(e){}
+}
+function loadLastGood(){
+  try{
+    var raw=localStorage.getItem(cacheKey());
+    if(!raw)return null;
+    var payload=JSON.parse(raw);
+    if(!payload||!payload.data||!payload.savedAt)return null;
+    if(Date.now()-Number(payload.savedAt)>CONFIG.lastGoodMaxAgeMs)return null;
+    payload.data.__fromCache=true;
+    payload.data.__cacheSavedAt=Number(payload.savedAt);
+    return payload;
+  }catch(e){return null}
+}
+function renderLastGood(reason){
+  var cached=loadLastGood();
+  if(!cached)return false;
+  state.cacheFallback=true;state.cacheSavedAt=cached.savedAt;
+  state.data=cached.data;state.lastOk=cached.savedAt;
+  markSource("qr",false,reason||"last-good cache");
+  setLive(false,"STALE");
+  render(cached.data);
+  return true;
+}
 function tick(){
   if(pageParam("demo")==="1"){
     var demo=demoData();
     markSource("qr",true,"demo");
     markSource("sales",true,"demo");
     markSource("ads",true,"demo");
-    state.data=demo;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(demo);return;
+    state.cacheFallback=false;state.cacheSavedAt=0;state.data=demo;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(demo);return;
   }
   fetchJson(CONFIG.endpoint+"?stats=1&t="+Date.now(),CONFIG.requestTimeoutMs)
     .then(function(d){
@@ -1233,12 +1277,15 @@ function tick(){
         d.sales=res[0];d.ads=res[1];return d;
       });
     })
-    .then(function(d){state.data=d;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(d)})
+    .then(function(d){
+      state.cacheFallback=false;state.cacheSavedAt=0;state.data=d;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);saveLastGood(d);render(d)
+    })
     .catch(function(err){
       markSource("qr",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้",err&&err.responseMs);
       setLive(false);
       state.nextAt=Date.now()+state.refreshMs;
-      if(state.data)render(state.data);
+      if(state.data){state.cacheFallback=!!state.cacheFallback;render(state.data)}
+      else renderLastGood("last-good cache");
     });
 }
 function demoData(){
@@ -1286,10 +1333,11 @@ function demoData(){
     timeline:timeline,perMin:perMin
   };
 }
-function setLive(ok){
-  setText("statusText",ok?"OK":"FAIL");
-  $("statusText").style.color=ok?"var(--green)":"var(--red)";
-  $("statusDot").style.background=ok?"var(--green)":"var(--red)";
+function setLive(ok,label){
+  var text=label||(ok?"OK":"FAIL");
+  setText("statusText",text);
+  $("statusText").style.color=ok?"var(--green)":text==="STALE"?"var(--gold)":"var(--red)";
+  $("statusDot").style.background=ok?"var(--green)":text==="STALE"?"var(--gold)":"var(--red)";
 }
 function startLoop(){
   stopLoop();tick();
@@ -1584,10 +1632,11 @@ function renderSignalGuard(){
   signalChip("sigAi","ai","AI Lens");
   var required=["qr","sales"], risky=required.filter(function(n){return sourceState(n)==="bad"});
   var waiting=required.filter(function(n){return !state.sources[n].lastOk});
-  var overall=risky.length?"สัญญาณเสี่ยง":waiting.length?"รอสัญญาณหลัก":"สัญญาณหลักสด";
+  var overall=state.cacheFallback?"ใช้ข้อมูลล่าสุด":risky.length?"สัญญาณเสี่ยง":waiting.length?"รอสัญญาณหลัก":"สัญญาณหลักสด";
   setText("signalOverall",overall);
-  $("signalOverall").style.color=risky.length?"var(--red)":waiting.length?"var(--gold)":"var(--green)";
-  var note=risky.length?"มี endpoint หลัก fail ต่อเนื่อง ต้องตรวจ network/endpoint ก่อนใช้ action หนัก":waiting.length?"รอ QR หรือ Beam ส่งข้อมูลรอบแรก":("QR + Beam สด · refresh "+(state.refreshMs/1000)+" วิ · last render "+sourceAge("qr"));
+  $("signalOverall").style.color=state.cacheFallback?"var(--gold)":risky.length?"var(--red)":waiting.length?"var(--gold)":"var(--green)";
+  var note=state.cacheFallback?("LAST GOOD · ข้อมูลล่าสุดจาก "+new Date(state.cacheSavedAt).toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})+" · ห้ามตีความเป็น live"):
+    risky.length?"มี endpoint หลัก fail ต่อเนื่อง ต้องตรวจ network/endpoint ก่อนใช้ action หนัก":waiting.length?"รอ QR หรือ Beam ส่งข้อมูลรอบแรก":("QR + Beam สด · refresh "+(state.refreshMs/1000)+" วิ · last render "+sourceAge("qr"));
   setText("signalNote",note);
 }
 function buildCommandRules(d,mo,sales,ads){
@@ -1651,7 +1700,7 @@ function missionChecks(d,sales,ads){
   var adSpend=platformSpend(ads);
   return {
     phase1:[
-      {label:"QR endpoint",detail:state.sources.qr.lastOk?"Apps Script สด "+sourceAge("qr"):"รอ QR stats รอบแรก",status:sourceState("qr"),metric:signalLabel("qr"),icon:"bi-qr-code-scan"},
+      {label:"QR endpoint",detail:state.cacheFallback?"ใช้ last-good snapshot เพราะ endpoint สดไม่พร้อม":state.sources.qr.lastOk?"Apps Script สด "+sourceAge("qr"):"รอ QR stats รอบแรก",status:state.cacheFallback?"warn":sourceState("qr"),metric:state.cacheFallback?"LAST":signalLabel("qr"),icon:"bi-qr-code-scan"},
       {label:"Beam endpoint",detail:state.sources.sales.lastOk?"Beam ตอบกลับ "+sourceAge("sales"):"รอ Beam stats รอบแรก",status:sourceState("sales"),metric:signalLabel("sales"),icon:"bi-cash-coin"},
       {label:"Tag coverage",detail:total?("ระบุจุดสแกน "+fmt(tagged)+" / "+fmt(total)):"ยังไม่มีสแกนจริง",status:!total?"warn":tagRate>=.75?"good":"bad",metric:total?pc(tagRate):"WAIT",icon:"bi-tags-fill"},
       {label:"Ads safety",detail:"Ads Watch เป็น display-only และไม่ปรับงบ/แคมเปญ",status:"good",metric:"READ",icon:"bi-eye-fill"},
@@ -1670,8 +1719,8 @@ function renderMissionControl(d,mo,sales,ads,actions){
   var checksByPhase=missionChecks(d,sales,ads), phase=state.control.phase||"phase1", checks=checksByPhase[phase]||checksByPhase.phase1;
   var worst=checks.reduce(function(min,c){return Math.min(min,statusRank(c.status))},2);
   var top=firstAction(actions)||{};
-  var lock=worst===0?"HOLD":worst===1?"WATCH":"GO";
-  var reason=lock==="HOLD"?"หยุด action ใหญ่ก่อน เพราะมี signal หรือ data guard เสี่ยง":lock==="WATCH"?"เดินงานได้แบบเฝ้าระวัง รอข้อมูลสดให้ครบอีกชั้น":"สัญญาณหลักพร้อม ใช้ Action Command เป็นตัวนำ";
+  var lock=state.cacheFallback?"WATCH":worst===0?"HOLD":worst===1?"WATCH":"GO";
+  var reason=state.cacheFallback?"ใช้ข้อมูลล่าสุดที่เคยดีอยู่ ห้ามถือเป็น live จนกว่า QR/Beam กลับมา":lock==="HOLD"?"หยุด action ใหญ่ก่อน เพราะมี signal หรือ data guard เสี่ยง":lock==="WATCH"?"เดินงานได้แบบเฝ้าระวัง รอข้อมูลสดให้ครบอีกชั้น":"สัญญาณหลักพร้อม ใช้ Action Command เป็นตัวนำ";
   if(phase==="phase2"&&(d.count||0)<=0)reason="Live Ops ยังรอ traffic จริงจากหน้างาน";
   setText("missionLock","DAY "+state.control.day+" · "+(phase==="phase1"?"PHASE 1 READY":"PHASE 2 LIVE")+" · "+lock);
   setText("missionReason",top.title?reason+" · focus: "+top.title:reason);
@@ -1737,6 +1786,7 @@ function normalizeAiLenses(raw,fallback){
   };
 }
 function aiConfidence(d,sales,ads,actions){
+  if(state.cacheFallback)return "LOW · LAST GOOD ไม่ใช่ live";
   var requiredRisk=sourceState("qr")==="bad"||sourceState("sales")==="bad";
   if(requiredRisk)return "LOW · สัญญาณหลักเสี่ยง";
   if(!(d.count||0))return "LOW · รอข้อมูลจริง";
