@@ -1419,6 +1419,30 @@ function pad(n){return String(n).padStart(2,"0")}
 function setText(id,v){var el=$(id);if(el)el.textContent=v}
 function baht(n){n=Number(n)||0;if(n>=1000000)return "฿"+(n/1000000).toFixed(2)+"M";if(n>=1000)return "฿"+(n/1000).toFixed(1)+"k";return "฿"+fmt(n)}
 function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
+function hashDashboardKey(){
+  if(!location.hash)return "";
+  var m=location.hash.match(/key=([^&]+)/);
+  return m?decodeURIComponent(m[1]):"";
+}
+function dashboardKey(){
+  var saved="";
+  try{saved=sessionStorage.getItem("rdfair_gate")||""}catch(e){}
+  return saved||hashDashboardKey()||(!CONFIG.gate.on?CONFIG.gate.key:"");
+}
+function appendQuery(url,params){
+  var u=new URL(url,location.href);
+  Object.keys(params||{}).forEach(function(k){
+    var v=params[k];
+    if(v!=null&&v!=="")u.searchParams.set(k,v);
+  });
+  return u.toString();
+}
+function dashboardHeaders(headers){
+  headers=headers||{};
+  var key=dashboardKey();
+  if(key)headers["x-dashboard-key"]=key;
+  return headers;
+}
 function fetchJson(url,timeoutMs,init){
   timeoutMs=timeoutMs||CONFIG.requestTimeoutMs;
   init=init||{};
@@ -1928,8 +1952,7 @@ function normalizeAds(raw){
 function loadAds(d){
   var embedded=normalizeAds(d&&d.ads);
   if(!CONFIG.adsEndpoint){markSource("ads",false,"read-only / รอเชื่อม");return Promise.resolve(embedded)}
-  var joiner=CONFIG.adsEndpoint.indexOf("?")>=0?"&":"?";
-  return fetchJson(CONFIG.adsEndpoint+joiner+"range=today&t="+Date.now(),CONFIG.requestTimeoutMs)
+  return fetchJson(appendQuery(CONFIG.adsEndpoint,{range:"today",t:Date.now(),key:dashboardKey()}),CONFIG.requestTimeoutMs)
     .then(function(s){
       var normalized=normalizeAds(s), spend=platformSpend(normalized);
       markSource("ads",true,spend>0?"สด":"สด / รอ official connector",s&&s.__responseMs);
@@ -2531,7 +2554,7 @@ function loadAiLenses(d,mo,sales,ads,actions){
   };
   return fetchJson(CONFIG.aiEndpoint,CONFIG.requestTimeoutMs,{
     method:"POST",
-    headers:{"content-type":"application/json"},
+    headers:dashboardHeaders({"content-type":"application/json"}),
     body:JSON.stringify(payload)
   })
     .then(function(raw){markSource("ai",true,"live AI lens",raw&&raw.__responseMs);return normalizeAiLenses(raw,fallback)})
