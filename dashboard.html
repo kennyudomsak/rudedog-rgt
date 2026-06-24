@@ -181,6 +181,11 @@
   .quality-cell b{display:block;color:var(--text);font-size:16px;font-weight:950;line-height:1.1}
   .quality-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;margin-top:3px;line-height:1.25}
   .signal-note{margin-top:8px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35}
+  .control-lock{margin-top:9px;border:1px solid rgba(57,226,107,.22);border-radius:10px;background:rgba(57,226,107,.07);padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .lock-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.24);padding:9px;min-height:68px}
+  .lock-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.05em;margin-bottom:4px}
+  .lock-cell b{display:block;color:var(--text);font-size:14px;font-weight:950;line-height:1.18}
+  .lock-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;margin-top:4px;line-height:1.25}
   .command-hero{border:1px solid var(--line-cyan);border-radius:10px;background:linear-gradient(135deg,rgba(22,205,236,.12),rgba(43,132,255,.05));padding:15px;margin-bottom:12px}
   .command-hero small{display:block;color:var(--muted);font-weight:900;letter-spacing:.08em;margin-bottom:7px}
   .command-hero b{display:block;font-size:28px;line-height:1.12;font-weight:950;color:var(--text)}
@@ -714,6 +719,11 @@
   .quality-cell b{color:#172238}
   .quality-cell small{color:#63748c}
   .quality-cell span{color:#8b9bb1}
+  .control-lock{border-color:rgba(22,184,107,.20);background:#edfdf4}
+  .lock-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.68)}
+  .lock-cell b{color:#172238}
+  .lock-cell small{color:#168a54}
+  .lock-cell span{color:#63748c}
   .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
   .command-hero{
     border-color:rgba(24,135,232,.20);
@@ -776,7 +786,7 @@
     .status-card,.timer-card{height:66px}
     .kpi{grid-template-columns:56px minmax(0,1fr)}
     .kpi h3{font-size:19px}
-    .mission-body,.ai-consensus{grid-template-columns:1fr}
+    .mission-body,.ai-consensus,.control-lock{grid-template-columns:1fr}
     .mission-lock{display:block}
     .mission-badge{display:inline-block;margin-top:10px}
     .ai-consensus div{border-right:0;border-bottom:1px solid rgba(112,139,170,.14);padding-right:0;padding-bottom:8px}
@@ -927,6 +937,11 @@
               <div class="quality-cell"><small>REFRESH ADVICE</small><b>15 วิ</b><span>ใช้เมื่อสัญญาณนิ่ง</span></div>
             </div>
             <div class="signal-note" id="signalNote">ใช้ดูความสดของข้อมูลและสัญญาณติดดับก่อนสั่ง action หน้างาน</div>
+            <div class="control-lock" id="controlSafetyLock">
+              <div class="lock-cell"><small>CONTROL SAFETY LOCK</small><b>No ad mutation</b><span>ดู Meta/TikTok ได้เท่านั้น ไม่ปรับงบหรือแคมเปญ</span></div>
+              <div class="lock-cell"><small>AI APPROVAL LOCK</small><b>Human confirms</b><span>Codex/Claude แนะนำได้ แต่คนคุมงานเป็นคนสั่งจริง</span></div>
+              <div class="lock-cell"><small>DATA TRUST LOCK</small><b>Live or Last-good</b><span>ถ้าเป็น LAST GOOD ห้ามตีความเป็นข้อมูล live</span></div>
+            </div>
           </div>
           <div class="command-hero">
             <small>คำสั่งหลักตอนนี้</small>
