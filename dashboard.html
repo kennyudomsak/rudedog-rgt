@@ -93,6 +93,32 @@
   .split-row div{text-align:center}
   .split-row .divider{height:48px;background:var(--line)}
 
+  .sales-panel{margin-bottom:14px;border-color:rgba(255,181,30,.64);box-shadow:inset 0 0 42px rgba(255,181,30,.045),0 14px 50px rgba(0,0,0,.34)}
+  .sales-headline{display:flex;align-items:center;gap:10px}
+  .sales-live{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:13px;font-weight:900}
+  .sales-live i{font-size:18px;color:var(--gold)}
+  .sales-kpis{display:grid;grid-template-columns:1.1fr .9fr .9fr .9fr 1.2fr;gap:10px;padding:12px 14px}
+  .sale-stat{min-height:88px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(180deg,#101922,#071017);padding:12px;display:flex;flex-direction:column;justify-content:space-between}
+  .sale-stat small{color:var(--muted);font-size:12px;font-weight:900;letter-spacing:.04em}
+  .sale-stat b{font-size:28px;line-height:1;font-weight:950;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sale-stat.gold{border-color:rgba(255,181,30,.55)}
+  .sale-stat.gold b{color:var(--gold)}
+  .sale-stat.cyan{border-color:var(--line-cyan)}
+  .sale-stat.cyan b{color:var(--cyan)}
+  .sales-body{display:grid;grid-template-columns:minmax(420px,1.45fr) minmax(240px,.8fr) minmax(280px,.95fr);gap:12px;padding:0 14px 14px}
+  .sales-block{border:1px solid var(--line);border-radius:8px;background:rgba(5,10,14,.52);min-height:220px;overflow:hidden}
+  .sales-block h3{margin:0;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px;font-weight:950;color:var(--muted);display:flex;align-items:center;justify-content:space-between}
+  .sales-block h3 span{color:var(--text)}
+  .sales-chart{height:220px;padding:12px}
+  .sales-chart svg{width:100%;height:100%;display:block}
+  .sale-bar{display:grid;grid-template-columns:58px 1fr 58px;gap:8px;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.055)}
+  .sale-bar:last-child{border-bottom:0}
+  .sale-bar label{font-size:13px;font-weight:950;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sale-track{height:20px;background:#17232b;border-radius:3px;overflow:hidden}
+  .sale-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),rgba(255,181,30,.42));transition:width .7s ease}
+  .sale-bar em{font-style:normal;text-align:right;color:var(--muted);font-size:12px;font-weight:900}
+  .sale-empty{color:var(--dim);font-weight:850;text-align:center;padding:48px 12px;line-height:1.5}
+
   .grid{display:grid;grid-template-columns:minmax(520px,1.65fr) minmax(320px,.88fr) minmax(340px,1.02fr);grid-template-areas:"left channels signals" "left heat heat";gap:14px;align-items:stretch}
   .left-stack{display:grid;gap:14px}
   .left-stack{grid-area:left}
@@ -208,6 +234,9 @@
     .top{grid-template-columns:1fr 190px 230px}
     .date-card{display:none}
     .kpis{grid-template-columns:repeat(3,1fr)}
+    .sales-kpis{grid-template-columns:repeat(3,1fr)}
+    .sales-body{grid-template-columns:1fr 1fr}
+    .sales-chart-card{grid-column:span 2}
     .grid{grid-template-columns:1fr;grid-template-areas:"left" "channels" "signals" "heat"}
     .bottom-grid{grid-template-columns:1fr 1fr}
     .suite-grid{grid-template-columns:repeat(2,1fr)}
@@ -226,6 +255,9 @@
     .brand p{font-size:13px}
     .dogmark{width:56px;height:50px}
     .kpis{grid-template-columns:1fr}
+    .sales-kpis,.sales-body{grid-template-columns:1fr}
+    .sales-chart-card{grid-column:span 1}
+    .sale-stat b{font-size:24px}
     .kpi{min-height:108px}
     .grid,.bottom-grid{grid-template-columns:1fr}
     .chart-wrap{height:250px}
@@ -257,6 +289,7 @@
       <a class="active" href="#overview"><i class="bi bi-speedometer2"></i><span>ภาพรวม</span></a>
       <a href="#traffic"><i class="bi bi-bar-chart-line-fill"></i><span>ทราฟฟิก</span></a>
       <a href="#channels"><i class="bi bi-card-checklist"></i><span>ลงทะเบียน</span></a>
+      <a href="#sales"><i class="bi bi-cash-coin"></i><span>ยอดขาย</span></a>
       <a href="#signals"><i class="bi bi-siren-fill"></i><span>สัญญาณ</span></a>
       <a href="#products"><i class="bi bi-bag"></i><span>สินค้า</span></a>
       <a href="#heat"><i class="bi bi-grid-3x3-gap"></i><span>รายงาน</span></a>
@@ -308,6 +341,34 @@
         <div class="ico"><i class="bi bi-door-open"></i></div>
         <div><h3>Door vs In-Event</h3><div class="split-row"><div><div class="num" id="kDoor">—</div><div class="sub">DOOR</div></div><div class="divider"></div><div><div class="num" id="kIn">—</div><div class="sub">IN-EVENT</div></div></div></div>
       </article>
+    </section>
+
+    <section class="panel sales-panel" id="sales">
+      <div class="panel-head">
+        <div class="sales-headline"><div class="panel-title">BEAM SALES MOVEMENT <small>(ยอดขาย / ไซซ์ / สินค้า)</small></div></div>
+        <div class="sales-live"><i class="bi bi-broadcast-pin"></i><span id="saleConn">รอเชื่อม Beam</span></div>
+      </div>
+      <div class="sales-kpis">
+        <div class="sale-stat gold"><small>ยอดรับชำระวันนี้</small><b id="salePaid">—</b></div>
+        <div class="sale-stat"><small>ยอด 15 นาทีล่าสุด</small><b id="saleLast15">—</b></div>
+        <div class="sale-stat"><small>จำนวนออเดอร์วันนี้</small><b id="saleOrders">—</b></div>
+        <div class="sale-stat cyan"><small>Top size</small><b id="saleTopSize">—</b></div>
+        <div class="sale-stat cyan"><small>Top SKU / สินค้า</small><b id="saleTopSku">—</b></div>
+      </div>
+      <div class="sales-body">
+        <div class="sales-block sales-chart-card">
+          <h3><span>กราฟยอดขายทุก 15 นาที</span><small id="saleUpdated">—</small></h3>
+          <div class="sales-chart" id="salesChart"></div>
+        </div>
+        <div class="sales-block">
+          <h3><span>ไซซ์ที่ขายออก</span><small>qty</small></h3>
+          <div id="salesSizeBars"></div>
+        </div>
+        <div class="sales-block">
+          <h3><span>สินค้าที่ขายออก</span><small>amount</small></h3>
+          <div id="salesProductRanks"></div>
+        </div>
+      </div>
     </section>
 
     <section class="grid">
@@ -426,6 +487,7 @@
 <script>
 var CONFIG={
   endpoint:"https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
+  salesEndpoint:"",
   refreshMs:15000,
   gate:{on:true,key:"rdfair26"}
 };
@@ -436,6 +498,7 @@ function pc(n){return Math.round((Number(n)||0)*100)+"%"}
 function pad(n){return String(n).padStart(2,"0")}
 function setText(id,v){var el=$(id);if(el)el.textContent=v}
 function baht(n){n=Number(n)||0;if(n>=1000000)return "฿"+(n/1000000).toFixed(2)+"M";if(n>=1000)return "฿"+(n/1000).toFixed(1)+"k";return "฿"+fmt(n)}
+function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
 var LABEL={
   source:{door:"DOOR\n(หน้างาน)",table:"TABLE\n(บูธ/กิจกรรม)",poster:"POSTER\n(สื่อหน้างาน)",other:"OTHERS\n(อื่นๆ)"},
   channel:{tiktok:"TikTok",facebook:"Facebook",signage:"ป้าย/หน้าร้าน",wom_other:"เพื่อนชวน/อื่นๆ",codex_test:"Codex test",other:"ไม่ระบุ"},
@@ -460,13 +523,20 @@ function calcMomentum(perMin){
   var pct=prev>0?Math.round(diff/prev*100):(last>0?100:0);
   return{roll:r,last:last,prev:prev,diff:diff,pct:pct};
 }
+function pageParam(name){
+  var qs=new URLSearchParams(location.search);
+  if(qs.get(name)!=null)return qs.get(name);
+  var hash=(location.hash||"").replace(/^#/,"");
+  return new URLSearchParams(hash).get(name);
+}
 function tick(){
-  if(new URLSearchParams(location.search).get("demo")==="1"){
+  if(pageParam("demo")==="1"){
     var demo=demoData();
     state.data=demo;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(demo);return;
   }
   fetch(CONFIG.endpoint+"?stats=1&t="+Date.now(),{cache:"no-store"})
     .then(function(r){return r.json()})
+    .then(function(d){return loadSales(d).then(function(sales){d.sales=sales;return d})})
     .then(function(d){state.data=d;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(d)})
     .catch(function(){setLive(false);state.nextAt=Date.now()+state.refreshMs});
 }
@@ -489,6 +559,17 @@ function demoData(){
     provinceTop:[{name:"กรุงเทพมหานคร",n:5642},{name:"นนทบุรี",n:2341},{name:"สมุทรปราการ",n:1987},{name:"ชลบุรี",n:1752},{name:"ปทุมธานี",n:1245}],
     seg:{door:{n:3671,channel:{tiktok:1580,facebook:980,signage:760,wom_other:351},interest:{apparel:1180,bag:820,cap:640,perfume:560},style:{street:1500,sporty:900,minimal:780,boss:491},forwho:{self:1900,partner:730,family:620,gift:421},visit:{first:2620,loyal:990,unknown:61}},inEvent:{n:4189,channel:{tiktok:1740,facebook:1190,signage:800,wom_other:459},interest:{apparel:950,bag:961,cap:620,perfume:452},style:{street:1610,sporty:1030,minimal:870,boss:679},forwho:{self:2140,partner:860,family:730,gift:459},visit:{first:2920,loyal:1210,unknown:59}}},
     consent:{yes:8120,total:8742,rate:.929},score:{avg:82.4,max:100,n:8742},
+    sales:{
+      ok:true,source:"demo",updatedAt:now.toISOString(),
+      summary:{paidAmountToday:935400,paidOrdersToday:312,itemsToday:780,last15Amount:64200,last15Orders:18,last15Items:46,topSize:"L",topSku:"RD-TEE-BLK-L"},
+      timeline15m:[
+        {label:"10:00",amount:11800,orders:4,items:11},{label:"10:15",amount:22400,orders:7,items:18},{label:"10:30",amount:35100,orders:12,items:30},{label:"10:45",amount:28600,orders:9,items:21},
+        {label:"11:00",amount:42100,orders:14,items:34},{label:"11:15",amount:51900,orders:17,items:40},{label:"11:30",amount:63200,orders:21,items:52},{label:"11:45",amount:58400,orders:18,items:44},
+        {label:"12:00",amount:71300,orders:24,items:61},{label:"12:15",amount:64200,orders:18,items:46}
+      ],
+      bySize:[{label:"L",qty:184,amount:220800},{label:"XL",qty:158,amount:189600},{label:"M",qty:146,amount:175200},{label:"F",qty:112,amount:100800},{label:"S",qty:86,amount:103200}],
+      byProduct:[{label:"Basic Tee Black",sku:"RD-TEE-BLK-L",qty:122,amount:146400},{label:"Motion Bag",sku:"ACS-BAG-MOTION",qty:78,amount:202800},{label:"Cap Logo",sku:"RD-CAP-LOGO",qty:96,amount:105600},{label:"Perfume",sku:"RD-PERFUME",qty:64,amount:89600},{label:"Basic Tee White",sku:"RD-TEE-WHT-M",qty:83,amount:99600}]
+    },
     timeline:timeline,perMin:perMin
   };
 }
@@ -535,6 +616,7 @@ function render(d){
   setText("kRegRate",att.people?pc(total/Math.max(1,att.people)):"—");
   setText("kPaceAvg",avg15(d.timeline||[]));
   renderDoorSplit(d);
+  renderSales(d);
   renderTraffic(d,mo);
   renderChannels(d);
   renderProducts(d);
@@ -591,6 +673,118 @@ function renderProducts(d){
   if(!arr.length){$("productRanks").innerHTML='<div class="empty">ยังไม่มีข้อมูลสินค้า</div>';return}
   var max=arr[0].value||1,sum=arr.reduce(function(a,b){return a+b.value},0)||1;
   $("productRanks").innerHTML=arr.map(function(e,i){return '<div class="rank"><span class="rank-no">'+(i+1)+'</span><span class="rank-name">'+e.label+'</span><span class="rank-bar"><i style="width:'+(e.value/max*100).toFixed(1)+'%"></i></span><span class="rank-val">'+fmt(e.value)+' ('+Math.round(e.value/sum*100)+'%)</span></div>'}).join("");
+}
+function emptySales(){
+  return {
+    ok:false,status:"not_configured",source:"beam",updatedAt:null,
+    summary:{paidAmountToday:0,paidOrdersToday:0,itemsToday:0,last15Amount:0,last15Orders:0,last15Items:0,topSize:"—",topSku:"—"},
+    timeline15m:[],bySize:[],byProduct:[]
+  };
+}
+function salesRows(raw,labelKey){
+  if(!raw)return [];
+  if(!Array.isArray(raw)){
+    raw=Object.keys(raw).map(function(k){
+      var v=raw[k];
+      if(typeof v==="number")return{label:k,qty:v,amount:0};
+      v=v||{};v.label=v.label||v.name||v.sku||k;return v;
+    });
+  }
+  return raw.map(function(r){
+    r=r||{};
+    return {
+      label:String(r.label||r.name||r[labelKey]||r.sku||"—"),
+      sku:String(r.sku||r.code||""),
+      qty:Number(r.qty||r.quantity||r.items||r.count||0),
+      amount:Number(r.amount||r.paidAmount||r.revenue||r.total||0)
+    };
+  }).filter(function(r){return r.qty>0||r.amount>0}).sort(function(a,b){return (b.amount||b.qty)-(a.amount||a.qty)});
+}
+function normalizeSales(raw){
+  var out=emptySales();
+  var s=(raw&&raw.sales)||raw;
+  if(!s)return out;
+  var sum=s.summary||s.totals||s.today||{};
+  var timeline=s.timeline15m||s.buckets||s.intervals||s.timeline||[];
+  var sizes=salesRows(s.bySize||s.sizes||s.sizeMix,"size");
+  var products=salesRows(s.byProduct||s.products||s.skuMix||s.items,"product");
+  out.ok=!!(s.ok||s.status==="ok"||timeline.length||sizes.length||products.length||sum.paidAmountToday||sum.amount);
+  out.status=s.status||s.state||(out.ok?"ok":"empty");
+  out.source=s.source||"beam";
+  out.updatedAt=s.updatedAt||s.asOf||s.generatedAt||null;
+  out.timeline15m=timeline.map(function(b){
+    b=b||{};
+    return {
+      label:String(b.label||b.time||b.bucket||b.hhmm||""),
+      amount:Number(b.amount||b.paidAmount||b.revenue||b.total||0),
+      orders:Number(b.orders||b.orderCount||b.count||0),
+      items:Number(b.items||b.itemCount||b.qty||0)
+    };
+  }).filter(function(b){return b.amount>0||b.orders>0||b.items>0}).slice(-32);
+  out.bySize=sizes.slice(0,8);
+  out.byProduct=products.slice(0,8);
+  var last=out.timeline15m[out.timeline15m.length-1]||{};
+  var topSize=out.bySize[0]||{}, topProduct=out.byProduct[0]||{};
+  out.summary={
+    paidAmountToday:Number(sum.paidAmountToday||sum.paidAmount||sum.amount||s.paidAmountToday||0),
+    paidOrdersToday:Number(sum.paidOrdersToday||sum.orders||sum.orderCount||s.paidOrdersToday||0),
+    itemsToday:Number(sum.itemsToday||sum.items||sum.itemCount||s.itemsToday||0),
+    last15Amount:Number(sum.last15Amount||sum.last15||last.amount||0),
+    last15Orders:Number(sum.last15Orders||last.orders||0),
+    last15Items:Number(sum.last15Items||last.items||0),
+    topSize:String(sum.topSize||topSize.label||"—"),
+    topSku:String(sum.topSku||topProduct.sku||topProduct.label||"—")
+  };
+  return out;
+}
+function loadSales(d){
+  var embedded=normalizeSales(d&&d.sales);
+  if(!CONFIG.salesEndpoint)return Promise.resolve(embedded);
+  var joiner=CONFIG.salesEndpoint.indexOf("?")>=0?"&":"?";
+  return fetch(CONFIG.salesEndpoint+joiner+"range=today&t="+Date.now(),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("sales "+r.status);return r.json()})
+    .then(function(s){return normalizeSales(s)})
+    .catch(function(){return embedded});
+}
+function renderSales(d){
+  var sales=normalizeSales(d&&d.sales), sum=sales.summary||{};
+  var hasData=!!(sales.ok&&(sum.paidAmountToday||sum.paidOrdersToday||sales.timeline15m.length||sales.byProduct.length));
+  setText("saleConn",hasData?(sales.source==="demo"?"DEMO DATA":"Beam พร้อมใช้งาน"):(CONFIG.salesEndpoint?"รอรายการขาย":"รอใส่ Beam endpoint"));
+  $("saleConn").style.color=hasData?"var(--green)":"var(--gold)";
+  setText("salePaid",hasData?baht(sum.paidAmountToday):"—");
+  setText("saleLast15",hasData?baht(sum.last15Amount):"—");
+  setText("saleOrders",hasData?fmt(sum.paidOrdersToday):"—");
+  setText("saleTopSize",hasData?sum.topSize:"—");
+  setText("saleTopSku",hasData?sum.topSku:"—");
+  setText("saleUpdated",sales.updatedAt?new Date(sales.updatedAt).toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit",second:"2-digit"}):"ทุก 15 นาที");
+  renderSalesChart(sales);
+  renderSaleBars("salesSizeBars",sales.bySize,"qty",false);
+  renderSaleBars("salesProductRanks",sales.byProduct,"amount",true);
+}
+function renderSalesChart(sales){
+  var arr=(sales.timeline15m||[]).slice(-24);
+  if(!arr.length){$("salesChart").innerHTML='<div class="sale-empty">ยังไม่พบยอดขาย Beam<br>เมื่อ webhook เริ่มส่งข้อมูล กราฟ 15 นาทีจะขึ้นตรงนี้</div>';return}
+  var W=760,H=200,L=48,R=16,T=16,B=34;
+  var max=Math.max.apply(null,arr.map(function(x){return x.amount}).concat([1]));
+  var bw=Math.max(8,(W-L-R)/arr.length*.62), step=(W-L-R)/arr.length;
+  var html='', grid='';
+  for(var g=0;g<=4;g++){var yy=T+g*(H-T-B)/4;grid+='<line x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'" stroke="#1c2830"/><text x="'+(L-8)+'" y="'+(yy+4)+'" fill="#a7b2bd" font-size="11" text-anchor="end">'+baht(max*(4-g)/4).replace("฿","")+'</text>'}
+  arr.forEach(function(b,i){
+    var x=L+i*step+step*.19, h=b.amount/max*(H-T-B), y=H-B-h;
+    html+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+'" rx="3" fill="url(#saleGrad)"/>';
+    if(i%2===0||i===arr.length-1)html+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-10)+'" fill="#a7b2bd" font-size="11" text-anchor="middle">'+esc(b.label||"")+'</text>';
+  });
+  var last=arr[arr.length-1]||{};
+  $("salesChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'"><defs><linearGradient id="saleGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffb51e"/><stop offset="100%" stop-color="#ff2b3b" stop-opacity=".58"/></linearGradient></defs>'+grid+'<line x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'" stroke="#263743"/>'+html+'<text x="'+(W-R)+'" y="22" fill="#ffb51e" font-size="15" font-weight="950" text-anchor="end">ล่าสุด '+baht(last.amount||0)+' · '+fmt(last.orders||0)+' orders</text></svg>';
+}
+function renderSaleBars(id,arr,valueKey,isMoney){
+  arr=(arr||[]).slice(0,6);
+  if(!arr.length){$(id).innerHTML='<div class="sale-empty">รอข้อมูลขายจริง</div>';return}
+  var max=Math.max.apply(null,arr.map(function(x){return Number(x[valueKey])||0}).concat([1]));
+  $(id).innerHTML=arr.map(function(e){
+    var v=Number(e[valueKey])||0, label=e.sku?e.label+" · "+e.sku:e.label;
+    return '<div class="sale-bar"><label title="'+esc(label)+'">'+esc(e.label)+'</label><span class="sale-track"><i style="width:'+(v/max*100).toFixed(1)+'%"></i></span><em>'+esc(isMoney?baht(v):fmt(v))+'</em></div>';
+  }).join("");
 }
 function renderProvince(d){
   var arr=(d.provinceTop||[]).slice(0,5);
