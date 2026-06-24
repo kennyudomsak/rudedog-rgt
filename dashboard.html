@@ -131,6 +131,18 @@
   .mission-badge.go{color:var(--green);border-color:rgba(57,226,107,.30);background:rgba(57,226,107,.08)}
   .mission-badge.watch{color:var(--gold);border-color:rgba(255,181,30,.36);background:rgba(255,181,30,.08)}
   .mission-badge.hold{color:var(--red);border-color:rgba(255,43,59,.34);background:rgba(255,43,59,.08)}
+  .operator-brief-snapshot{margin:14px 14px 0;border:1px solid rgba(43,132,255,.22);border-radius:10px;background:rgba(43,132,255,.06);padding:11px;display:grid;gap:9px}
+  .brief-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .brief-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+  .brief-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+  .brief-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+  .brief-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.22);padding:9px;min-height:72px}
+  .brief-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;margin-bottom:5px}
+  .brief-cell b{display:block;color:var(--text);font-size:14px;font-weight:950;line-height:1.15}
+  .brief-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;line-height:1.3;margin-top:4px}
+  .brief-cell.good b{color:var(--green)}
+  .brief-cell.warn b{color:var(--gold)}
+  .brief-cell.bad b{color:var(--red)}
   .mission-switch{display:grid;gap:8px;margin-top:12px}
   .mission-buttons{display:flex;gap:7px;flex-wrap:wrap}
   .mission-buttons button{height:34px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted);font-size:12px;font-weight:950;padding:0 12px;cursor:pointer}
@@ -465,6 +477,7 @@
     .heat-grid{grid-template-columns:54px repeat(24,20px);overflow-x:auto}
     .signal-grid{grid-template-columns:1fr 1fr}
     .signal-quality{grid-template-columns:1fr}
+    .brief-grid{grid-template-columns:1fr 1fr}
     .recorder-grid{grid-template-columns:1fr}
     .freshness-grid{grid-template-columns:1fr 1fr}
     .confidence-grid{grid-template-columns:1fr 1fr}
@@ -779,6 +792,11 @@
   .mission-check i,.decision-row i{background:#e8f3ff;color:#1687e8}
   .mission-check.good i{background:#e7fbf1;color:#16b86b}
   .mission-check.bad i{background:#ffe8ec;color:#e74658}
+  .operator-brief-snapshot{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
+  .brief-head b,.brief-cell b{color:#172238}
+  .brief-head small,.brief-cell small{color:#63748c}
+  .brief-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+  .brief-cell span{color:#8b9bb1}
   .source-pill i,.sig-row i{background:#e8f3ff;color:#1687e8}
   .source-pill.good i{background:#e7fbf1;color:#16b86b}
   .source-pill.warn i{background:#fff6dc;color:#d78a00}
@@ -986,6 +1004,16 @@
       <div class="panel-head">
         <div class="panel-title">4-DAY CONTROL PANEL <small>(Phase 1/2 + live decision guard)</small></div>
         <div class="readonly-badge good"><i class="bi bi-lock-fill"></i> Human approval required</div>
+      </div>
+      <div class="operator-brief-snapshot" id="operatorBriefSnapshot">
+        <div class="brief-head"><small>OPERATOR BRIEF SNAPSHOT</small><b>WATCH · รอสัญญาณสด</b></div>
+        <div class="brief-grid">
+          <div class="brief-cell warn"><small>Status</small><b>WATCH</b><span>รอสัญญาณหลัก</span></div>
+          <div class="brief-cell warn"><small>Why</small><b>รอข้อมูล</b><span>ยังไม่มี action หน้างาน</span></div>
+          <div class="brief-cell warn"><small>First Team</small><b>FOCUS</b><span>รอระบบจัดลำดับ</span></div>
+          <div class="brief-cell warn"><small>Signal</small><b>QR WAIT</b><span>Beam WAIT</span></div>
+          <div class="brief-cell good"><small>Safety</small><b>LOCKED</b><span>No ad mutation</span></div>
+        </div>
       </div>
       <div class="mission-body">
         <div class="mission-core">
@@ -2210,6 +2238,31 @@ function checkRow(label,detail,status,metric,icon){
   var tag=status==="good"?"PASS":status==="bad"?"RISK":"WAIT";
   return '<div class="mission-check '+cls+'"><i class="bi '+esc(icon||"bi-check2-circle")+'"></i><div><b>'+esc(label)+'</b><small>'+esc(detail)+'</small></div><em>'+esc(metric||tag)+'</em></div>';
 }
+function briefCell(label,item){
+  item=item||{};
+  return '<div class="brief-cell '+esc(item.cls||"warn")+'"><small>'+esc(label)+'</small><b>'+esc(item.status||"WATCH")+'</b><span>'+esc(item.detail||"รอข้อมูล")+'</span></div>';
+}
+function renderOperatorBriefSnapshot(lock,reason,top,d,sales,ads){
+  var el=$("operatorBriefSnapshot");if(!el)return;
+  top=top||{};d=d||{};sales=sales||emptySales();ads=ads||emptyAds();
+  var governor=stabilityGovernor(), confidence=decisionConfidence();
+  var statusCls=lock==="GO"?"good":lock==="HOLD"?"bad":"warn";
+  var firstTeam=top.lane==="critical"?"CRITICAL":top.lane==="next"?"NEXT MOVE":"FOCUS";
+  var firstDetail=top.title||"รอระบบจัดลำดับ";
+  var signalDetail="QR "+signalLabel("qr")+" · Beam "+signalLabel("sales")+" · "+((governor.head||"WATCH").split(" · ")[0]);
+  var salesAmount=(sales.summary||{}).paidAmountToday||0;
+  var actionDetail=(d.count||0)?(fmt(d.count||0)+" scans · "+baht(salesAmount)):"รอ QR traffic จริง";
+  el.innerHTML=[
+    '<div class="brief-head"><small>OPERATOR BRIEF SNAPSHOT</small><b>'+esc(lock+" · "+(top.title||"รอ action"))+'</b></div>',
+    '<div class="brief-grid">',
+    briefCell("Status",{cls:statusCls,status:lock,detail:reason||"รอสัญญาณ"}),
+    briefCell("Why",{cls:statusCls,status:firstDetail,detail:actionDetail}),
+    briefCell("First Team",{cls:top.lane==="critical"?"bad":top.lane==="next"?"good":"warn",status:firstTeam,detail:top.body||"รอ action รอบถัดไป"}),
+    briefCell("Signal",{cls:confidence.overall==="HIGH"?"good":confidence.overall==="HOLD"?"bad":"warn",status:confidence.overall||"WATCH",detail:signalDetail}),
+    briefCell("Safety",{cls:"good",status:"LOCKED",detail:"No ad mutation · Human confirms"}),
+    '</div>'
+  ].join("");
+}
 function missionChecks(d,sales,ads){
   var total=d.count||0, bs=d.bySource||{};
   var tagged=((bs.door||{}).parties||0)+((bs.table||{}).parties||0)+((bs.poster||{}).parties||0);
@@ -2243,6 +2296,7 @@ function renderMissionControl(d,mo,sales,ads,actions){
   var lock=state.cacheFallback?"WATCH":worst===0?"HOLD":worst===1?"WATCH":"GO";
   var reason=state.cacheFallback?"ใช้ข้อมูลล่าสุดที่เคยดีอยู่ ห้ามถือเป็น live จนกว่า QR/Beam กลับมา":lock==="HOLD"?"หยุด action ใหญ่ก่อน เพราะมี signal หรือ data guard เสี่ยง":lock==="WATCH"?"เดินงานได้แบบเฝ้าระวัง รอข้อมูลสดให้ครบอีกชั้น":"สัญญาณหลักพร้อม ใช้ Action Command เป็นตัวนำ";
   if(phase==="phase2"&&(d.count||0)<=0)reason="Live Ops ยังรอ traffic จริงจากหน้างาน";
+  renderOperatorBriefSnapshot(lock,reason,top,d,sales,ads);
   setText("missionLock","DAY "+state.control.day+" · "+(phase==="phase1"?"PHASE 1 READY":"PHASE 2 LIVE")+" · "+lock);
   setText("missionReason",top.title?reason+" · focus: "+top.title:reason);
   $("missionBadge").textContent=lock;
