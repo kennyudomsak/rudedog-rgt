@@ -242,6 +242,18 @@
   .unlock-cell.good b{color:var(--green)}
   .unlock-cell.warn b{color:var(--gold)}
   .unlock-cell.bad b{color:var(--red)}
+  .incident-command{margin-top:9px;border:1px solid rgba(255,123,26,.28);border-radius:10px;background:rgba(255,123,26,.06);padding:10px;display:grid;gap:9px}
+  .incident-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .incident-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+  .incident-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+  .incident-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:8px}
+  .incident-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.22);padding:9px;min-height:76px}
+  .incident-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;margin-bottom:5px}
+  .incident-cell b{display:block;color:var(--text);font-size:14px;font-weight:950;line-height:1.15}
+  .incident-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;line-height:1.3;margin-top:4px}
+  .incident-cell.good b{color:var(--green)}
+  .incident-cell.warn b{color:var(--gold)}
+  .incident-cell.bad b{color:var(--red)}
   .stability-governor{margin-top:9px;border:1px solid rgba(22,205,236,.24);border-radius:8px;background:rgba(22,205,236,.06);padding:9px}
   .governor-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
   .governor-head small{color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
@@ -508,6 +520,7 @@
     .freshness-grid{grid-template-columns:1fr 1fr}
     .confidence-grid{grid-template-columns:1fr 1fr}
     .unlock-grid{grid-template-columns:1fr 1fr}
+    .incident-grid{grid-template-columns:1fr 1fr}
     .governor-grid{grid-template-columns:1fr 1fr}
     .panel-head{height:auto;min-height:52px;flex-wrap:wrap;padding:12px}
     .suite-grid{grid-template-columns:1fr}
@@ -859,6 +872,11 @@
   .unlock-head b,.unlock-cell b{color:#172238}
   .unlock-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
   .unlock-cell span{color:#8b9bb1}
+  .incident-command{border-color:rgba(255,139,44,.22);background:rgba(255,255,255,.58)}
+  .incident-head b,.incident-cell b{color:#172238}
+  .incident-head small,.incident-cell small{color:#63748c}
+  .incident-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+  .incident-cell span{color:#8b9bb1}
   .stability-governor{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
   .governor-head b,.governor-cell b{color:#172238}
   .governor-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
@@ -1150,6 +1168,15 @@
                 <div class="unlock-cell warn"><small>AI Lens</small><b>LOCAL</b><span>รอ live AI endpoint</span></div>
                 <div class="unlock-cell warn"><small>Endpoint Config</small><b>LOCKED</b><span>ยังไม่ตั้ง endpoint live</span></div>
                 <div class="unlock-cell good"><small>Safety</small><b>NO MUTATION</b><span>ไม่ส่งคำสั่งปรับแอด</span></div>
+              </div>
+            </div>
+            <div class="incident-command" id="incidentCommand">
+              <div class="incident-head"><small>INCIDENT COMMAND</small><b>60-sec escalation lane · standby</b></div>
+              <div class="incident-grid">
+                <div class="incident-cell warn"><small>Trigger</small><b>WATCH</b><span>รอ QR + Beam sample</span></div>
+                <div class="incident-cell good"><small>Owner</small><b>Ops Lead</b><span>คนคุมงานยืนยัน action</span></div>
+                <div class="incident-cell warn"><small>First 60s</small><b>Check signal</b><span>ดู QR/Beam/Network</span></div>
+                <div class="incident-cell good"><small>Stop Rule</small><b>No ad edits</b><span>Ads display-only</span></div>
               </div>
             </div>
             <div class="signal-note" id="signalNote">ใช้ดูความสดของข้อมูลและสัญญาณติดดับก่อนสั่ง action หน้างาน</div>
@@ -2238,6 +2265,71 @@ function renderConnectorUnlock(){
     '</div>'
   ].join("");
 }
+function incidentCell(label,item){
+  item=item||{};
+  return '<div class="incident-cell '+esc(item.cls||"warn")+'"><small>'+esc(label)+'</small><b>'+esc(item.status||"WATCH")+'</b><span>'+esc(item.detail||"รอข้อมูล")+'</span></div>';
+}
+function incidentCommand(){
+  var q=qualityStats(["qr","sales"]);
+  var qr=sourceState("qr"), sales=sourceState("sales"), ads=sourceState("ads"), ai=sourceState("ai");
+  var trigger={cls:"good",status:"CLEAR",detail:"QR + Beam ไม่มี incident ที่ต้อง escalate"};
+  var owner={cls:"good",status:"Ops Lead",detail:"คุมจังหวะผ่าน Action Command"};
+  var first={cls:"good",status:"Keep LIVE",detail:"ใช้ refresh "+Math.round(state.refreshMs/1000)+" วิ และบันทึก timeline"};
+  var stop={cls:"good",status:"Human lock",detail:"No ad edits · AI recommend only"};
+  var head="CLEAR · monitor normal";
+
+  if(state.cacheFallback){
+    head="WATCH · ใช้ last-good";
+    trigger={cls:"warn",status:"LAST GOOD",detail:"ข้อมูลสดหลุด ใช้ snapshot ล่าสุดแบบระวัง"};
+    owner={cls:"warn",status:"Ops + CTO",detail:"เช็ก endpoint และ venue network"};
+    first={cls:"warn",status:"Verify live",detail:"ทดสอบ QR/Beam sample ใหม่ก่อนสั่ง action หนัก"};
+  }else if(qr==="bad"||sales==="bad"){
+    head="HOLD · endpoint incident";
+    trigger={cls:"bad",status:qr==="bad"?"QR RISK":"BEAM RISK",detail:"สัญญาณหลัก fail ต้องแก้ก่อนใช้ตัวเลขนำ"};
+    owner={cls:"bad",status:qr==="bad"?"Door Lead + CTO":"Cashier Lead + CTO",detail:qr==="bad"?"ทดสอบ QR/Apps Script/เน็ตจุดสแกน":"ทดสอบ Beam bridge/cashier/payment flow"};
+    first={cls:"bad",status:"60-sec check",detail:"หยุด action หนัก ตรวจ live sample แล้วค่อยปลด HOLD"};
+  }else if(q.samples>=2&&(q.flaps>0||q.slowSamples>0||q.score<75)){
+    head="WATCH · signal unstable";
+    trigger={cls:"warn",status:q.flaps>0?"FLAPPING":"SLOW",detail:"สัญญาณยังผ่านแต่ไม่นิ่งพอสำหรับ action หนัก"};
+    owner={cls:"warn",status:"Ops + Network",detail:"ลด refresh pressure และดู venue network"};
+    first={cls:"warn",status:q.advice||"1 นาที",detail:"ใช้ action แบบย้อนกลับได้จนกว่าสัญญาณนิ่ง"};
+  }else if(!state.sources.qr.lastOk||!state.sources.sales.lastOk){
+    head="WATCH · wait first sample";
+    trigger={cls:"warn",status:"WAIT SAMPLE",detail:"ยังรอ QR หรือ Beam sample รอบแรก"};
+    owner={cls:"warn",status:"Ops Lead",detail:"ให้ทีม test scan + test sale ก่อนเปิดใช้จริง"};
+    first={cls:"warn",status:"Test signal",detail:"ทำ QR test และ Beam test แล้วดู Signal Flight Recorder"};
+  }else if(CONFIG.adsEndpoint&&ads!=="good"){
+    head="WATCH · Ads display verifying";
+    trigger={cls:"warn",status:"ADS VERIFY",detail:"Ads endpoint ตั้งแล้วแต่ยังไม่มี sample ผ่าน"};
+    owner={cls:"warn",status:"Marketing + CTO",detail:"ตรวจ read-only Worker โดยไม่ปรับ campaign"};
+    first={cls:"warn",status:"Read-only check",detail:"ดู health/key/response shape ห้ามแก้แอดจาก dashboard"};
+  }else if(CONFIG.aiEndpoint&&ai!=="good"){
+    head="WATCH · AI lens verifying";
+    trigger={cls:"warn",status:"AI VERIFY",detail:"AI endpoint ตั้งแล้วแต่ยังไม่ตอบสด"};
+    owner={cls:"warn",status:"Ops + CTO",detail:"ใช้ local rule lens ไปก่อน"};
+    first={cls:"warn",status:"Fallback AI",detail:"Codex/Claude local lens ยังใช้ประกอบการตัดสินใจได้"};
+  }
+
+  return {
+    head:head,
+    cells:[
+      ["Trigger",trigger],
+      ["Owner",owner],
+      ["First 60s",first],
+      ["Stop Rule",stop]
+    ]
+  };
+}
+function renderIncidentCommand(){
+  var el=$("incidentCommand");if(!el)return;
+  var inc=incidentCommand();
+  el.innerHTML=[
+    '<div class="incident-head"><small>INCIDENT COMMAND</small><b>'+esc(inc.head)+'</b></div>',
+    '<div class="incident-grid">',
+    inc.cells.map(function(row){return incidentCell(row[0],row[1])}).join(""),
+    '</div>'
+  ].join("");
+}
 function renderSignalGuard(){
   if(!$("signalGuard"))return;
   signalChip("sigQr","qr","QR Stats");
@@ -2250,6 +2342,7 @@ function renderSignalGuard(){
   renderFreshnessLedger();
   renderDecisionConfidence();
   renderConnectorUnlock();
+  renderIncidentCommand();
   var q=qualityStats(["qr","sales"]);
   var required=["qr","sales"], risky=required.filter(function(n){return sourceState(n)==="bad"});
   var waiting=required.filter(function(n){return !state.sources[n].lastOk});
