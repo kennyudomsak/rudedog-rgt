@@ -307,12 +307,24 @@
   .readonly-badge.good{color:var(--green);border-color:rgba(57,226,107,.28)}
 
   .ads-panel{margin:0 0 14px}
-  .ads-body{display:grid;grid-template-columns:minmax(420px,1.2fr) minmax(320px,.95fr);gap:12px;padding:14px}
-  .ads-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 14px 0}
-  .ad-stat{min-height:78px;border:1px solid var(--line);border-radius:8px;background:rgba(5,10,14,.38);padding:11px;display:flex;flex-direction:column;justify-content:space-between}
-  .ad-stat small{color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.04em}
-  .ad-stat b{color:var(--text);font-size:23px;line-height:1;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .ads-platforms{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+	  .ads-body{display:grid;grid-template-columns:minmax(420px,1.2fr) minmax(320px,.95fr);gap:12px;padding:14px}
+	  .ads-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 14px 0}
+	  .ad-stat{min-height:78px;border:1px solid var(--line);border-radius:8px;background:rgba(5,10,14,.38);padding:11px;display:flex;flex-direction:column;justify-content:space-between}
+	  .ad-stat small{color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.04em}
+	  .ad-stat b{color:var(--text);font-size:23px;line-height:1;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+	  .ads-decision{margin:10px 14px 0;border:1px solid rgba(255,181,30,.24);border-radius:10px;background:rgba(255,181,30,.06);padding:11px;display:grid;gap:9px}
+	  .ads-decision-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+	  .ads-decision-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+	  .ads-decision-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+	  .ads-decision-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+	  .ads-decision-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.22);padding:9px;min-height:74px}
+	  .ads-decision-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;margin-bottom:5px}
+	  .ads-decision-cell b{display:block;color:var(--text);font-size:14px;font-weight:950;line-height:1.15}
+	  .ads-decision-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;line-height:1.3;margin-top:4px}
+	  .ads-decision-cell.good b{color:var(--green)}
+	  .ads-decision-cell.warn b{color:var(--gold)}
+	  .ads-decision-cell.bad b{color:var(--red)}
+	  .ads-platforms{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .ad-platform,.ad-table{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);overflow:hidden}
   .ad-platform h3,.ad-table h3{margin:0;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px;font-weight:950;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:10px}
   .ad-platform h3 small,.ad-table h3 small{color:var(--muted);font-size:11px;font-weight:900}
@@ -445,8 +457,8 @@
     .command-grid{grid-template-columns:1fr}
     .sales-kpis{grid-template-columns:repeat(3,1fr)}
     .sales-body{grid-template-columns:1fr 1fr}
-    .ads-body,.ads-platforms{grid-template-columns:1fr}
-    .ads-summary{grid-template-columns:repeat(2,1fr)}
+	    .ads-body,.ads-platforms{grid-template-columns:1fr}
+	    .ads-summary{grid-template-columns:repeat(2,1fr)}
     .sales-chart-card{grid-column:span 2}
     .grid{grid-template-columns:1fr;grid-template-areas:"left" "channels" "signals" "heat"}
     .bottom-grid{grid-template-columns:1fr 1fr}
@@ -466,7 +478,8 @@
     .brand p{font-size:13px}
     .dogmark{width:56px;height:50px}
     .kpis{grid-template-columns:1fr}
-    .source-strip,.action-lanes,.ai-compare,.ads-summary{grid-template-columns:1fr}
+	    .source-strip,.action-lanes,.ai-compare,.ads-summary{grid-template-columns:1fr}
+	    .ads-decision-grid{grid-template-columns:1fr 1fr}
     .sales-kpis,.sales-body{grid-template-columns:1fr}
     .sales-chart-card{grid-column:span 1}
     .sale-stat b{font-size:24px}
@@ -842,8 +855,13 @@
   .lock-cell b{color:#172238}
   .lock-cell small{color:#168a54}
   .lock-cell span{color:#63748c}
-  .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
-  .operator-timeline{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
+	  .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
+	  .ads-decision{border-color:rgba(255,181,30,.22);background:rgba(255,255,255,.58)}
+	  .ads-decision-head b,.ads-decision-cell b{color:#172238}
+	  .ads-decision-head small,.ads-decision-cell small{color:#63748c}
+	  .ads-decision-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+	  .ads-decision-cell span{color:#8b9bb1}
+	  .operator-timeline{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
   .timeline-head b,.timeline-row b{color:#172238}
   .timeline-head small,.timeline-row time{color:#63748c}
   .timeline-row{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
@@ -1195,13 +1213,22 @@
         <div class="panel-title">ADS WATCH <small>(Meta / TikTok display)</small></div>
         <div class="readonly-badge"><i class="bi bi-eye-fill"></i> Read-only · ไม่ยิงคำสั่งปรับแอด</div>
       </div>
-      <div class="ads-summary">
-        <div class="ad-stat"><small>Ad spend วันนี้</small><b id="adsSpend">—</b></div>
-        <div class="ad-stat"><small>ยอดขาย Beam วันนี้</small><b id="adsRevenue">—</b></div>
-        <div class="ad-stat"><small>Ad cost / revenue</small><b id="adsCostPct">—</b></div>
-        <div class="ad-stat"><small>Connector</small><b id="adsConn">รอเชื่อม</b></div>
-      </div>
-      <div class="ads-body">
+	      <div class="ads-summary">
+	        <div class="ad-stat"><small>Ad spend วันนี้</small><b id="adsSpend">—</b></div>
+	        <div class="ad-stat"><small>ยอดขาย Beam วันนี้</small><b id="adsRevenue">—</b></div>
+	        <div class="ad-stat"><small>Ad cost / revenue</small><b id="adsCostPct">—</b></div>
+	        <div class="ad-stat"><small>Connector</small><b id="adsConn">รอเชื่อม</b></div>
+	      </div>
+	      <div class="ads-decision" id="adsDecisionSupport">
+	        <div class="ads-decision-head"><small>ADS DECISION SUPPORT</small><b>WAIT · รอ official connector</b></div>
+	        <div class="ads-decision-grid">
+	          <div class="ads-decision-cell warn"><small>Mode</small><b>WAIT CONNECTOR</b><span>ยังไม่ใช้เป็น live ads truth</span></div>
+	          <div class="ads-decision-cell warn"><small>Decision</small><b>ดู QR/Beam ก่อน</b><span>รอ Meta/TikTok read-only</span></div>
+	          <div class="ads-decision-cell warn"><small>Spend vs Beam</small><b>—</b><span>ยังไม่มีค่าเทียบ</span></div>
+	          <div class="ads-decision-cell good"><small>Guard</small><b>DISPLAY ONLY</b><span>No ad mutation</span></div>
+	        </div>
+	      </div>
+	      <div class="ads-body">
         <div class="ads-platforms">
           <div class="ad-platform">
             <h3><span><i class="bi bi-facebook"></i> Meta</span><small id="metaStatus">display only</small></h3>
@@ -2484,11 +2511,59 @@ function renderActionCommand(d,mo,sales,ads,actions){
     setText("aiConn",lenses.ok?"live AI lens":"local rule lens");
     setText("aiNote",lenses.note||"AI lens พร้อมใช้งาน");
   });
-}
-function adMetric(label,value){return '<div class="ad-metric"><small>'+esc(label)+'</small><b>'+esc(value)+'</b></div>'}
-function renderPlatformMetrics(id,p){
-  $(id).innerHTML=[
-    adMetric("Spend",baht(p.spend)),
+	}
+	function adMetric(label,value){return '<div class="ad-metric"><small>'+esc(label)+'</small><b>'+esc(value)+'</b></div>'}
+	function adsDecisionCell(label,item){
+	  item=item||{};
+	  return '<div class="ads-decision-cell '+esc(item.cls||"warn")+'"><small>'+esc(label)+'</small><b>'+esc(item.status||"WATCH")+'</b><span>'+esc(item.detail||"รอข้อมูล")+'</span></div>';
+	}
+	function platformLeader(ads){
+	  var meta=(ads&&ads.meta)||{}, tk=(ads&&ads.tiktok)||{};
+	  if((meta.spend||0)<=0&&(tk.spend||0)<=0)return "รอ spend";
+	  return (meta.spend||0)>=(tk.spend||0)?"Meta นำ spend":"TikTok นำ spend";
+	}
+	function adsDecisionSupport(ads,sales){
+	  ads=ads||emptyAds();sales=sales||emptySales();
+	  var spend=platformSpend(ads), revenue=(sales.summary||{}).paidAmountToday||0, pct=revenue?spend/revenue:0;
+	  var configured=!!CONFIG.adsEndpoint, live=!!(configured&&ads.ok&&spend>=0);
+	  var mode={cls:"warn",status:"WAIT CONNECTOR",detail:"รอ official Meta/TikTok read-only"};
+	  var decision={cls:"warn",status:"ดู QR/Beam ก่อน",detail:"ยังไม่ใช้ Ads เป็น live truth"};
+	  var compare={cls:"warn",status:"—",detail:"ยังไม่มีค่าเทียบ"};
+	  if(live&&spend>0&&!revenue){
+	    mode={cls:"bad",status:"WATCH SPEND",detail:"Ads มี spend แต่ Beam ยังไม่ยืนยันยอด"};
+	    decision={cls:"bad",status:"หยุดขยายแอด",detail:"ตรวจ cashier/stock/QR ก่อนตัดสินใจ"};
+	    compare={cls:"bad",status:baht(spend)+" / ฿0",detail:platformLeader(ads)};
+	  }else if(live&&spend>0&&pct>.35){
+	    mode={cls:"warn",status:"WATCH COST",detail:"Ad cost / revenue สูง"};
+	    decision={cls:"warn",status:"ใช้ action reversible",detail:"ดูไซซ์/สินค้า/จุดสแกนก่อนเพิ่มแรง"};
+	    compare={cls:"warn",status:pc(pct),detail:baht(spend)+" spend · "+baht(revenue)+" Beam"};
+	  }else if(live&&spend>0){
+	    mode={cls:"good",status:"READ SIGNAL",detail:"ใช้ประกอบกับ QR/Beam ได้"};
+	    decision={cls:"good",status:"ดู campaign winners",detail:"ใช้เป็น display support เท่านั้น"};
+	    compare={cls:"good",status:pc(pct),detail:baht(spend)+" spend · "+baht(revenue)+" Beam"};
+	  }else if(configured){
+	    mode={cls:"warn",status:"WAIT SAMPLE",detail:"endpoint พร้อมแต่ยังไม่มี spend"};
+	    decision={cls:"warn",status:"รอ ads sample",detail:"ใช้ QR/Beam เป็น truth หลัก"};
+	    compare={cls:"warn",status:"฿0",detail:"รอ platform movement"};
+	  }
+	  return {mode:mode,decision:decision,compare:compare,guard:{cls:"good",status:"DISPLAY ONLY",detail:"No ad mutation · Human confirms"}};
+	}
+	function renderAdsDecisionSupport(ads,sales){
+	  var el=$("adsDecisionSupport");if(!el)return;
+	  var d=adsDecisionSupport(ads,sales);
+	  el.innerHTML=[
+	    '<div class="ads-decision-head"><small>ADS DECISION SUPPORT</small><b>'+esc(d.mode.status+" · "+d.decision.status)+'</b></div>',
+	    '<div class="ads-decision-grid">',
+	    adsDecisionCell("Mode",d.mode),
+	    adsDecisionCell("Decision",d.decision),
+	    adsDecisionCell("Spend vs Beam",d.compare),
+	    adsDecisionCell("Guard",d.guard),
+	    '</div>'
+	  ].join("");
+	}
+	function renderPlatformMetrics(id,p){
+	  $(id).innerHTML=[
+	    adMetric("Spend",baht(p.spend)),
     adMetric("Reach",fmt(p.reach)),
     adMetric("Clicks",fmt(p.clicks)),
     adMetric("Orders",fmt(p.orders)),
@@ -2496,10 +2571,11 @@ function renderPlatformMetrics(id,p){
     adMetric("ROAS",p.roas?p.roas.toFixed(1)+"x":"—")
   ].join("");
 }
-function renderAds(d){
-  var ads=normalizeAds(d&&d.ads), sales=normalizeSales(d&&d.sales), sum=sales.summary||{};
-  var spend=platformSpend(ads), revenue=sum.paidAmountToday||0, pct=revenue?spend/revenue:0;
-  setText("adsSpend",spend?baht(spend):"—");
+	function renderAds(d){
+	  var ads=normalizeAds(d&&d.ads), sales=normalizeSales(d&&d.sales), sum=sales.summary||{};
+	  var spend=platformSpend(ads), revenue=sum.paidAmountToday||0, pct=revenue?spend/revenue:0;
+	  renderAdsDecisionSupport(ads,sales);
+	  setText("adsSpend",spend?baht(spend):"—");
   setText("adsRevenue",revenue?baht(revenue):"—");
   setText("adsCostPct",spend&&revenue?pc(pct):"—");
   setText("adsConn",spend?(ads.source==="demo"?"DEMO":"พร้อมแสดง"):(CONFIG.adsEndpoint?"รอ official connector":"รอ official connector"));
