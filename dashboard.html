@@ -129,6 +129,22 @@
   .source-pill b{display:block;color:var(--text);font-size:13px}
   .source-pill.good i{background:rgba(57,226,107,.12);color:var(--green)}
   .source-pill.warn i{background:rgba(255,181,30,.13);color:var(--gold)}
+  .source-pill.bad i{background:rgba(255,43,59,.12);color:var(--red)}
+  .control-signal{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);padding:11px;margin-bottom:12px}
+  .signal-guard-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .signal-guard-head span{display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:950;letter-spacing:.08em}
+  .signal-guard-head i{color:var(--cyan);font-size:15px}
+  .signal-guard-head b{font-size:13px;font-weight:950;color:var(--green)}
+  .signal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .signal-chip{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02);padding:9px;min-height:78px;display:flex;flex-direction:column;gap:4px}
+  .signal-chip .topline{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .signal-chip strong{color:var(--text);font-size:13px;font-weight:950}
+  .signal-chip em{font-style:normal;border-radius:999px;padding:3px 7px;font-size:10px;font-weight:950;background:rgba(255,181,30,.12);color:var(--gold)}
+  .signal-chip.good em{background:rgba(57,226,107,.12);color:var(--green)}
+  .signal-chip.bad em{background:rgba(255,43,59,.12);color:var(--red)}
+  .signal-chip small{color:var(--muted);font-size:11px;font-weight:850;line-height:1.3}
+  .signal-chip .latency{color:var(--dim);font-size:10px;font-weight:900;letter-spacing:.04em}
+  .signal-note{margin-top:8px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35}
   .command-hero{border:1px solid var(--line-cyan);border-radius:10px;background:linear-gradient(135deg,rgba(22,205,236,.12),rgba(43,132,255,.05));padding:15px;margin-bottom:12px}
   .command-hero small{display:block;color:var(--muted);font-weight:900;letter-spacing:.08em;margin-bottom:7px}
   .command-hero b{display:block;font-size:28px;line-height:1.12;font-weight:950;color:var(--text)}
@@ -325,6 +341,7 @@
     .chart-wrap{height:250px}
     .province{grid-template-columns:1fr}
     .heat-grid{grid-template-columns:54px repeat(24,20px);overflow-x:auto}
+    .signal-grid{grid-template-columns:1fr 1fr}
     .panel-head{height:auto;min-height:52px;flex-wrap:wrap;padding:12px}
     .suite-grid{grid-template-columns:1fr}
     .suite-wide{grid-column:span 1}
@@ -622,6 +639,19 @@
   .source-pill i,.sig-row i{background:#e8f3ff;color:#1687e8}
   .source-pill.good i{background:#e7fbf1;color:#16b86b}
   .source-pill.warn i{background:#fff6dc;color:#d78a00}
+  .source-pill.bad i{background:#ffe8ec;color:#e74658}
+  .control-signal{
+    border-color:rgba(112,139,170,.18);
+    background:rgba(248,252,255,.74);
+  }
+  .signal-guard-head span,.signal-chip small,.signal-note{color:#63748c}
+  .signal-guard-head b{color:#16b86b}
+  .signal-chip{
+    border-color:rgba(112,139,170,.16);
+    background:rgba(255,255,255,.58);
+  }
+  .signal-chip strong{color:#172238}
+  .signal-chip .latency{color:#8b9bb1}
   .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
   .command-hero{
     border-color:rgba(24,135,232,.20);
@@ -778,6 +808,19 @@
             <div class="source-pill warn" id="srcQr"><i class="bi bi-qr-code-scan"></i><span><b>QR Gate</b><small>รอสัญญาณ</small></span></div>
             <div class="source-pill warn" id="srcBeam"><i class="bi bi-cash-coin"></i><span><b>Beam Sales</b><small>รอรายการขาย</small></span></div>
             <div class="source-pill warn" id="srcAds"><i class="bi bi-megaphone"></i><span><b>Ads Watch</b><small>display only</small></span></div>
+          </div>
+          <div class="control-signal" id="signalGuard">
+            <div class="signal-guard-head">
+              <span><i class="bi bi-broadcast-pin"></i> SIGNAL GUARD</span>
+              <b id="signalOverall">รอสัญญาณสด</b>
+            </div>
+            <div class="signal-grid">
+              <div class="signal-chip warn" id="sigQr"><div class="topline"><strong>QR Stats</strong><em>WAIT</em></div><small>รอสแกน/รอ Apps Script</small><span class="latency">—</span></div>
+              <div class="signal-chip warn" id="sigBeam"><div class="topline"><strong>Beam Sales</strong><em>WAIT</em></div><small>รอรายการขาย</small><span class="latency">—</span></div>
+              <div class="signal-chip warn" id="sigAds"><div class="topline"><strong>Ads Watch</strong><em>READ</em></div><small>display only</small><span class="latency">—</span></div>
+              <div class="signal-chip warn" id="sigAi"><div class="topline"><strong>AI Lens</strong><em>LOCAL</em></div><small>local rule lens</small><span class="latency">—</span></div>
+            </div>
+            <div class="signal-note" id="signalNote">ใช้ดูความสดของข้อมูลและสัญญาณติดดับก่อนสั่ง action หน้างาน</div>
           </div>
           <div class="command-hero">
             <small>คำสั่งหลักตอนนี้</small>
@@ -992,10 +1035,10 @@ var CONFIG={
 var state={
   data:null,lastOk:0,lastRenderAt:0,nextAt:0,timer:null,ticker:null,refreshMs:CONFIG.refreshMs,
   sources:{
-    qr:{ok:false,lastOk:0,lastTry:0,message:"รอสัญญาณ"},
-    sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย"},
-    ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม"},
-    ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens"}
+    qr:{ok:false,lastOk:0,lastTry:0,message:"รอสัญญาณ",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
+    sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
+    ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม",responseMs:0,failStreak:0,successStreak:0,mode:"read-only"},
+    ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens",responseMs:0,failStreak:0,successStreak:0,mode:"local"}
   }
 };
 var $=function(id){return document.getElementById(id)};
@@ -1008,18 +1051,28 @@ function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){retur
 function fetchJson(url,timeoutMs,init){
   timeoutMs=timeoutMs||CONFIG.requestTimeoutMs;
   init=init||{};
+  var started=Date.now();
   var ctrl=typeof AbortController!=="undefined"?new AbortController():null;
   var timer=ctrl?setTimeout(function(){ctrl.abort()},timeoutMs):null;
   init.cache=init.cache||"no-store";
   if(ctrl)init.signal=ctrl.signal;
   return fetch(url,init)
-    .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()})
+    .then(function(r){
+      if(!r.ok){var er=new Error("http "+r.status);er.responseMs=Date.now()-started;throw er}
+      return r.json().then(function(data){
+        if(data&&typeof data==="object")data.__responseMs=Date.now()-started;
+        return data;
+      });
+    })
+    .catch(function(err){err.responseMs=err.responseMs||Date.now()-started;throw err})
     .finally(function(){if(timer)clearTimeout(timer)});
 }
-function markSource(name,ok,message){
+function markSource(name,ok,message,responseMs){
   var src=state.sources[name];if(!src)return;
   src.lastTry=Date.now();src.ok=!!ok;src.message=message||src.message;
-  if(ok)src.lastOk=Date.now();
+  if(responseMs!=null)src.responseMs=Number(responseMs)||0;
+  if(ok){src.lastOk=Date.now();src.successStreak=(src.successStreak||0)+1;src.failStreak=0}
+  else{src.failStreak=(src.failStreak||0)+1;src.successStreak=0}
 }
 function sourceAge(name){
   var src=state.sources[name];if(!src||!src.lastOk)return "ยังไม่สด";
@@ -1030,11 +1083,13 @@ function sourceAge(name){
 }
 function sourceState(name){
   var src=state.sources[name]||{};
+  if(src.mode==="read-only"||src.mode==="local")return "warn";
+  if(src.failStreak>=2&&!src.ok)return "bad";
   if(!src.lastOk)return "warn";
   var age=Date.now()-src.lastOk;
   if(src.ok&&age<=CONFIG.staleWarnMs)return "good";
   if(age<=CONFIG.staleFailMs)return "warn";
-  return "warn";
+  return "bad";
 }
 var LABEL={
   source:{door:"DOOR\n(หน้างาน)",table:"TABLE\n(บูธ/กิจกรรม)",poster:"POSTER\n(สื่อหน้างาน)",other:"OTHERS\n(อื่นๆ)"},
@@ -1076,14 +1131,14 @@ function tick(){
   }
   fetchJson(CONFIG.endpoint+"?stats=1&t="+Date.now(),CONFIG.requestTimeoutMs)
     .then(function(d){
-      markSource("qr",true,"สด");
+      markSource("qr",true,"สด",d&&d.__responseMs);
       return Promise.all([loadSales(d),loadAds(d)]).then(function(res){
         d.sales=res[0];d.ads=res[1];return d;
       });
     })
     .then(function(d){state.data=d;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(d)})
     .catch(function(err){
-      markSource("qr",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้");
+      markSource("qr",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้",err&&err.responseMs);
       setLive(false);
       state.nextAt=Date.now()+state.refreshMs;
       if(state.data)render(state.data);
@@ -1162,6 +1217,7 @@ function clockTick(){
   var left=Math.max(0,Math.round((state.nextAt-Date.now())/1000));
   setText("countdown","00:"+pad(Math.min(left,59)));
   if(left>=60)setText("countdown",pad(Math.floor(left/60))+":"+pad(left%60));
+  renderSignalGuard();
 }
 function render(d){
   d=d||{};
@@ -1182,6 +1238,7 @@ function render(d){
   renderActionCommand(d,mo,sales,ads);
   renderSales(d);
   renderAds(d);
+  renderSignalGuard();
   renderTraffic(d,mo);
   renderChannels(d);
   renderProducts(d);
@@ -1310,11 +1367,11 @@ function loadSales(d){
     .then(function(s){
       var normalized=normalizeSales(s), sum=normalized.summary||{};
       var hasMovement=!!(sum.paidAmountToday||sum.paidOrdersToday||normalized.timeline15m.length||normalized.byProduct.length);
-      markSource("sales",true,hasMovement?"สด":"สด / รอรายการขาย");
+      markSource("sales",true,hasMovement?"สด":"สด / รอรายการขาย",s&&s.__responseMs);
       return normalized;
     })
     .catch(function(err){
-      markSource("sales",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้");
+      markSource("sales",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้",err&&err.responseMs);
       return embedded;
     });
 }
@@ -1370,11 +1427,11 @@ function loadAds(d){
   return fetchJson(CONFIG.adsEndpoint+joiner+"range=today&t="+Date.now(),CONFIG.requestTimeoutMs)
     .then(function(s){
       var normalized=normalizeAds(s), spend=platformSpend(normalized);
-      markSource("ads",true,spend>0?"สด":"สด / รอ official connector");
+      markSource("ads",true,spend>0?"สด":"สด / รอ official connector",s&&s.__responseMs);
       return normalized;
     })
     .catch(function(err){
-      markSource("ads",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้");
+      markSource("ads",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้",err&&err.responseMs);
       return embedded;
     });
 }
@@ -1385,6 +1442,54 @@ function sourceSet(id,state,title,sub){
   var b=el.querySelector("b"),small=el.querySelector("small");
   if(b)b.textContent=title;
   if(small)small.textContent=sub;
+}
+function signalLabel(name){
+  var src=state.sources[name]||{};
+  if(src.mode==="read-only")return "READ";
+  if(src.mode==="local")return "LOCAL";
+  var st=sourceState(name);
+  if(st==="good")return "LIVE";
+  if(st==="bad")return "RISK";
+  return src.lastOk?"STALE":"WAIT";
+}
+function signalText(name){
+  var src=state.sources[name]||{};
+  if(src.mode==="read-only")return "read-only / ไม่ปรับแอด";
+  if(src.mode==="local")return "local rule lens";
+  if(src.failStreak>=2)return (src.message||"ต่อไม่ได้")+" · fail "+src.failStreak+" รอบ";
+  return (src.message||"รอสัญญาณ")+" · "+sourceAge(name);
+}
+function signalLatency(name){
+  var src=state.sources[name]||{};
+  if(src.mode==="read-only")return "safe display · no mutation";
+  if(src.mode==="local")return "local fallback · no external AI";
+  var ms=Number(src.responseMs)||0;
+  var streak=src.successStreak?("pass "+src.successStreak):src.failStreak?("fail "+src.failStreak):"standby";
+  return (ms?ms+"ms":"—")+" · "+streak;
+}
+function signalChip(id,name,title){
+  var el=$(id);if(!el)return;
+  var st=sourceState(name), label=signalLabel(name);
+  el.className="signal-chip "+st;
+  var strong=el.querySelector("strong"), em=el.querySelector("em"), small=el.querySelector("small"), lat=el.querySelector(".latency");
+  if(strong)strong.textContent=title;
+  if(em)em.textContent=label;
+  if(small)small.textContent=signalText(name);
+  if(lat)lat.textContent=signalLatency(name);
+}
+function renderSignalGuard(){
+  if(!$("signalGuard"))return;
+  signalChip("sigQr","qr","QR Stats");
+  signalChip("sigBeam","sales","Beam Sales");
+  signalChip("sigAds","ads","Ads Watch");
+  signalChip("sigAi","ai","AI Lens");
+  var required=["qr","sales"], risky=required.filter(function(n){return sourceState(n)==="bad"});
+  var waiting=required.filter(function(n){return !state.sources[n].lastOk});
+  var overall=risky.length?"สัญญาณเสี่ยง":waiting.length?"รอสัญญาณหลัก":"สัญญาณหลักสด";
+  setText("signalOverall",overall);
+  $("signalOverall").style.color=risky.length?"var(--red)":waiting.length?"var(--gold)":"var(--green)";
+  var note=risky.length?"มี endpoint หลัก fail ต่อเนื่อง ต้องตรวจ network/endpoint ก่อนใช้ action หนัก":waiting.length?"รอ QR หรือ Beam ส่งข้อมูลรอบแรก":("QR + Beam สด · refresh "+(state.refreshMs/1000)+" วิ · last render "+sourceAge("qr"));
+  setText("signalNote",note);
 }
 function buildCommandRules(d,mo,sales,ads){
   d=d||{};sales=sales||emptySales();ads=ads||emptyAds();
@@ -1501,9 +1606,9 @@ function loadAiLenses(d,mo,sales,ads,actions){
     headers:{"content-type":"application/json"},
     body:JSON.stringify(payload)
   })
-    .then(function(raw){markSource("ai",true,"live AI lens");return normalizeAiLenses(raw,fallback)})
+    .then(function(raw){markSource("ai",true,"live AI lens",raw&&raw.__responseMs);return normalizeAiLenses(raw,fallback)})
     .catch(function(err){
-      markSource("ai",false,(err&&err.name==="AbortError")?"AI timeout":"AI fallback");
+      markSource("ai",false,(err&&err.name==="AbortError")?"AI timeout":"AI fallback",err&&err.responseMs);
       return {ok:false,source:"local-rule",codex:fallback.codex,claude:fallback.claude,note:"AI endpoint ใช้ไม่ได้ในรอบนี้ จึง fallback เป็น local rule lens",warnings:[]};
     });
 }
