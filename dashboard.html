@@ -230,6 +230,18 @@
   .unlock-cell.good b{color:var(--green)}
   .unlock-cell.warn b{color:var(--gold)}
   .unlock-cell.bad b{color:var(--red)}
+  .stability-governor{margin-top:9px;border:1px solid rgba(22,205,236,.24);border-radius:8px;background:rgba(22,205,236,.06);padding:9px}
+  .governor-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .governor-head small{color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+  .governor-head b{color:var(--text);font-size:12px;font-weight:950;text-align:right}
+  .governor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .governor-cell{border:1px solid rgba(255,255,255,.06);border-radius:7px;background:rgba(5,10,14,.22);padding:8px;min-height:66px}
+  .governor-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;margin-bottom:5px}
+  .governor-cell b{display:block;color:var(--text);font-size:13px;font-weight:950;line-height:1.15}
+  .governor-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;margin-top:4px;line-height:1.25}
+  .governor-cell.good b{color:var(--green)}
+  .governor-cell.warn b{color:var(--gold)}
+  .governor-cell.bad b{color:var(--red)}
   .signal-note{margin-top:8px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35}
   .control-lock{margin-top:9px;border:1px solid rgba(57,226,107,.22);border-radius:10px;background:rgba(57,226,107,.07);padding:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
   .lock-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.24);padding:9px;min-height:68px}
@@ -444,6 +456,7 @@
     .freshness-grid{grid-template-columns:1fr 1fr}
     .confidence-grid{grid-template-columns:1fr 1fr}
     .unlock-grid{grid-template-columns:1fr 1fr}
+    .governor-grid{grid-template-columns:1fr 1fr}
     .panel-head{height:auto;min-height:52px;flex-wrap:wrap;padding:12px}
     .suite-grid{grid-template-columns:1fr}
     .suite-wide{grid-column:span 1}
@@ -761,7 +774,7 @@
     border-color:rgba(112,139,170,.18);
     background:rgba(248,252,255,.74);
   }
-  .signal-guard-head span,.signal-chip small,.signal-note,.recorder-head small,.recorder-track label,.freshness-head small,.fresh-cell small,.confidence-head small,.confidence-cell small,.unlock-head small,.unlock-cell small{color:#63748c}
+  .signal-guard-head span,.signal-chip small,.signal-note,.recorder-head small,.recorder-track label,.freshness-head small,.fresh-cell small,.confidence-head small,.confidence-cell small,.unlock-head small,.unlock-cell small,.governor-head small,.governor-cell small{color:#63748c}
   .signal-guard-head b{color:#16b86b}
   .signal-chip{
     border-color:rgba(112,139,170,.16);
@@ -789,6 +802,10 @@
   .unlock-head b,.unlock-cell b{color:#172238}
   .unlock-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
   .unlock-cell span{color:#8b9bb1}
+  .stability-governor{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
+  .governor-head b,.governor-cell b{color:#172238}
+  .governor-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+  .governor-cell span{color:#8b9bb1}
   .control-lock{border-color:rgba(22,184,107,.20);background:#edfdf4}
   .lock-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.68)}
   .lock-cell b{color:#172238}
@@ -1006,6 +1023,15 @@
               <div class="quality-cell"><small>LATENCY</small><b>—</b><span>avg response</span></div>
               <div class="quality-cell"><small>LATENCY GUARD</small><b>รอรอบตรวจ</b><span>slow spike watch</span></div>
               <div class="quality-cell"><small>REFRESH ADVICE</small><b>15 วิ</b><span>ใช้เมื่อสัญญาณนิ่ง</span></div>
+            </div>
+            <div class="stability-governor" id="stabilityGovernor">
+              <div class="governor-head"><small>STABILITY GOVERNOR</small><b>WATCH · รอสัญญาณหลัก</b></div>
+              <div class="governor-grid">
+                <div class="governor-cell warn"><small>Mode</small><b>WATCH</b><span>รอ QR + Beam sample</span></div>
+                <div class="governor-cell warn"><small>Refresh</small><b>1 นาที</b><span>ลดแรงกด endpoint ตอนยังไม่นิ่ง</span></div>
+                <div class="governor-cell warn"><small>Truth Route</small><b>WAIT LIVE</b><span>รอ live truth ให้ครบ</span></div>
+                <div class="governor-cell good"><small>Fallback</small><b>ARMED</b><span>same-day recovery พร้อม</span></div>
+              </div>
             </div>
             <div class="signal-recorder" id="signalRecorder">
               <div class="recorder-head"><small>SIGNAL FLIGHT RECORDER</small><b>รอ QR + Beam samples</b></div>
@@ -1847,6 +1873,50 @@ function renderSignalQuality(){
     '<div class="quality-cell"><small>REFRESH ADVICE</small><b>'+esc(q.advice)+'</b><span>'+esc(q.adviceNote)+'</span></div>'
   ].join("");
 }
+function governorCell(label,item){
+  item=item||{};
+  return '<div class="governor-cell '+esc(item.cls||"warn")+'"><small>'+esc(label)+'</small><b>'+esc(item.status||"WATCH")+'</b><span>'+esc(item.detail||"รอข้อมูล")+'</span></div>';
+}
+function stabilityGovernor(){
+  var q=qualityStats(["qr","sales"]);
+  var sourceRisk=sourceState("qr")==="bad"||sourceState("sales")==="bad";
+  var waiting=!state.sources.qr.lastOk||!state.sources.sales.lastOk;
+  var recovered=["qr","sales"].some(function(name){return hasRecoveredHistory(name)&&!(state.sources[name]||{}).lastOk});
+  var slow=q.slowSamples>0&&q.fail===0&&q.flaps===0;
+  var mode=state.cacheFallback||sourceRisk?"HOLD":waiting||slow||q.score<75?"WATCH":"LIVE";
+  var modeCell=mode==="LIVE"?
+    {cls:"good",status:"LIVE",detail:"QR + Beam สด ใช้ 15 วิได้"}:
+    mode==="HOLD"?{cls:"bad",status:"HOLD",detail:state.cacheFallback?"ใช้ last-good ห้าม action หนัก":"endpoint หลักเสี่ยง"}:
+    {cls:"warn",status:"WATCH",detail:slow?"ช้าแต่ยังผ่าน":"รอ sample ให้ครบ/นิ่งขึ้น"};
+  var refresh=mode==="LIVE"?{cls:"good",status:"15 วิ",detail:"สัญญาณนิ่งพอสำหรับ live ops"}:
+    mode==="HOLD"?{cls:"bad",status:"5 นาที",detail:"ลดแรงกด endpoint และหยุด action หนัก"}:
+    {cls:"warn",status:q.advice||"1 นาที",detail:q.adviceNote||"ใช้โหมดเฝ้าระวัง"};
+  var truth=state.cacheFallback?
+    {cls:"bad",status:"LAST GOOD",detail:"not live · ใช้เป็นภาพจำเท่านั้น"}:
+    recovered?{cls:"warn",status:"RECOVERED",detail:"memory วันนี้พร้อม รอ live sample"}:
+    waiting?{cls:"warn",status:"WAIT LIVE",detail:"รอ QR/Beam live truth ให้ครบ"}:
+    sourceRisk?{cls:"bad",status:"RISK",detail:"ตรวจ endpoint/network ก่อน"}:
+    {cls:"good",status:"PRIMARY",detail:"ใช้ QR + Beam เป็น truth หลัก"};
+  return {
+    head:mode==="LIVE"?"LIVE · ใช้สัญญาณหลัก":mode==="HOLD"?"HOLD · ลด refresh และหยุด action หนัก":"WATCH · ใช้โหมดเฝ้าระวัง",
+    cells:[
+      ["Mode",modeCell],
+      ["Refresh",refresh],
+      ["Truth Route",truth],
+      ["Fallback",{cls:"good",status:"ARMED",detail:"last-good + same-day recovery พร้อม"}]
+    ]
+  };
+}
+function renderStabilityGovernor(){
+  var el=$("stabilityGovernor");if(!el)return;
+  var g=stabilityGovernor();
+  el.innerHTML=[
+    '<div class="governor-head"><small>STABILITY GOVERNOR</small><b>'+esc(g.head)+'</b></div>',
+    '<div class="governor-grid">',
+    g.cells.map(function(row){return governorCell(row[0],row[1])}).join(""),
+    '</div>'
+  ].join("");
+}
 function recorderSummary(name){
   var hist=((state.sources[name]||{}).history||[]).slice(-10);
   var fail=hist.filter(function(row){return !row.ok}).length;
@@ -2008,6 +2078,7 @@ function renderSignalGuard(){
   signalChip("sigAds","ads","Ads Watch");
   signalChip("sigAi","ai","AI Lens");
   renderSignalQuality();
+  renderStabilityGovernor();
   renderSignalRecorder();
   renderFreshnessLedger();
   renderDecisionConfidence();
