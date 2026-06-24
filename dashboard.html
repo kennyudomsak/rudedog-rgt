@@ -120,6 +120,37 @@
   .sale-bar em{font-style:normal;text-align:right;color:var(--muted);font-size:12px;font-weight:900}
   .sale-empty{color:var(--dim);font-weight:850;text-align:center;padding:48px 12px;line-height:1.5}
 
+  .mission-panel{margin:0 0 14px;border-color:rgba(24,135,232,.30)}
+  .mission-body{display:grid;grid-template-columns:minmax(360px,.95fr) minmax(420px,1.2fr) minmax(320px,.86fr);gap:12px;padding:14px}
+  .mission-core,.mission-checks,.mission-decision{border:1px solid var(--line);border-radius:12px;background:rgba(5,10,14,.34);padding:12px}
+  .mission-lock{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:10px}
+  .mission-lock small{display:block;color:var(--muted);font-size:11px;font-weight:950;letter-spacing:.08em;margin-bottom:6px}
+  .mission-lock b{display:block;color:var(--text);font-size:28px;font-weight:950;line-height:1.1}
+  .mission-lock p{margin:6px 0 0;color:var(--muted);font-size:12px;font-weight:850;line-height:1.4}
+  .mission-badge{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:950;color:var(--muted);background:rgba(255,255,255,.03);white-space:nowrap}
+  .mission-badge.go{color:var(--green);border-color:rgba(57,226,107,.30);background:rgba(57,226,107,.08)}
+  .mission-badge.watch{color:var(--gold);border-color:rgba(255,181,30,.36);background:rgba(255,181,30,.08)}
+  .mission-badge.hold{color:var(--red);border-color:rgba(255,43,59,.34);background:rgba(255,43,59,.08)}
+  .mission-switch{display:grid;gap:8px;margin-top:12px}
+  .mission-buttons{display:flex;gap:7px;flex-wrap:wrap}
+  .mission-buttons button{height:34px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--muted);font-size:12px;font-weight:950;padding:0 12px;cursor:pointer}
+  .mission-buttons button.on{background:var(--blue);border-color:var(--blue);color:white}
+  .mission-checks{display:grid;gap:8px}
+  .mission-check{display:grid;grid-template-columns:28px 1fr auto;gap:9px;align-items:center;border-bottom:1px solid rgba(255,255,255,.055);padding:0 0 8px}
+  .mission-check:last-child{border-bottom:0;padding-bottom:0}
+  .mission-check i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:13px;background:rgba(255,181,30,.11);color:var(--gold)}
+  .mission-check.good i{background:rgba(57,226,107,.11);color:var(--green)}
+  .mission-check.bad i{background:rgba(255,43,59,.11);color:var(--red)}
+  .mission-check b{display:block;color:var(--text);font-size:13px;font-weight:950}
+  .mission-check small{display:block;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35}
+  .mission-check em{font-style:normal;font-size:10px;font-weight:950;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:4px 7px}
+  .mission-decision{display:grid;gap:9px}
+  .decision-row{display:grid;grid-template-columns:28px 1fr;gap:9px;align-items:start;padding-bottom:9px;border-bottom:1px solid rgba(255,255,255,.055)}
+  .decision-row:last-child{border-bottom:0;padding-bottom:0}
+  .decision-row i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(22,205,236,.11);color:var(--cyan);font-size:13px}
+  .decision-row b{display:block;color:var(--text);font-size:13px;font-weight:950}
+  .decision-row small{display:block;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35;margin-top:2px}
+
   .command-grid{display:grid;grid-template-columns:minmax(520px,1.36fr) minmax(360px,.92fr);gap:14px;margin:0 0 14px;align-items:stretch}
   .command-panel,.ai-panel,.ads-panel{border-color:rgba(22,205,236,.42)}
   .command-body{padding:14px}
@@ -162,6 +193,11 @@
   .action-card.focus em{color:var(--gold)}
   .ai-body{padding:14px;display:grid;gap:12px}
   .ai-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ai-consensus{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);padding:12px;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:10px}
+  .ai-consensus div{border-right:1px solid rgba(255,255,255,.06);padding-right:10px}
+  .ai-consensus div:last-child{border-right:0;padding-right:0}
+  .ai-consensus small{display:block;color:var(--muted);font-size:11px;font-weight:950;letter-spacing:.05em;margin-bottom:5px}
+  .ai-consensus b{display:block;color:var(--text);font-size:15px;font-weight:950;line-height:1.25}
   .ai-card{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.42);padding:13px;min-height:210px}
   .ai-card h3{margin:0 0 10px;font-size:18px;font-weight:950;color:var(--text);display:flex;align-items:center;gap:8px}
   .ai-card h3 i{color:var(--cyan)}
@@ -308,6 +344,7 @@
     .top{grid-template-columns:1fr 190px 230px}
     .date-card{display:none}
     .kpis{grid-template-columns:repeat(3,1fr)}
+    .mission-body{grid-template-columns:1fr}
     .command-grid{grid-template-columns:1fr}
     .sales-kpis{grid-template-columns:repeat(3,1fr)}
     .sales-body{grid-template-columns:1fr 1fr}
@@ -627,15 +664,30 @@
     border-color:#0d4d91;
     color:white;
   }
-  .command-panel,.ai-panel,.ads-panel{
+  .command-panel,.ai-panel,.ads-panel,.mission-panel{
     border-color:rgba(24,135,232,.22);
     background:rgba(255,255,255,.76);
     box-shadow:0 18px 44px rgba(71,100,132,.13), inset 0 1px 0 rgba(255,255,255,.9);
   }
-  .source-pill,.lane,.ai-card,.ad-stat,.ad-platform,.ad-table{
+  .source-pill,.lane,.ai-card,.ad-stat,.ad-platform,.ad-table,.mission-core,.mission-checks,.mission-decision,.ai-consensus{
     border-color:rgba(112,139,170,.18);
     background:rgba(248,252,255,.74);
   }
+  .mission-lock b,.mission-check b,.decision-row b,.ai-consensus b{color:#172238}
+  .mission-lock p,.mission-lock small,.mission-check small,.decision-row small,.ai-consensus small{color:#63748c}
+  .mission-badge,.mission-buttons button,.mission-check em{
+    border-color:rgba(112,139,170,.20);
+    background:rgba(255,255,255,.62);
+    color:#40546d;
+  }
+  .mission-badge.go{color:#168a54;border-color:rgba(22,184,107,.28);background:#e7fbf1}
+  .mission-badge.watch{color:#a86f00;border-color:rgba(243,166,31,.32);background:#fff6dc}
+  .mission-badge.hold{color:#c82e42;border-color:rgba(231,70,88,.28);background:#ffe8ec}
+  .mission-buttons button.on{background:#0d4d91;border-color:#0d4d91;color:white}
+  .mission-check,.decision-row,.ai-consensus div{border-color:rgba(112,139,170,.14)}
+  .mission-check i,.decision-row i{background:#e8f3ff;color:#1687e8}
+  .mission-check.good i{background:#e7fbf1;color:#16b86b}
+  .mission-check.bad i{background:#ffe8ec;color:#e74658}
   .source-pill i,.sig-row i{background:#e8f3ff;color:#1687e8}
   .source-pill.good i{background:#e7fbf1;color:#16b86b}
   .source-pill.warn i{background:#fff6dc;color:#d78a00}
@@ -714,6 +766,11 @@
     .status-card,.timer-card{height:66px}
     .kpi{grid-template-columns:56px minmax(0,1fr)}
     .kpi h3{font-size:19px}
+    .mission-body,.ai-consensus{grid-template-columns:1fr}
+    .mission-lock{display:block}
+    .mission-badge{display:inline-block;margin-top:10px}
+    .ai-consensus div{border-right:0;border-bottom:1px solid rgba(112,139,170,.14);padding-right:0;padding-bottom:8px}
+    .ai-consensus div:last-child{border-bottom:0;padding-bottom:0}
     .heat{padding:10px 10px 14px}
     .heat-grid{grid-template-columns:46px repeat(24,minmax(0,1fr));gap:1px}
     .heat-lab{font-size:10px;padding-right:4px}
@@ -739,6 +796,7 @@
     <div class="rail-mark">RD</div>
     <nav class="nav">
       <a class="active" href="#overview"><i class="bi bi-speedometer2"></i><span>ภาพรวม</span></a>
+      <a href="#mission"><i class="bi bi-ui-checks-grid"></i><span>ภารกิจ</span></a>
       <a href="#traffic"><i class="bi bi-bar-chart-line-fill"></i><span>ทราฟฟิก</span></a>
       <a href="#channels"><i class="bi bi-card-checklist"></i><span>ลงทะเบียน</span></a>
       <a href="#command"><i class="bi bi-command"></i><span>คำสั่ง</span></a>
@@ -797,6 +855,39 @@
       </article>
     </section>
 
+    <section class="panel mission-panel" id="mission">
+      <div class="panel-head">
+        <div class="panel-title">4-DAY CONTROL PANEL <small>(Phase 1/2 + live decision guard)</small></div>
+        <div class="readonly-badge good"><i class="bi bi-lock-fill"></i> Human approval required</div>
+      </div>
+      <div class="mission-body">
+        <div class="mission-core">
+          <div class="mission-lock">
+            <div>
+              <small>MISSION LOCK</small>
+              <b id="missionLock">WATCH</b>
+              <p id="missionReason">รอสัญญาณสดเพื่อคุมจังหวะงาน</p>
+            </div>
+            <span class="mission-badge watch" id="missionBadge">WATCH</span>
+          </div>
+          <div class="mission-switch">
+            <div class="mission-buttons" id="dayButtons">
+              <button data-day="1">DAY 1</button>
+              <button data-day="2">DAY 2</button>
+              <button data-day="3">DAY 3</button>
+              <button data-day="4">DAY 4</button>
+            </div>
+            <div class="mission-buttons" id="phaseButtons">
+              <button data-phase="phase1">PHASE 1 · READY</button>
+              <button data-phase="phase2">PHASE 2 · LIVE OPS</button>
+            </div>
+          </div>
+        </div>
+        <div class="mission-checks" id="missionChecks"></div>
+        <div class="mission-decision" id="missionDecision"></div>
+      </div>
+    </section>
+
     <section class="command-grid" id="command">
       <section class="panel command-panel">
         <div class="panel-head">
@@ -844,6 +935,11 @@
           <div class="ai-compare">
             <article class="ai-card" id="codexLens"></article>
             <article class="ai-card" id="claudeLens"></article>
+          </div>
+          <div class="ai-consensus" id="aiConsensus">
+            <div><small>CONSENSUS</small><b>รอสัญญาณ</b></div>
+            <div><small>DIFFERENCE</small><b>รอ Codex / Claude lens</b></div>
+            <div><small>CONFIDENCE</small><b>—</b></div>
           </div>
           <div class="ad-warning" id="aiNote">Codex / Claude Lens ตอนนี้เป็น local rule-simulated lens เพื่อเทียบมุมคิด ก่อนต่อ AI endpoint จริง</div>
         </div>
@@ -1039,7 +1135,8 @@ var state={
     sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
     ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม",responseMs:0,failStreak:0,successStreak:0,mode:"read-only"},
     ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens",responseMs:0,failStreak:0,successStreak:0,mode:"local"}
-  }
+  },
+  control:{day:"1",phase:"phase1"}
 };
 var $=function(id){return document.getElementById(id)};
 function fmt(n){return Math.round(Number(n)||0).toLocaleString("en-US")}
@@ -1225,6 +1322,7 @@ function render(d){
   var att=d.attendance||{parties:0,people:0}, pace=d.pace||{lastHour:0,last15:0}, today=d.today||{count:0,heads:0};
   var mo=calcMomentum(d.perMin||[]);
   var sales=normalizeSales(d&&d.sales), ads=normalizeAds(d&&d.ads);
+  var actions=buildCommandRules(d,mo,sales,ads);
   var total=d.count||0, heads=d.heads||0;
   setText("kAtt",fmt(att.people));
   setText("kReg",fmt(total));
@@ -1235,7 +1333,8 @@ function render(d){
   setText("kRegRate",att.people?pc(total/Math.max(1,att.people)):"—");
   setText("kPaceAvg",avg15(d.timeline||[]));
   renderDoorSplit(d);
-  renderActionCommand(d,mo,sales,ads);
+  renderMissionControl(d,mo,sales,ads,actions);
+  renderActionCommand(d,mo,sales,ads,actions);
   renderSales(d);
   renderAds(d);
   renderSignalGuard();
@@ -1538,6 +1637,55 @@ function buildCommandRules(d,mo,sales,ads){
 function firstAction(actions){
   return actions.filter(function(a){return a.lane==="critical"})[0]||actions.filter(function(a){return a.lane==="focus"})[0]||actions[0];
 }
+function statusRank(status){return status==="good"?2:status==="warn"?1:0}
+function checkRow(label,detail,status,metric,icon){
+  var cls=status==="good"?"good":status==="bad"?"bad":"warn";
+  var tag=status==="good"?"PASS":status==="bad"?"RISK":"WAIT";
+  return '<div class="mission-check '+cls+'"><i class="bi '+esc(icon||"bi-check2-circle")+'"></i><div><b>'+esc(label)+'</b><small>'+esc(detail)+'</small></div><em>'+esc(metric||tag)+'</em></div>';
+}
+function missionChecks(d,sales,ads){
+  var total=d.count||0, bs=d.bySource||{};
+  var tagged=((bs.door||{}).parties||0)+((bs.table||{}).parties||0)+((bs.poster||{}).parties||0);
+  var tagRate=total?tagged/total:0;
+  var ssum=sales.summary||{}, hasSales=!!(sales.ok&&(ssum.paidAmountToday||ssum.paidOrdersToday||sales.timeline15m.length));
+  var adSpend=platformSpend(ads);
+  return {
+    phase1:[
+      {label:"QR endpoint",detail:state.sources.qr.lastOk?"Apps Script สด "+sourceAge("qr"):"รอ QR stats รอบแรก",status:sourceState("qr"),metric:signalLabel("qr"),icon:"bi-qr-code-scan"},
+      {label:"Beam endpoint",detail:state.sources.sales.lastOk?"Beam ตอบกลับ "+sourceAge("sales"):"รอ Beam stats รอบแรก",status:sourceState("sales"),metric:signalLabel("sales"),icon:"bi-cash-coin"},
+      {label:"Tag coverage",detail:total?("ระบุจุดสแกน "+fmt(tagged)+" / "+fmt(total)):"ยังไม่มีสแกนจริง",status:!total?"warn":tagRate>=.75?"good":"bad",metric:total?pc(tagRate):"WAIT",icon:"bi-tags-fill"},
+      {label:"Ads safety",detail:"Ads Watch เป็น display-only และไม่ปรับงบ/แคมเปญ",status:"good",metric:"READ",icon:"bi-eye-fill"},
+      {label:"AI fallback",detail:CONFIG.aiEndpoint?"มี AI endpoint รอตรวจสด":"ใช้ local rule lens จนกว่า AI Worker พร้อม",status:"good",metric:CONFIG.aiEndpoint?"LIVE":"LOCAL",icon:"bi-cpu"}
+    ],
+    phase2:[
+      {label:"Traffic movement",detail:total?("มี scan วันนี้ "+fmt(total)):"ยังไม่มี movement จริง",status:total>0?"good":"warn",metric:total?fmt(total):"WAIT",icon:"bi-people-fill"},
+      {label:"Sales movement",detail:hasSales?("ยอดรับชำระ "+baht(ssum.paidAmountToday)):"Beam ต่อได้แต่ยังไม่มียอดขาย",status:hasSales?"good":sourceState("sales")==="bad"?"bad":"warn",metric:hasSales?baht(ssum.last15Amount):signalLabel("sales"),icon:"bi-bag-check"},
+      {label:"Signal stability",detail:sourceState("qr")==="bad"||sourceState("sales")==="bad"?"มีสัญญาณหลักเสี่ยง":"QR/Beam ไม่มี fail ต่อเนื่อง",status:(sourceState("qr")==="bad"||sourceState("sales")==="bad")?"bad":(sourceState("qr")==="good"&&sourceState("sales")==="good")?"good":"warn",metric:(state.sources.qr.failStreak||0)+(state.sources.sales.failStreak||0)+" fail",icon:"bi-broadcast-pin"},
+      {label:"Ads display",detail:adSpend?("Meta/TikTok spend แสดง "+baht(adSpend)):"รอ official connector แบบ read-only",status:adSpend?"good":"warn",metric:adSpend?baht(adSpend):"READ",icon:"bi-megaphone"},
+      {label:"Human approval",detail:"ทุก action ต้องผ่านคนคุมงานก่อน ไม่มี auto-mutation",status:"good",metric:"LOCK",icon:"bi-person-check-fill"}
+    ]
+  };
+}
+function renderMissionControl(d,mo,sales,ads,actions){
+  var checksByPhase=missionChecks(d,sales,ads), phase=state.control.phase||"phase1", checks=checksByPhase[phase]||checksByPhase.phase1;
+  var worst=checks.reduce(function(min,c){return Math.min(min,statusRank(c.status))},2);
+  var top=firstAction(actions)||{};
+  var lock=worst===0?"HOLD":worst===1?"WATCH":"GO";
+  var reason=lock==="HOLD"?"หยุด action ใหญ่ก่อน เพราะมี signal หรือ data guard เสี่ยง":lock==="WATCH"?"เดินงานได้แบบเฝ้าระวัง รอข้อมูลสดให้ครบอีกชั้น":"สัญญาณหลักพร้อม ใช้ Action Command เป็นตัวนำ";
+  if(phase==="phase2"&&(d.count||0)<=0)reason="Live Ops ยังรอ traffic จริงจากหน้างาน";
+  setText("missionLock","DAY "+state.control.day+" · "+(phase==="phase1"?"PHASE 1 READY":"PHASE 2 LIVE")+" · "+lock);
+  setText("missionReason",top.title?reason+" · focus: "+top.title:reason);
+  $("missionBadge").textContent=lock;
+  $("missionBadge").className="mission-badge "+(lock==="GO"?"go":lock==="HOLD"?"hold":"watch");
+  $("missionChecks").innerHTML=checks.map(function(c){return checkRow(c.label,c.detail,c.status,c.metric,c.icon)}).join("");
+  $("missionDecision").innerHTML=[
+    {icon:"bi-broadcast-pin",title:"1. Signal",body:"QR "+signalLabel("qr")+" · Beam "+signalLabel("sales")+" · refresh "+Math.round(state.refreshMs/1000)+"s"},
+    {icon:"bi-braces-asterisk",title:"2. AI compare",body:"Codex หา action เร็ว · Claude ตรวจ risk/ข้อมูลหลอกตา"},
+    {icon:"bi-command",title:"3. Command",body:top.title?top.title:"รอระบบจัดลำดับ action"},
+    {icon:"bi-shield-lock-fill",title:"4. Approval",body:"Ads/AI เป็น display + recommend เท่านั้น คนคุมงานเป็นคนอนุมัติ"}
+  ].map(function(r){return '<div class="decision-row"><i class="bi '+r.icon+'"></i><div><b>'+esc(r.title)+'</b><small>'+esc(r.body)+'</small></div></div>'}).join("");
+  updateMissionButtons();
+}
 function actionHtml(actions,lane){
   var arr=actions.filter(function(a){return a.lane===lane}).slice(0,3);
   if(!arr.length)return '<div class="action-card"><b>ยังไม่มีรายการ</b><span>ระบบจะเติมให้เมื่อข้อมูลรอบถัดไปมีสัญญาณชัดขึ้น</span><em>standby</em></div>';
@@ -1588,6 +1736,27 @@ function normalizeAiLenses(raw,fallback){
     warnings:Array.isArray(raw&&raw.warnings)?raw.warnings:[]
   };
 }
+function aiConfidence(d,sales,ads,actions){
+  var requiredRisk=sourceState("qr")==="bad"||sourceState("sales")==="bad";
+  if(requiredRisk)return "LOW · สัญญาณหลักเสี่ยง";
+  if(!(d.count||0))return "LOW · รอข้อมูลจริง";
+  if(actions.some(function(a){return a.lane==="critical"}))return "MEDIUM · มี critical action";
+  if(sourceState("qr")==="good"&&sourceState("sales")==="good")return "HIGH · QR/Beam สด";
+  return "MEDIUM · ใช้พร้อม Signal Guard";
+}
+function renderAiConsensus(lenses,actions,d,sales,ads){
+  if(!$("aiConsensus"))return;
+  var top=firstAction(actions)||{};
+  var critical=actions.filter(function(a){return a.lane==="critical"}).length;
+  var diff=critical?"Codex เร่ง action · Claude เน้น risk guard":"มุมคิดใกล้กัน ใช้ action เดียวกันได้";
+  var spend=platformSpend(ads);
+  if(spend>0&&!(sales.summary||{}).paidAmountToday)diff="Ads มี spend แต่ Beam ยังไม่ยืนยันยอดขาย";
+  $("aiConsensus").innerHTML=[
+    '<div><small>CONSENSUS</small><b>'+esc(top.title||lenses.codex.verdict||"รอสัญญาณ")+'</b></div>',
+    '<div><small>DIFFERENCE</small><b>'+esc(diff)+'</b></div>',
+    '<div><small>CONFIDENCE</small><b>'+esc(aiConfidence(d,sales,ads,actions))+'</b></div>'
+  ].join("");
+}
 function loadAiLenses(d,mo,sales,ads,actions){
   var fallback=buildAiLenses(d,mo,sales,ads,actions);
   if(!CONFIG.aiEndpoint){
@@ -1612,8 +1781,9 @@ function loadAiLenses(d,mo,sales,ads,actions){
       return {ok:false,source:"local-rule",codex:fallback.codex,claude:fallback.claude,note:"AI endpoint ใช้ไม่ได้ในรอบนี้ จึง fallback เป็น local rule lens",warnings:[]};
     });
 }
-function renderActionCommand(d,mo,sales,ads){
-  var actions=buildCommandRules(d,mo,sales,ads), top=firstAction(actions), fallbackLenses=buildAiLenses(d,mo,sales,ads,actions);
+function renderActionCommand(d,mo,sales,ads,actions){
+  actions=actions||buildCommandRules(d,mo,sales,ads);
+  var top=firstAction(actions), fallbackLenses=buildAiLenses(d,mo,sales,ads,actions);
   setText("commandHeadline",top.title||"รอข้อมูลหน้างาน");
   setText("commandReason",top.body||"เมื่อข้อมูลเข้ามา ระบบจะจัดลำดับ action ให้ทันที");
   $("criticalActions").innerHTML=actionHtml(actions,"critical");
@@ -1627,10 +1797,12 @@ function renderActionCommand(d,mo,sales,ads){
   sourceSet("srcAds",sourceState("ads"),"Ads Watch",adSpend>0?baht(adSpend)+" · "+sourceAge("ads"):state.sources.ads.message);
   $("codexLens").innerHTML=lensHtml("codex",fallbackLenses.codex);
   $("claudeLens").innerHTML=lensHtml("claude",fallbackLenses.claude);
+  renderAiConsensus({codex:fallbackLenses.codex,claude:fallbackLenses.claude},actions,d,sales,ads);
   setText("aiConn",state.sources.ai.message||"local rule lens");
   loadAiLenses(d,mo,sales,ads,actions).then(function(lenses){
     $("codexLens").innerHTML=lensHtml("codex",lenses.codex);
     $("claudeLens").innerHTML=lensHtml("claude",lenses.claude);
+    renderAiConsensus(lenses,actions,d,sales,ads);
     setText("aiConn",lenses.ok?"live AI lens":"local rule lens");
     setText("aiNote",lenses.note||"AI lens พร้อมใช้งาน");
   });
@@ -1824,6 +1996,9 @@ function renderSuiteCompare(d){
 function saveSuiteCfg(){
   try{localStorage.setItem("rdfair_suite_cfg",JSON.stringify({goal:$("suiteGoal").value,leadVal:$("suiteLeadVal").value,conv:$("suiteConv").value,aov:$("suiteAov").value,perf:$("suitePerf").value}))}catch(e){}
 }
+function saveControlCfg(){
+  try{localStorage.setItem("rdfair_control_cfg",JSON.stringify(state.control))}catch(e){}
+}
 function loadSuiteCfg(){
   try{
     var c=JSON.parse(localStorage.getItem("rdfair_suite_cfg")||"{}");
@@ -1834,10 +2009,37 @@ function loadSuiteCfg(){
     if(c.perf)$("suitePerf").value=c.perf;
   }catch(e){}
 }
+function loadControlCfg(){
+  try{
+    var c=JSON.parse(localStorage.getItem("rdfair_control_cfg")||"{}");
+    if(["1","2","3","4"].indexOf(String(c.day))>=0)state.control.day=String(c.day);
+    if(["phase1","phase2"].indexOf(String(c.phase))>=0)state.control.phase=String(c.phase);
+  }catch(e){}
+}
+function updateMissionButtons(){
+  Array.prototype.forEach.call(document.querySelectorAll("#dayButtons button"),function(b){b.className=b.dataset.day===state.control.day?"on":""});
+  Array.prototype.forEach.call(document.querySelectorAll("#phaseButtons button"),function(b){b.className=b.dataset.phase===state.control.phase?"on":""});
+}
+function bindMissionControl(){
+  var mission=$("mission");if(!mission)return;
+  mission.addEventListener("click",function(e){
+    var day=e.target.closest("button[data-day]"), phase=e.target.closest("button[data-phase]");
+    if(day)state.control.day=String(day.dataset.day);
+    if(phase)state.control.phase=String(phase.dataset.phase);
+    if(day||phase){
+      saveControlCfg();
+      updateMissionButtons();
+      if(state.data)render(state.data);
+    }
+  });
+  updateMissionButtons();
+}
 function unlock(){ $("gate").className="gate hidden"; $("app").style.display="grid"; boot(); }
 function boot(){
   try{var r=Number(localStorage.getItem("rdfair_cmd_refresh"));if([15000,60000,300000].indexOf(r)>=0)state.refreshMs=r}catch(e){}
   loadSuiteCfg();
+  loadControlCfg();
+  bindMissionControl();
   setText("refreshLabel",state.refreshMs===15000?"15 วินาที":state.refreshMs===60000?"1 นาที":"5 นาที");
   document.querySelector("#refreshTabs").addEventListener("click",function(e){var b=e.target.closest("button[data-ms]");if(b)setRefresh(Number(b.dataset.ms))});
   ["suiteGoal","suiteLeadVal","suiteConv","suiteAov","suitePerf"].forEach(function(id){$(id).addEventListener("input",function(){if(state.data)renderSuite(state.data,calcMomentum(state.data.perMin||[]))})});
