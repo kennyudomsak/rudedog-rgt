@@ -365,36 +365,46 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .coin-float{position:absolute;width:15px;height:22px;border:3px solid #7d4d00;border-radius:50%;background:linear-gradient(90deg,#ffd84a,#fff1a6,#e7a900);box-shadow:0 0 0 2px rgba(0,0,0,.18);animation:coinBob 2.4s ease-in-out infinite}
 .coin-float.c1{left:9%;bottom:190px}.coin-float.c2{right:8%;bottom:250px;animation-delay:-.9s}.coin-float.c3{left:72%;bottom:146px;animation-delay:-1.5s}
 @keyframes coinBob{0%,100%{transform:translateY(0) rotateY(0deg)}50%{transform:translateY(-12px) rotateY(60deg)}}
-.graffiti-pack{
-  position:absolute;left:15px;right:15px;bottom:92px;min-height:172px;
-  opacity:.9;mix-blend-mode:normal;z-index:1;
+.sales-headline{
+  --headline-bg:#e53924;--headline-edge:#ffe16a;--headline-ink:#fff;--headline-sub:#fff7bd;--tilt:-2deg;
+  position:absolute;left:34px;right:34px;bottom:48px;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:122px;padding:13px 14px 15px;text-align:center;color:var(--headline-ink);background:var(--headline-bg);
+  border:4px solid var(--headline-edge);box-shadow:0 7px 0 #06080b, inset 0 0 0 3px rgba(255,255,255,.18);
+  transform:rotate(var(--tilt));animation:headlineFloat 4.8s ease-in-out infinite;pointer-events:none;
 }
-.sticker{
-  position:absolute;display:inline-block;padding:7px 10px;border-radius:6px;
-  color:#fff;font-weight:950;line-height:1.05;letter-spacing:0;
-  text-shadow:2px 2px 0 #000,-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000;
-  -webkit-text-stroke:.35px rgba(0,0,0,.75);
-  transform:rotate(var(--rot));animation:floatSticker var(--dur) ease-in-out infinite;
+.sales-headline::before,.sales-headline::after{content:"";position:absolute;width:14px;height:14px;background:var(--headline-edge);border:3px solid #07090c}
+.sales-headline::before{left:-11px;top:18px}.sales-headline::after{right:-11px;bottom:18px}
+.sales-headline b{
+  display:block;font-size:29px;line-height:1.04;font-weight:950;letter-spacing:0;
+  text-shadow:3px 3px 0 #050505,-1px -1px 0 #050505,1px -1px 0 #050505,-1px 1px 0 #050505;
 }
-.sticker b{display:block;font-size:20px}
-.sticker small{display:block;font-size:12px;margin-top:3px;color:#fff7bd}
-.sticker.s1{--rot:-8deg;--dur:4.5s;left:2px;bottom:110px;background:#e53924;border:2px solid #ffe16a}
-.sticker.s2{--rot:5deg;--dur:5.2s;right:8px;bottom:104px;background:#111;border:2px dashed #f3d27b}
-.sticker.s3{--rot:-3deg;--dur:4.8s;left:22px;bottom:52px;background:#217a42;border:2px solid #fff}
-.sticker.s4{--rot:6deg;--dur:5.6s;right:3px;bottom:44px;background:#f0b51f;color:#111;text-shadow:1px 1px 0 #fff;-webkit-text-stroke:0;border:2px solid #111}
-.sticker.s4 small{color:#7a0800}.sticker.s5{--rot:-5deg;--dur:5s;left:58px;bottom:0;background:#1d5eff;border:2px solid #fff}
-.sticker s{opacity:.75;text-decoration-thickness:3px}
-@keyframes floatSticker{0%,100%{translate:0 0}50%{translate:8px -10px}}
-.quiz .graffiti-pack,.success .graffiti-pack{bottom:72px;opacity:.32;filter:saturate(.85)}
-.contact .graffiti-pack{bottom:78px;opacity:.5}
+.sales-headline small{
+  display:block;margin-top:7px;font-size:18px;line-height:1.15;font-weight:950;color:var(--headline-sub);
+  text-shadow:2px 2px 0 #050505,-1px -1px 0 #050505,1px -1px 0 #050505,-1px 1px 0 #050505;
+}
+.sales-headline s{opacity:.78;text-decoration-thickness:4px}
+.sales-headline.v2{--headline-bg:#111820;--headline-edge:#f3d27b;--headline-sub:#f8e7a2;--tilt:2deg}
+.sales-headline.v3{--headline-bg:#217a42;--headline-edge:#fff;--headline-sub:#ffe98c;--tilt:-1.5deg}
+.sales-headline.v4{--headline-bg:#f0b51f;--headline-edge:#111;--headline-ink:#111;--headline-sub:#7a0800;--tilt:2deg}
+.sales-headline.v4 b,.sales-headline.v4 small{text-shadow:2px 2px 0 #fff}
+.sales-headline.v5{--headline-bg:#1d5eff;--headline-edge:#fff;--headline-sub:#dff2ff;--tilt:-2deg}
+.sales-headline.v5 b{font-size:25px}.sales-headline.v5 small{font-size:17px}
+@keyframes headlineFloat{0%,100%{translate:0 0}50%{translate:0 -8px}}
+.quiz .sales-headline{bottom:36px;min-height:104px}
+.quiz .sales-headline b{font-size:25px}.quiz .sales-headline small{font-size:16px}
+.contact .sales-headline{bottom:28px;min-height:102px}
+.contact .sales-headline b{font-size:24px}.contact .sales-headline small{font-size:16px}
+.success .sales-headline{bottom:38px;min-height:104px}
+.success .sales-headline b{font-size:24px}.success .sales-headline small{font-size:16px}
 .success .pixel-dog{bottom:24px;opacity:.42}.success .coin-float{opacity:.45}
 @media (max-height:760px){
-  .graffiti-pack{opacity:.48;bottom:76px;transform:scale(.86);transform-origin:bottom center}
+  .sales-headline{bottom:62px;min-height:104px;transform:rotate(var(--tilt)) scale(.88);transform-origin:bottom center}
+  .sales-headline b{font-size:24px}.sales-headline small{font-size:15px}
   .pixel-dog{bottom:64px}
 }
 
 @media (prefers-reduced-motion: reduce){
-  .prize,.prize::after,.eyebrow .blink,.mcell.cur,.pixel-dog,.pd-tail,.pd-leg-a,.pd-leg-b,.coin-float,.sticker{animation:none!important;}
+  .prize,.prize::after,.eyebrow .blink,.mcell.cur,.pixel-dog,.pd-tail,.pd-leg-a,.pd-leg-b,.coin-float,.sales-headline{animation:none!important;}
 }
 </style>
 </head>
@@ -737,6 +747,13 @@ function afterMount(node){
 /* ============================================================
    RENDER: welcome / quiz / contact / success
    ============================================================ */
+const SALES_HEADLINES = [
+  { cls:"v1", big:"ซื้อฝาก", small:"ของถูก แต่ได้บารมี" },
+  { cls:"v2", big:"ราคาโรงงาน", small:"ถูกกว่ากาแฟแก้วเดียว" },
+  { cls:"v3", big:"ซื้อให้คุ้ม", small:"ค่าน้ำมันรถ มันแพง!!" },
+  { cls:"v4", big:"ประหยัดทั้งปี", small:"ตุนเยอะๆ ไม่ต้องซื้ออีกยาวๆ" },
+  { cls:"v5", big:"หยิบอีกนิด ครบ 1,500", small:"รับน้ำหอมฟรี <s>389.-</s>" }
+];
 function ambientLayer(){
   return `
     <div class="ambient" aria-hidden="true">
@@ -749,20 +766,17 @@ function ambientLayer(){
       <div class="pixel-dog d2">
         <span class="pd-tail"></span><span class="pd-body"></span><span class="pd-head"></span><span class="pd-ear"></span><span class="pd-patch"></span><span class="pd-eye"></span><span class="pd-nose"></span><span class="pd-leg-a"></span><span class="pd-leg-b"></span><span class="pd-ground"></span>
       </div>
-      <div class="graffiti-pack">
-        <span class="sticker s1"><b>ซื้อฝาก</b><small>ของถูก แต่ได้บารมี</small></span>
-        <span class="sticker s2"><b>ราคาโรงงาน</b><small>ถูกกว่ากาแฟแก้วเดียว</small></span>
-        <span class="sticker s3"><b>ซื้อให้คุ้ม</b><small>ค่าน้ำมันรถ มันแพง!!</small></span>
-        <span class="sticker s4"><b>ประหยัดทั้งปี</b><small>ตุนเยอะๆ ไม่ต้องซื้ออีกยาวๆ</small></span>
-        <span class="sticker s5"><b>หยิบอีกนิด ครบ 1,500</b><small>รับน้ำหอมฟรี <s>389.-</s></small></span>
-      </div>
     </div>`;
+}
+function salesHeadlineLayer(headline=SALES_HEADLINES[0]){
+  return `<div class="sales-headline ${headline.cls}" aria-hidden="true"><b>${headline.big}</b><small>${headline.small}</small></div>`;
 }
 
 function buildWelcome(){
   const node=h(`
     <div class="screen welcome">
       ${ambientLayer()}
+      ${salesHeadlineLayer(SALES_HEADLINES[0])}
       <div class="topbar">
         <div class="wordmark">RUDEDOG <span class="g">FAIR 2026</span></div>
         <div class="tag px">★ 2026 ★</div>
@@ -816,6 +830,7 @@ function buildQuiz(){
   const node=h(`
     <div class="screen quiz">
       ${ambientLayer()}
+      ${salesHeadlineLayer(SALES_HEADLINES[state.step % SALES_HEADLINES.length])}
       <div class="hud">
         <div class="hud-row">
           <div class="mission-ttl">ภารกิจ <b>${state.step+1}</b><span>/${TOTAL}</span></div>
@@ -887,6 +902,7 @@ function buildContact(){
   const node=h(`
     <div class="screen contact">
       ${ambientLayer()}
+      ${salesHeadlineLayer(SALES_HEADLINES[4])}
       <div class="hud">
         <div class="hud-row"><div class="mission-ttl">ภารกิจ <b>สำเร็จ!</b></div><div class="coinhud px">🪙×<b>${state.score}</b></div></div>
         <div class="mtrack">${QUESTIONS.map(()=>'<div class="mcell done"></div>').join("")}<span class="mflag">🏁</span></div>
@@ -940,6 +956,7 @@ function buildSuccess(){
   const node=h(`
     <div class="screen success">
       ${ambientLayer()}
+      ${salesHeadlineLayer(SALES_HEADLINES[4])}
       <div class="pad center">
         <div class="clear-banner">รับสิทธิ์เรียบร้อย!</div>
         <div class="burst" tabindex="-1" data-focus>🎉</div>
