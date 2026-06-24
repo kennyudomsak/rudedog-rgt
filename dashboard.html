@@ -175,7 +175,7 @@
   .signal-chip.bad em{background:rgba(255,43,59,.12);color:var(--red)}
   .signal-chip small{color:var(--muted);font-size:11px;font-weight:850;line-height:1.3}
   .signal-chip .latency{color:var(--dim);font-size:10px;font-weight:900;letter-spacing:.04em}
-  .signal-quality{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:9px}
+  .signal-quality{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:9px}
   .quality-cell{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02);padding:8px 9px;min-height:56px}
   .quality-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.05em;margin-bottom:4px}
   .quality-cell b{display:block;color:var(--text);font-size:16px;font-weight:950;line-height:1.1}
@@ -934,6 +934,7 @@
             <div class="signal-quality" id="signalQuality">
               <div class="quality-cell"><small>SIGNAL QUALITY</small><b>รอรอบตรวจ</b><span>QR + Beam pass rate</span></div>
               <div class="quality-cell"><small>LATENCY</small><b>—</b><span>avg response</span></div>
+              <div class="quality-cell"><small>LATENCY GUARD</small><b>รอรอบตรวจ</b><span>slow spike watch</span></div>
               <div class="quality-cell"><small>REFRESH ADVICE</small><b>15 วิ</b><span>ใช้เมื่อสัญญาณนิ่ง</span></div>
             </div>
             <div class="signal-note" id="signalNote">ใช้ดูความสดของข้อมูลและสัญญาณติดดับก่อนสั่ง action หน้างาน</div>
@@ -1153,6 +1154,7 @@ var CONFIG={
   adsEndpoint:"",
   aiEndpoint:"",
   requestTimeoutMs:9000,
+  latencyWarnMs:5000,
   staleWarnMs:45000,
   staleFailMs:180000,
   lastGoodMaxAgeMs:21600000,
@@ -1664,19 +1666,23 @@ function qualityStats(names){
     rows=rows.concat(hist.map(function(row){return {name:name,ok:row.ok,responseMs:row.responseMs,t:row.t}}));
   });
   rows=rows.sort(function(a,b){return a.t-b.t}).slice(-20);
-  if(!rows.length)return {samples:0,passRate:0,avgMs:0,flaps:0,fail:0,score:0,label:"รอรอบตรวจ",advice:"15 วิ",adviceNote:"ใช้เมื่อสัญญาณนิ่ง"};
+  if(!rows.length)return {samples:0,passRate:0,avgMs:0,maxMs:0,slowSamples:0,flaps:0,fail:0,score:0,label:"รอรอบตรวจ",latencyLabel:"รอรอบตรวจ",latencyNote:"slow spike watch",advice:"15 วิ",adviceNote:"ใช้เมื่อสัญญาณนิ่ง"};
   var pass=rows.filter(function(r){return r.ok}).length;
   var fail=rows.length-pass;
   var flaps=0;
   rows.forEach(function(row,i){if(i>0&&row.ok!==rows[i-1].ok)flaps++});
   var responseRows=rows.filter(function(r){return r.responseMs>0});
   var avgMs=responseRows.length?Math.round(responseRows.reduce(function(s,r){return s+r.responseMs},0)/responseRows.length):0;
+  var maxMs=responseRows.length?Math.max.apply(null,responseRows.map(function(r){return r.responseMs})):0;
+  var slowSamples=responseRows.filter(function(r){return r.responseMs>=(CONFIG.latencyWarnMs||5000)}).length;
   var passRate=pass/rows.length;
-  var score=Math.max(0,Math.round(passRate*100)-flaps*8-(avgMs>3000?10:0));
+  var score=Math.max(0,Math.round(passRate*100)-flaps*8-(avgMs>3000?10:0)-slowSamples*6);
   var label=score>=90?"นิ่งมาก":score>=75?"ใช้งานได้":score>=55?"เฝ้าระวัง":"เสี่ยงติดดับ";
-  var advice=score>=75&&fail===0?"15 วิ":score>=55?"1 นาที":"5 นาที";
-  var adviceNote=score>=75?"สัญญาณพร้อม refresh ถี่":score>=55?"ลดแรงกด endpoint ถ้าเน็ตแกว่ง":"พัก refresh ถี่จนกว่าจะนิ่ง";
-  return {samples:rows.length,passRate:passRate,avgMs:avgMs,flaps:flaps,fail:fail,score:score,label:label,advice:advice,adviceNote:adviceNote};
+  var latencyLabel=fail>0||flaps>0?"เสี่ยง":slowSamples>0?"ช้าแต่ยังผ่าน":"เร็ว";
+  var latencyNote=slowSamples>0?("slow "+slowSamples+" · max "+maxMs+"ms"):("max "+(maxMs||0)+"ms");
+  var advice=score>=75&&fail===0&&slowSamples===0?"15 วิ":score>=55?"1 นาที":"5 นาที";
+  var adviceNote=score>=75&&slowSamples===0?"สัญญาณพร้อม refresh ถี่":score>=55?"ลดแรงกด endpoint ถ้าเน็ตแกว่ง":"พัก refresh ถี่จนกว่าจะนิ่ง";
+  return {samples:rows.length,passRate:passRate,avgMs:avgMs,maxMs:maxMs,slowSamples:slowSamples,flaps:flaps,fail:fail,score:score,label:label,latencyLabel:latencyLabel,latencyNote:latencyNote,advice:advice,adviceNote:adviceNote};
 }
 function renderSignalQuality(){
   var el=$("signalQuality");if(!el)return;
@@ -1685,6 +1691,7 @@ function renderSignalQuality(){
   el.innerHTML=[
     '<div class="quality-cell"><small>SIGNAL QUALITY</small><b>'+esc(q.score? q.score+"/100 · "+q.label:q.label)+'</b><span>'+esc(pct+" pass · "+q.samples+" samples · "+q.flaps+" flaps")+'</span></div>',
     '<div class="quality-cell"><small>LATENCY</small><b>'+esc(q.avgMs?q.avgMs+"ms":"—")+'</b><span>'+esc(q.fail+" fail in rolling window")+'</span></div>',
+    '<div class="quality-cell"><small>LATENCY GUARD</small><b>'+esc(q.latencyLabel)+'</b><span>'+esc(q.latencyNote)+'</span></div>',
     '<div class="quality-cell"><small>REFRESH ADVICE</small><b>'+esc(q.advice)+'</b><span>'+esc(q.adviceNote)+'</span></div>'
   ].join("");
 }
@@ -1695,13 +1702,15 @@ function renderSignalGuard(){
   signalChip("sigAds","ads","Ads Watch");
   signalChip("sigAi","ai","AI Lens");
   renderSignalQuality();
+  var q=qualityStats(["qr","sales"]);
   var required=["qr","sales"], risky=required.filter(function(n){return sourceState(n)==="bad"});
   var waiting=required.filter(function(n){return !state.sources[n].lastOk});
-  var overall=state.cacheFallback?"ใช้ข้อมูลล่าสุด":risky.length?"สัญญาณเสี่ยง":waiting.length?"รอสัญญาณหลัก":"สัญญาณหลักสด";
+  var slow=q.slowSamples>0&&risky.length===0&&waiting.length===0;
+  var overall=state.cacheFallback?"ใช้ข้อมูลล่าสุด":risky.length?"สัญญาณเสี่ยง":waiting.length?"รอสัญญาณหลัก":slow?"สัญญาณช้า":"สัญญาณหลักสด";
   setText("signalOverall",overall);
-  $("signalOverall").style.color=state.cacheFallback?"var(--gold)":risky.length?"var(--red)":waiting.length?"var(--gold)":"var(--green)";
+  $("signalOverall").style.color=state.cacheFallback?"var(--gold)":risky.length?"var(--red)":waiting.length||slow?"var(--gold)":"var(--green)";
   var note=state.cacheFallback?("LAST GOOD · ข้อมูลล่าสุดจาก "+new Date(state.cacheSavedAt).toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit",second:"2-digit"})+" · ห้ามตีความเป็น live"):
-    risky.length?"มี endpoint หลัก fail ต่อเนื่อง ต้องตรวจ network/endpoint ก่อนใช้ action หนัก":waiting.length?"รอ QR หรือ Beam ส่งข้อมูลรอบแรก":("QR + Beam สด · refresh "+(state.refreshMs/1000)+" วิ · last render "+sourceAge("qr"));
+    risky.length?"มี endpoint หลัก fail ต่อเนื่อง ต้องตรวจ network/endpoint ก่อนใช้ action หนัก":waiting.length?"รอ QR หรือ Beam ส่งข้อมูลรอบแรก":slow?("endpoint ช้าแต่ยังผ่าน · แนะนำ refresh "+q.advice+" · "+q.latencyNote):("QR + Beam สด · refresh "+(state.refreshMs/1000)+" วิ · last render "+sourceAge("qr"));
   setText("signalNote",note);
 }
 function buildCommandRules(d,mo,sales,ads){
@@ -1764,7 +1773,8 @@ function missionChecks(d,sales,ads){
   var ssum=sales.summary||{}, hasSales=!!(sales.ok&&(ssum.paidAmountToday||ssum.paidOrdersToday||sales.timeline15m.length));
   var adSpend=platformSpend(ads);
   var q=qualityStats(["qr","sales"]);
-  var qStatus=q.samples<2?"warn":q.score>=75?"good":q.score>=55?"warn":"bad";
+  var qStatus=q.samples<2?"warn":q.score<55||q.fail>0||q.flaps>0?"bad":q.slowSamples>0||q.score<75?"warn":"good";
+  var qDetail=q.samples?("rolling "+q.samples+" samples · "+Math.round(q.passRate*100)+"% pass · "+q.flaps+" flaps"+(q.slowSamples?(" · slow "+q.slowSamples):"")):"รอรอบตรวจสัญญาณ";
   return {
     phase1:[
       {label:"QR endpoint",detail:state.cacheFallback?"ใช้ last-good snapshot เพราะ endpoint สดไม่พร้อม":state.sources.qr.lastOk?"Apps Script สด "+sourceAge("qr"):"รอ QR stats รอบแรก",status:state.cacheFallback?"warn":sourceState("qr"),metric:state.cacheFallback?"LAST":signalLabel("qr"),icon:"bi-qr-code-scan"},
@@ -1776,7 +1786,7 @@ function missionChecks(d,sales,ads){
     phase2:[
       {label:"Traffic movement",detail:total?("มี scan วันนี้ "+fmt(total)):"ยังไม่มี movement จริง",status:total>0?"good":"warn",metric:total?fmt(total):"WAIT",icon:"bi-people-fill"},
       {label:"Sales movement",detail:hasSales?("ยอดรับชำระ "+baht(ssum.paidAmountToday)):"Beam ต่อได้แต่ยังไม่มียอดขาย",status:hasSales?"good":sourceState("sales")==="bad"?"bad":"warn",metric:hasSales?baht(ssum.last15Amount):signalLabel("sales"),icon:"bi-bag-check"},
-      {label:"Signal quality",detail:q.samples?("rolling "+q.samples+" samples · "+Math.round(q.passRate*100)+"% pass · "+q.flaps+" flaps"):"รอรอบตรวจสัญญาณ",status:qStatus,metric:q.samples?q.score+"/100":"WAIT",icon:"bi-broadcast-pin"},
+      {label:"Signal quality",detail:qDetail,status:qStatus,metric:q.samples?q.score+"/100":"WAIT",icon:"bi-broadcast-pin"},
       {label:"Ads display",detail:adSpend?("Meta/TikTok spend แสดง "+baht(adSpend)):"รอ official connector แบบ read-only",status:adSpend?"good":"warn",metric:adSpend?baht(adSpend):"READ",icon:"bi-megaphone"},
       {label:"Human approval",detail:"ทุก action ต้องผ่านคนคุมงานก่อน ไม่มี auto-mutation",status:"good",metric:"LOCK",icon:"bi-person-check-fill"}
     ]
