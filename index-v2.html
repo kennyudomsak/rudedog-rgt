@@ -470,7 +470,7 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .sales-headline b{
   display:inline;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 9px 3px;
   font-size:40px;line-height:1.14;font-weight:950;letter-spacing:0;background:var(--headline-mark);
-  text-shadow:none;animation:headlinePunch 1.85s steps(2,end) infinite;
+  color:var(--headline-ink);text-shadow:none;animation:headlinePunch 1.85s steps(2,end) infinite;
 }
 .sales-headline small{
   display:inline;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 9px 3px;margin-top:6px;
@@ -539,9 +539,9 @@ const QUESTIONS = [
     hint:'',
     opts:[
       {em:"🎵",lb:'<span class="hl">TikTok</span>',v:"tiktok"},
-      {em:"📘",lb:'<span class="hl">Facebook</span>',v:"facebook"},
+      {em:"📘",lb:'<span class="hl">Facebook (1.5ล้าน ผู้ติดตาม)</span>',v:"facebook"},
       {em:"🚗",lb:'ป้ายหน้าโกดัง',v:"signage"},
-      {em:"🔮",lb:"เพื่อนชวน",v:"wom_other"},
+      {em:"🔮",lb:"เพื่อนชวน - มันว่า เสื้อถูกกว่า กาแฟหนึ่งแก้วอีก",v:"wom_other"},
     ]},
   { id:"visit", meta:"WORLD 2–5", combo:true, counter:true, q:"มากันแบบไหน?",
     visitOpts:[ {em:"🆕",lb:"ครั้งแรก",v:"first"}, {em:"👑",lb:"เคยมาหลายครั้ง",v:"loyal"} ],
