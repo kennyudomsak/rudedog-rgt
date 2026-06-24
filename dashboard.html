@@ -175,6 +175,11 @@
   .signal-chip.bad em{background:rgba(255,43,59,.12);color:var(--red)}
   .signal-chip small{color:var(--muted);font-size:11px;font-weight:850;line-height:1.3}
   .signal-chip .latency{color:var(--dim);font-size:10px;font-weight:900;letter-spacing:.04em}
+  .signal-quality{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:9px}
+  .quality-cell{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.02);padding:8px 9px;min-height:56px}
+  .quality-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.05em;margin-bottom:4px}
+  .quality-cell b{display:block;color:var(--text);font-size:16px;font-weight:950;line-height:1.1}
+  .quality-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;margin-top:3px;line-height:1.25}
   .signal-note{margin-top:8px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35}
   .command-hero{border:1px solid var(--line-cyan);border-radius:10px;background:linear-gradient(135deg,rgba(22,205,236,.12),rgba(43,132,255,.05));padding:15px;margin-bottom:12px}
   .command-hero small{display:block;color:var(--muted);font-weight:900;letter-spacing:.08em;margin-bottom:7px}
@@ -379,6 +384,7 @@
     .province{grid-template-columns:1fr}
     .heat-grid{grid-template-columns:54px repeat(24,20px);overflow-x:auto}
     .signal-grid{grid-template-columns:1fr 1fr}
+    .signal-quality{grid-template-columns:1fr}
     .panel-head{height:auto;min-height:52px;flex-wrap:wrap;padding:12px}
     .suite-grid{grid-template-columns:1fr}
     .suite-wide{grid-column:span 1}
@@ -704,6 +710,10 @@
   }
   .signal-chip strong{color:#172238}
   .signal-chip .latency{color:#8b9bb1}
+  .quality-cell{border-color:rgba(112,139,170,.16);background:rgba(255,255,255,.58)}
+  .quality-cell b{color:#172238}
+  .quality-cell small{color:#63748c}
+  .quality-cell span{color:#8b9bb1}
   .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
   .command-hero{
     border-color:rgba(24,135,232,.20);
@@ -910,6 +920,11 @@
               <div class="signal-chip warn" id="sigBeam"><div class="topline"><strong>Beam Sales</strong><em>WAIT</em></div><small>รอรายการขาย</small><span class="latency">—</span></div>
               <div class="signal-chip warn" id="sigAds"><div class="topline"><strong>Ads Watch</strong><em>READ</em></div><small>display only</small><span class="latency">—</span></div>
               <div class="signal-chip warn" id="sigAi"><div class="topline"><strong>AI Lens</strong><em>LOCAL</em></div><small>local rule lens</small><span class="latency">—</span></div>
+            </div>
+            <div class="signal-quality" id="signalQuality">
+              <div class="quality-cell"><small>SIGNAL QUALITY</small><b>รอรอบตรวจ</b><span>QR + Beam pass rate</span></div>
+              <div class="quality-cell"><small>LATENCY</small><b>—</b><span>avg response</span></div>
+              <div class="quality-cell"><small>REFRESH ADVICE</small><b>15 วิ</b><span>ใช้เมื่อสัญญาณนิ่ง</span></div>
             </div>
             <div class="signal-note" id="signalNote">ใช้ดูความสดของข้อมูลและสัญญาณติดดับก่อนสั่ง action หน้างาน</div>
           </div>
@@ -1132,10 +1147,10 @@ var CONFIG={
 var state={
   data:null,lastOk:0,lastRenderAt:0,nextAt:0,timer:null,ticker:null,refreshMs:CONFIG.refreshMs,cacheFallback:false,cacheSavedAt:0,
   sources:{
-    qr:{ok:false,lastOk:0,lastTry:0,message:"รอสัญญาณ",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
-    sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย",responseMs:0,failStreak:0,successStreak:0,mode:"live"},
-    ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม",responseMs:0,failStreak:0,successStreak:0,mode:"read-only"},
-    ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens",responseMs:0,failStreak:0,successStreak:0,mode:"local"}
+    qr:{ok:false,lastOk:0,lastTry:0,message:"รอสัญญาณ",responseMs:0,failStreak:0,successStreak:0,mode:"live",history:[]},
+    sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย",responseMs:0,failStreak:0,successStreak:0,mode:"live",history:[]},
+    ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม",responseMs:0,failStreak:0,successStreak:0,mode:"read-only",history:[]},
+    ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens",responseMs:0,failStreak:0,successStreak:0,mode:"local",history:[]}
   },
   control:{day:"1",phase:"phase1"}
 };
@@ -1171,6 +1186,9 @@ function markSource(name,ok,message,responseMs){
   if(responseMs!=null)src.responseMs=Number(responseMs)||0;
   if(ok){src.lastOk=Date.now();src.successStreak=(src.successStreak||0)+1;src.failStreak=0}
   else{src.failStreak=(src.failStreak||0)+1;src.successStreak=0}
+  src.history=src.history||[];
+  src.history.push({ok:!!ok,responseMs:Number(responseMs)||0,t:Date.now()});
+  if(src.history.length>10)src.history=src.history.slice(-10);
 }
 function sourceAge(name){
   var src=state.sources[name];if(!src||!src.lastOk)return "ยังไม่สด";
@@ -1624,12 +1642,44 @@ function signalChip(id,name,title){
   if(small)small.textContent=signalText(name);
   if(lat)lat.textContent=signalLatency(name);
 }
+function qualityStats(names){
+  var rows=[];
+  names.forEach(function(name){
+    var hist=(state.sources[name]&&state.sources[name].history)||[];
+    rows=rows.concat(hist.map(function(row){return {name:name,ok:row.ok,responseMs:row.responseMs,t:row.t}}));
+  });
+  rows=rows.sort(function(a,b){return a.t-b.t}).slice(-20);
+  if(!rows.length)return {samples:0,passRate:0,avgMs:0,flaps:0,fail:0,score:0,label:"รอรอบตรวจ",advice:"15 วิ",adviceNote:"ใช้เมื่อสัญญาณนิ่ง"};
+  var pass=rows.filter(function(r){return r.ok}).length;
+  var fail=rows.length-pass;
+  var flaps=0;
+  rows.forEach(function(row,i){if(i>0&&row.ok!==rows[i-1].ok)flaps++});
+  var responseRows=rows.filter(function(r){return r.responseMs>0});
+  var avgMs=responseRows.length?Math.round(responseRows.reduce(function(s,r){return s+r.responseMs},0)/responseRows.length):0;
+  var passRate=pass/rows.length;
+  var score=Math.max(0,Math.round(passRate*100)-flaps*8-(avgMs>3000?10:0));
+  var label=score>=90?"นิ่งมาก":score>=75?"ใช้งานได้":score>=55?"เฝ้าระวัง":"เสี่ยงติดดับ";
+  var advice=score>=75&&fail===0?"15 วิ":score>=55?"1 นาที":"5 นาที";
+  var adviceNote=score>=75?"สัญญาณพร้อม refresh ถี่":score>=55?"ลดแรงกด endpoint ถ้าเน็ตแกว่ง":"พัก refresh ถี่จนกว่าจะนิ่ง";
+  return {samples:rows.length,passRate:passRate,avgMs:avgMs,flaps:flaps,fail:fail,score:score,label:label,advice:advice,adviceNote:adviceNote};
+}
+function renderSignalQuality(){
+  var el=$("signalQuality");if(!el)return;
+  var q=qualityStats(["qr","sales"]);
+  var pct=Math.round(q.passRate*100)+"%";
+  el.innerHTML=[
+    '<div class="quality-cell"><small>SIGNAL QUALITY</small><b>'+esc(q.score? q.score+"/100 · "+q.label:q.label)+'</b><span>'+esc(pct+" pass · "+q.samples+" samples · "+q.flaps+" flaps")+'</span></div>',
+    '<div class="quality-cell"><small>LATENCY</small><b>'+esc(q.avgMs?q.avgMs+"ms":"—")+'</b><span>'+esc(q.fail+" fail in rolling window")+'</span></div>',
+    '<div class="quality-cell"><small>REFRESH ADVICE</small><b>'+esc(q.advice)+'</b><span>'+esc(q.adviceNote)+'</span></div>'
+  ].join("");
+}
 function renderSignalGuard(){
   if(!$("signalGuard"))return;
   signalChip("sigQr","qr","QR Stats");
   signalChip("sigBeam","sales","Beam Sales");
   signalChip("sigAds","ads","Ads Watch");
   signalChip("sigAi","ai","AI Lens");
+  renderSignalQuality();
   var required=["qr","sales"], risky=required.filter(function(n){return sourceState(n)==="bad"});
   var waiting=required.filter(function(n){return !state.sources[n].lastOk});
   var overall=state.cacheFallback?"ใช้ข้อมูลล่าสุด":risky.length?"สัญญาณเสี่ยง":waiting.length?"รอสัญญาณหลัก":"สัญญาณหลักสด";
@@ -1698,6 +1748,8 @@ function missionChecks(d,sales,ads){
   var tagRate=total?tagged/total:0;
   var ssum=sales.summary||{}, hasSales=!!(sales.ok&&(ssum.paidAmountToday||ssum.paidOrdersToday||sales.timeline15m.length));
   var adSpend=platformSpend(ads);
+  var q=qualityStats(["qr","sales"]);
+  var qStatus=q.samples<2?"warn":q.score>=75?"good":q.score>=55?"warn":"bad";
   return {
     phase1:[
       {label:"QR endpoint",detail:state.cacheFallback?"ใช้ last-good snapshot เพราะ endpoint สดไม่พร้อม":state.sources.qr.lastOk?"Apps Script สด "+sourceAge("qr"):"รอ QR stats รอบแรก",status:state.cacheFallback?"warn":sourceState("qr"),metric:state.cacheFallback?"LAST":signalLabel("qr"),icon:"bi-qr-code-scan"},
@@ -1709,7 +1761,7 @@ function missionChecks(d,sales,ads){
     phase2:[
       {label:"Traffic movement",detail:total?("มี scan วันนี้ "+fmt(total)):"ยังไม่มี movement จริง",status:total>0?"good":"warn",metric:total?fmt(total):"WAIT",icon:"bi-people-fill"},
       {label:"Sales movement",detail:hasSales?("ยอดรับชำระ "+baht(ssum.paidAmountToday)):"Beam ต่อได้แต่ยังไม่มียอดขาย",status:hasSales?"good":sourceState("sales")==="bad"?"bad":"warn",metric:hasSales?baht(ssum.last15Amount):signalLabel("sales"),icon:"bi-bag-check"},
-      {label:"Signal stability",detail:sourceState("qr")==="bad"||sourceState("sales")==="bad"?"มีสัญญาณหลักเสี่ยง":"QR/Beam ไม่มี fail ต่อเนื่อง",status:(sourceState("qr")==="bad"||sourceState("sales")==="bad")?"bad":(sourceState("qr")==="good"&&sourceState("sales")==="good")?"good":"warn",metric:(state.sources.qr.failStreak||0)+(state.sources.sales.failStreak||0)+" fail",icon:"bi-broadcast-pin"},
+      {label:"Signal quality",detail:q.samples?("rolling "+q.samples+" samples · "+Math.round(q.passRate*100)+"% pass · "+q.flaps+" flaps"):"รอรอบตรวจสัญญาณ",status:qStatus,metric:q.samples?q.score+"/100":"WAIT",icon:"bi-broadcast-pin"},
       {label:"Ads display",detail:adSpend?("Meta/TikTok spend แสดง "+baht(adSpend)):"รอ official connector แบบ read-only",status:adSpend?"good":"warn",metric:adSpend?baht(adSpend):"READ",icon:"bi-megaphone"},
       {label:"Human approval",detail:"ทุก action ต้องผ่านคนคุมงานก่อน ไม่มี auto-mutation",status:"good",metric:"LOCK",icon:"bi-person-check-fill"}
     ]
