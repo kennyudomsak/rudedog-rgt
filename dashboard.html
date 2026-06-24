@@ -1420,8 +1420,7 @@ function setText(id,v){var el=$(id);if(el)el.textContent=v}
 function baht(n){n=Number(n)||0;if(n>=1000000)return "฿"+(n/1000000).toFixed(2)+"M";if(n>=1000)return "฿"+(n/1000).toFixed(1)+"k";return "฿"+fmt(n)}
 function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
 function hashDashboardKey(){
-  if(!location.hash)return "";
-  var m=location.hash.match(/key=([^&]+)/);
+  var m=String(location.href||"").match(/[?#&]key=([^&#]+)/);
   return m?decodeURIComponent(m[1]):"";
 }
 function dashboardKey(){
@@ -2882,10 +2881,11 @@ function boot(){
   clockTick();startLoop();
 }
 (function initGate(){
-  var hk=null;if(location.hash){var m=location.hash.match(/key=([^&]+)/);if(m)hk=decodeURIComponent(m[1])}
+  var hk=hashDashboardKey();
   var saved=null;try{saved=sessionStorage.getItem("rdfair_gate")}catch(e){}
   function ok(k){return !CONFIG.gate.on||k===CONFIG.gate.key}
-  if(ok(hk)||ok(saved)){unlock();return}
+  if(ok(hk)){try{sessionStorage.setItem("rdfair_gate",hk)}catch(e){}unlock();return}
+  if(ok(saved)){unlock();return}
   $("gateBtn").addEventListener("click",function(){var k=$("gateInput").value.trim();if(ok(k)){try{sessionStorage.setItem("rdfair_gate",k)}catch(e){}unlock()}else setText("gateErr","รหัสไม่ถูกต้อง")});
   $("gateInput").addEventListener("keydown",function(e){if(e.key==="Enter")$("gateBtn").click()});
 })();
