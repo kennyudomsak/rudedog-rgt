@@ -172,6 +172,32 @@
   .heat-scale:before{content:"น้อย";position:absolute;left:-40px;top:-4px;color:var(--muted);font-size:13px;font-weight:850}
   .heat-scale:after{content:"มาก";position:absolute;right:-38px;top:-4px;color:var(--muted);font-size:13px;font-weight:850}
 
+  .suite{margin-top:14px}
+  .suite-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:15px 18px;border-bottom:1px solid rgba(255,255,255,.07)}
+  .suite-title{font-size:28px;font-weight:950;color:var(--text)}
+  .suite-title span{color:var(--red)}
+  .suite-sub{color:var(--muted);font-size:13px;font-weight:850;text-align:right}
+  .suite-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;padding:14px}
+  .suite-card{border:1px solid var(--line);border-radius:10px;background:linear-gradient(180deg,#111b22,#071017);padding:13px;min-height:178px}
+  .suite-card h3{margin:0 0 10px;font-size:16px;font-weight:950;color:var(--gold);display:flex;align-items:center;gap:8px}
+  .suite-metric{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+  .suite-metric:last-child{border-bottom:0}
+  .suite-metric span{color:var(--muted);font-size:12px;font-weight:850}
+  .suite-metric b{font-size:18px;font-weight:950;text-align:right}
+  .suite-inputs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:6px}
+  .suite-inputs label{font-size:10.5px;color:var(--muted);font-weight:850}
+  .suite-inputs input{width:100%;margin-top:3px;background:#05080b;border:1px solid var(--line);border-radius:6px;color:var(--text);padding:6px;font-weight:900;text-align:right}
+  .suite-progress{height:10px;border-radius:999px;background:#17232b;overflow:hidden;margin:8px 0}
+  .suite-progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--red));transition:width .5s}
+  .suite-wide{grid-column:span 2}
+  .cmp-mini{display:grid;grid-template-columns:94px 1fr 42px 1fr 42px;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.055);font-size:12px;font-weight:850}
+  .cmp-mini:last-child{border-bottom:0}
+  .cmp-mini .lb{color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cmp-mini .track{height:10px;border-radius:999px;background:#17232b;overflow:hidden}
+  .cmp-mini .track i{display:block;height:100%;background:var(--red)}
+  .cmp-mini .track.b i{background:var(--cyan)}
+  .cmp-mini .val{color:var(--muted);font-size:11px;text-align:right}
+
   .refresh-tabs{display:flex;gap:6px}
   .refresh-tabs button{height:32px;border:1px solid var(--line);border-radius:7px;background:#0a1218;color:var(--muted);font-weight:900;padding:0 12px;cursor:pointer}
   .refresh-tabs button.on{background:var(--red);border-color:var(--red);color:white}
@@ -184,6 +210,8 @@
     .kpis{grid-template-columns:repeat(3,1fr)}
     .grid{grid-template-columns:1fr;grid-template-areas:"left" "channels" "signals" "heat"}
     .bottom-grid{grid-template-columns:1fr 1fr}
+    .suite-grid{grid-template-columns:repeat(2,1fr)}
+    .suite-wide{grid-column:span 2}
   }
   @media(max-width:760px){
     .app{display:block}
@@ -204,6 +232,10 @@
     .province{grid-template-columns:1fr}
     .heat-grid{grid-template-columns:54px repeat(24,20px);overflow-x:auto}
     .panel-head{height:auto;min-height:52px;flex-wrap:wrap;padding:12px}
+    .suite-grid{grid-template-columns:1fr}
+    .suite-wide{grid-column:span 1}
+    .suite-head{align-items:flex-start;flex-direction:column}
+    .suite-sub{text-align:left}
   }
 </style>
 </head>
@@ -321,6 +353,73 @@
         <div class="heat" id="heatmap"></div>
       </section>
     </section>
+
+    <section class="panel suite" id="csuite">
+      <div class="suite-head">
+        <div class="suite-title">C-SUITE <span>WAR ROOM</span></div>
+        <div class="suite-sub">รวม metric จาก dashboard เก่า + metric เพิ่มสำหรับประชุมผู้บริหารระหว่างงาน</div>
+      </div>
+      <div class="suite-grid">
+        <article class="suite-card">
+          <h3><i class="bi bi-person-badge"></i> CEO</h3>
+          <div class="suite-metric"><span>เป้าคนเข้างาน</span><b><input id="suiteGoal" type="number" min="1" value="500" style="width:74px;background:#05080b;border:1px solid var(--line);border-radius:6px;color:var(--text);padding:4px;text-align:right;font-weight:950"> คน</b></div>
+          <div class="suite-progress"><i id="suiteGoalBar"></i></div>
+          <div class="suite-metric"><span>ไปถึงเป้า</span><b id="suiteGoalPct">—</b></div>
+          <div class="suite-metric"><span>ใหม่ / ขาประจำ</span><b id="suiteVisit">—</b></div>
+          <div class="suite-metric"><span>ขนาดกลุ่มเฉลี่ย</span><b id="suiteGroupAvg">—</b></div>
+        </article>
+
+        <article class="suite-card">
+          <h3><i class="bi bi-people"></i> COO</h3>
+          <div class="suite-metric"><span>ชั่วโมงพีควันนี้</span><b id="suitePeak">—</b></div>
+          <div class="suite-metric"><span>15 นาทีล่าสุด</span><b id="suiteLast15">—</b></div>
+          <div class="suite-metric"><span>ชั่วโมงล่าสุด</span><b id="suiteLastHour">—</b></div>
+          <div class="suite-metric"><span>กลุ่มที่พบบ่อย</span><b id="suiteTopGroup">—</b></div>
+        </article>
+
+        <article class="suite-card">
+          <h3><i class="bi bi-megaphone"></i> CMO</h3>
+          <div class="suite-metric"><span>Consent rate</span><b id="suiteConsent">—</b></div>
+          <div class="suite-metric"><span>Top style</span><b id="suiteStyle">—</b></div>
+          <div class="suite-metric"><span>ซื้อให้ใครเด่น</span><b id="suiteForwho">—</b></div>
+          <div class="suite-metric"><span>Top channel</span><b id="suiteChannel">—</b></div>
+        </article>
+
+        <article class="suite-card">
+          <h3><i class="bi bi-cash-stack"></i> CFO</h3>
+          <div class="suite-inputs">
+            <label>มูลค่า/ลีด<input id="suiteLeadVal" type="number" min="0" value="25"></label>
+            <label>ปิดการขาย %<input id="suiteConv" type="number" min="0" step="0.5" value="8"></label>
+            <label>AOV<input id="suiteAov" type="number" min="0" value="600"></label>
+            <label>ต้นทุนน้ำหอม<input id="suitePerf" type="number" min="0" value="60"></label>
+          </div>
+          <div class="suite-metric"><span>มูลค่าลิสต์</span><b id="suiteListVal">—</b></div>
+          <div class="suite-metric"><span>ยอดต่อยอดคาดการณ์</span><b id="suiteRevenue">—</b></div>
+          <div class="suite-metric"><span>เพดานของแถม</span><b id="suiteLiability">—</b></div>
+        </article>
+
+        <article class="suite-card">
+          <h3><i class="bi bi-shield-check"></i> CTO + ACCT</h3>
+          <div class="suite-metric"><span>Tag coverage</span><b id="suiteTag">—</b></div>
+          <div class="suite-metric"><span>Other scans</span><b id="suiteOther">—</b></div>
+          <div class="suite-metric"><span>Score avg</span><b id="suiteScore">—</b></div>
+          <div class="suite-metric"><span>Data freshness</span><b id="suiteFresh">—</b></div>
+        </article>
+
+        <article class="suite-card suite-wide">
+          <h3><i class="bi bi-signpost-split"></i> Door vs In-Event — ความต่างของคนสองกลุ่ม</h3>
+          <div id="suiteCompare"></div>
+        </article>
+
+        <article class="suite-card suite-wide">
+          <h3><i class="bi bi-lightning-charge"></i> C-suite monitor ที่ควรดูเพิ่ม</h3>
+          <div class="suite-metric"><span>CEO</span><b>Goal pace + Door heads</b></div>
+          <div class="suite-metric"><span>COO</span><b>Peak hour + Last 15 min</b></div>
+          <div class="suite-metric"><span>CMO</span><b>Consent + Top intent</b></div>
+          <div class="suite-metric"><span>CFO</span><b>Lead value + Gift liability</b></div>
+        </article>
+      </div>
+    </section>
   </main>
 </div>
 
@@ -336,6 +435,7 @@ function fmt(n){return Math.round(Number(n)||0).toLocaleString("en-US")}
 function pc(n){return Math.round((Number(n)||0)*100)+"%"}
 function pad(n){return String(n).padStart(2,"0")}
 function setText(id,v){var el=$(id);if(el)el.textContent=v}
+function baht(n){n=Number(n)||0;if(n>=1000000)return "฿"+(n/1000000).toFixed(2)+"M";if(n>=1000)return "฿"+(n/1000).toFixed(1)+"k";return "฿"+fmt(n)}
 var LABEL={
   source:{door:"DOOR\n(หน้างาน)",table:"TABLE\n(บูธ/กิจกรรม)",poster:"POSTER\n(สื่อหน้างาน)",other:"OTHERS\n(อื่นๆ)"},
   channel:{tiktok:"TikTok",facebook:"Facebook",signage:"ป้าย/หน้าร้าน",wom_other:"เพื่อนชวน/อื่นๆ",codex_test:"Codex test",other:"ไม่ระบุ"},
@@ -347,6 +447,7 @@ function entries(obj,map){
   obj=obj||{};
   return Object.keys(obj).map(function(k){return{key:k,label:(map&&map[k])||k,value:Number(obj[k])||0}}).filter(function(x){return x.value>0}).sort(function(a,b){return b.value-a.value});
 }
+function topEntry(obj,map){var a=entries(obj,map);return a[0]||null}
 function rolling(perMin){
   perMin=(perMin||[]).slice();
   while(perMin.length<60)perMin.unshift(0);
@@ -440,6 +541,7 @@ function render(d){
   renderProvince(d);
   renderSignals(d,mo);
   renderHeat(d,mo);
+  renderSuite(d,mo);
 }
 function avg15(tl){
   var h=new Date().getHours()+1;
@@ -537,11 +639,94 @@ function renderHeat(d,mo){
   var accum=[],run=0;for(var i=0;i<24;i++){run+=tl[i]||0;accum.push(run)}
   $("heatmap").innerHTML='<div class="heat-grid">'+head+row("วันนี้",tl)+row("สะสม",accum)+row("60 นาที",perHour)+'</div><div class="heat-scale"></div>';
 }
+function renderSuite(d,mo){
+  d=d||{};mo=mo||calcMomentum([]);
+  var att=d.attendance||{parties:0,people:0}, total=d.count||0, heads=d.heads||0;
+  var target=Math.max(1,Number($("suiteGoal").value)||500);
+  var goalPct=att.people/target;
+  $("suiteGoalBar").style.width=Math.min(100,goalPct*100).toFixed(1)+"%";
+  setText("suiteGoalPct",fmt(att.people)+" / "+fmt(target)+" ("+pc(goalPct)+")");
+  var visit=d.visit||{first:0,loyal:0,unknown:0};
+  setText("suiteVisit",fmt(visit.first||0)+" / "+fmt(visit.loyal||0));
+  setText("suiteGroupAvg",total?(heads/total).toFixed(1)+" คน/สแกน":"—");
+
+  var tl=d.timeline||[], peakVal=0, peakHour=-1;
+  for(var i=0;i<tl.length;i++){if((tl[i]||0)>peakVal){peakVal=tl[i];peakHour=i}}
+  setText("suitePeak",peakHour>=0?pad(peakHour)+":00 · "+fmt(peakVal):"—");
+  setText("suiteLast15",fmt((d.pace||{}).last15||0));
+  setText("suiteLastHour",fmt((d.pace||{}).lastHour||0));
+  var tg=topEntry(d.group||{},null);
+  setText("suiteTopGroup",tg?tg.label+" คน":"—");
+
+  var con=d.consent||{yes:0,total:0,rate:0};
+  setText("suiteConsent",pc(con.rate)+" · "+fmt(con.yes||0));
+  var st=topEntry(d.style,LABEL.style), fw=topEntry(d.forwho,LABEL.forwho), ch=topEntry(d.channel,LABEL.channel);
+  setText("suiteStyle",st?st.label:"—");
+  setText("suiteForwho",fw?fw.label:"—");
+  setText("suiteChannel",ch?ch.label:"—");
+
+  var leadVal=Number($("suiteLeadVal").value)||0, conv=(Number($("suiteConv").value)||0)/100, aov=Number($("suiteAov").value)||0, perf=Number($("suitePerf").value)||0;
+  setText("suiteListVal",baht((con.yes||0)*leadVal));
+  setText("suiteRevenue",baht((con.yes||0)*conv*aov));
+  setText("suiteLiability",baht(total*perf));
+  saveSuiteCfg();
+
+  var bs=d.bySource||{}, tagged=((bs.door||{}).parties||0)+((bs.table||{}).parties||0)+((bs.poster||{}).parties||0), other=(bs.other||{}).parties||0;
+  setText("suiteTag",total?pc(tagged/total)+" · "+fmt(tagged)+"/"+fmt(total):"—");
+  setText("suiteOther",fmt(other));
+  setText("suiteScore",d.score?Number(d.score.avg||0).toFixed(1):"—");
+  var fresh=state.lastOk?Math.round((Date.now()-state.lastOk)/1000):0;
+  setText("suiteFresh",state.lastOk?(fresh<30?"สด":"~"+fresh+" วิ"):"—");
+  renderSuiteCompare(d);
+}
+function renderSuiteCompare(d){
+  var seg=d.seg||{}, door=seg.door||{}, ine=seg.inEvent||{};
+  if(((door.n||0)+(ine.n||0))<=0){$("suiteCompare").innerHTML='<div class="empty">ยังไม่มีข้อมูล door vs in-event · ต้องมี QR door/table/poster ก่อน</div>';return}
+  var dims=[
+    {key:"channel",label:"ช่องทาง",map:LABEL.channel},
+    {key:"interest",label:"สินค้า",map:LABEL.interest},
+    {key:"style",label:"สไตล์",map:LABEL.style},
+    {key:"forwho",label:"ซื้อให้ใคร",map:LABEL.forwho},
+    {key:"visit",label:"ใหม่/ประจำ",map:{first:"ครั้งแรก",loyal:"ขาประจำ",unknown:"ไม่ระบุ"}}
+  ];
+  var rows=[];
+  dims.forEach(function(dim){
+    var a=door[dim.key]||{}, b=ine[dim.key]||{};
+    var keys={};Object.keys(a).forEach(function(k){keys[k]=1});Object.keys(b).forEach(function(k){keys[k]=1});
+    var sa=Object.keys(a).reduce(function(s,k){return s+(a[k]||0)},0)||1;
+    var sb=Object.keys(b).reduce(function(s,k){return s+(b[k]||0)},0)||1;
+    var best=null;
+    Object.keys(keys).forEach(function(k){
+      var pa=(a[k]||0)/sa, pb=(b[k]||0)/sb, diff=Math.abs(pa-pb);
+      if(!best||diff>best.diff)best={label:dim.label+": "+((dim.map&&dim.map[k])||k),pa:pa,pb:pb,diff:diff};
+    });
+    if(best)rows.push(best);
+  });
+  if(!rows.length){$("suiteCompare").innerHTML='<div class="empty">ยังไม่มีข้อมูล door vs in-event</div>';return}
+  $("suiteCompare").innerHTML=rows.map(function(r){
+    return '<div class="cmp-mini"><div class="lb">'+r.label+'</div><div class="track"><i style="width:'+(r.pa*100).toFixed(1)+'%"></i></div><div class="val">'+pc(r.pa)+'</div><div class="track b"><i style="width:'+(r.pb*100).toFixed(1)+'%"></i></div><div class="val">'+pc(r.pb)+'</div></div>';
+  }).join("");
+}
+function saveSuiteCfg(){
+  try{localStorage.setItem("rdfair_suite_cfg",JSON.stringify({goal:$("suiteGoal").value,leadVal:$("suiteLeadVal").value,conv:$("suiteConv").value,aov:$("suiteAov").value,perf:$("suitePerf").value}))}catch(e){}
+}
+function loadSuiteCfg(){
+  try{
+    var c=JSON.parse(localStorage.getItem("rdfair_suite_cfg")||"{}");
+    if(c.goal)$("suiteGoal").value=c.goal;
+    if(c.leadVal)$("suiteLeadVal").value=c.leadVal;
+    if(c.conv)$("suiteConv").value=c.conv;
+    if(c.aov)$("suiteAov").value=c.aov;
+    if(c.perf)$("suitePerf").value=c.perf;
+  }catch(e){}
+}
 function unlock(){ $("gate").className="gate hidden"; $("app").style.display="grid"; boot(); }
 function boot(){
   try{var r=Number(localStorage.getItem("rdfair_cmd_refresh"));if([15000,60000,300000].indexOf(r)>=0)state.refreshMs=r}catch(e){}
+  loadSuiteCfg();
   setText("refreshLabel",state.refreshMs===15000?"15 วินาที":state.refreshMs===60000?"1 นาที":"5 นาที");
   document.querySelector("#refreshTabs").addEventListener("click",function(e){var b=e.target.closest("button[data-ms]");if(b)setRefresh(Number(b.dataset.ms))});
+  ["suiteGoal","suiteLeadVal","suiteConv","suiteAov","suitePerf"].forEach(function(id){$(id).addEventListener("input",function(){if(state.data)renderSuite(state.data,calcMomentum(state.data.perMin||[]))})});
   document.addEventListener("visibilitychange",function(){if(!document.hidden)tick()});
   clockTick();startLoop();
 }
