@@ -789,14 +789,14 @@
       <section class="panel ai-panel">
         <div class="panel-head">
           <div class="panel-title">AI SIDE BY SIDE <small>(Codex / Claude lens)</small></div>
-          <div class="readonly-badge"><i class="bi bi-eye"></i> วิเคราะห์เพื่อช่วยตัดสินใจ</div>
+          <div class="readonly-badge" id="aiConn"><i class="bi bi-eye"></i> local rule lens</div>
         </div>
         <div class="ai-body">
           <div class="ai-compare">
             <article class="ai-card" id="codexLens"></article>
             <article class="ai-card" id="claudeLens"></article>
           </div>
-          <div class="ad-warning">Claude Lens ตอนนี้เป็น rule-simulated lens ในหน้า dashboard เพื่อเทียบมุมคิด ก่อนต่อ Claude API จริงในเฟสถัดไป</div>
+          <div class="ad-warning" id="aiNote">Codex / Claude Lens ตอนนี้เป็น local rule-simulated lens เพื่อเทียบมุมคิด ก่อนต่อ AI endpoint จริง</div>
         </div>
       </section>
     </section>
@@ -976,6 +976,7 @@ var CONFIG={
   endpoint:"https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
   salesEndpoint:"https://rudedog-beam-sales-bridge.rudedog.workers.dev/stats",
   adsEndpoint:"",
+  aiEndpoint:"",
   requestTimeoutMs:9000,
   staleWarnMs:45000,
   staleFailMs:180000,
@@ -987,7 +988,8 @@ var state={
   sources:{
     qr:{ok:false,lastOk:0,lastTry:0,message:"รอสัญญาณ"},
     sales:{ok:false,lastOk:0,lastTry:0,message:"รอรายการขาย"},
-    ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม"}
+    ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม"},
+    ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens"}
   }
 };
 var $=function(id){return document.getElementById(id)};
@@ -997,11 +999,14 @@ function pad(n){return String(n).padStart(2,"0")}
 function setText(id,v){var el=$(id);if(el)el.textContent=v}
 function baht(n){n=Number(n)||0;if(n>=1000000)return "฿"+(n/1000000).toFixed(2)+"M";if(n>=1000)return "฿"+(n/1000).toFixed(1)+"k";return "฿"+fmt(n)}
 function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
-function fetchJson(url,timeoutMs){
+function fetchJson(url,timeoutMs,init){
   timeoutMs=timeoutMs||CONFIG.requestTimeoutMs;
+  init=init||{};
   var ctrl=typeof AbortController!=="undefined"?new AbortController():null;
   var timer=ctrl?setTimeout(function(){ctrl.abort()},timeoutMs):null;
-  return fetch(url,{cache:"no-store",signal:ctrl?ctrl.signal:void 0})
+  init.cache=init.cache||"no-store";
+  if(ctrl)init.signal=ctrl.signal;
+  return fetch(url,init)
     .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()})
     .finally(function(){if(timer)clearTimeout(timer)});
 }
@@ -1450,8 +1455,54 @@ function buildAiLenses(d,mo,sales,ads,actions){
   };
   return{codex:codex,claude:claude};
 }
+function normalizeLens(raw,type,fallback){
+  raw=raw||{};
+  return {
+    verdict:String(raw.verdict||fallback.verdict||"รอสัญญาณ"),
+    summary:String(raw.summary||fallback.summary||"วิเคราะห์จากข้อมูลรอบล่าสุด"),
+    meaning:String(raw.meaning||fallback.meaning||"รอข้อมูล"),
+    next:String(raw.next||fallback.next||"รอรอบถัดไป"),
+    risk:String(raw.risk||fallback.risk||"ข้อมูลอาจหน่วง")
+  };
+}
+function normalizeAiLenses(raw,fallback){
+  var s=(raw&&raw.lenses)||raw||{};
+  return {
+    ok:!!(raw&&raw.ok),
+    source:String((raw&&raw.source)||"ai-lens"),
+    updatedAt:(raw&&raw.updatedAt)||null,
+    codex:normalizeLens(s.codex,"codex",fallback.codex),
+    claude:normalizeLens(s.claude,"claude",fallback.claude),
+    note:String((raw&&raw.note)||"AI endpoint live"),
+    warnings:Array.isArray(raw&&raw.warnings)?raw.warnings:[]
+  };
+}
+function loadAiLenses(d,mo,sales,ads,actions){
+  var fallback=buildAiLenses(d,mo,sales,ads,actions);
+  if(!CONFIG.aiEndpoint){
+    markSource("ai",false,"local rule lens");
+    return Promise.resolve({ok:false,source:"local-rule",codex:fallback.codex,claude:fallback.claude,note:"Codex / Claude Lens ตอนนี้เป็น local rule-simulated lens เพื่อเทียบมุมคิด ก่อนต่อ AI endpoint จริง",warnings:[]});
+  }
+  var payload={
+    asOf:new Date().toISOString(),
+    traffic:{count:d.count||0,heads:d.heads||0,pace:d.pace||{},source:d.bySource||{},channel:d.channel||{}},
+    sales:(sales&&sales.summary)||{},
+    ads:{meta:(ads&&ads.meta)||{},tiktok:(ads&&ads.tiktok)||{},campaigns:(ads&&ads.campaigns)||[]},
+    actions:actions
+  };
+  return fetchJson(CONFIG.aiEndpoint,CONFIG.requestTimeoutMs,{
+    method:"POST",
+    headers:{"content-type":"application/json"},
+    body:JSON.stringify(payload)
+  })
+    .then(function(raw){markSource("ai",true,"live AI lens");return normalizeAiLenses(raw,fallback)})
+    .catch(function(err){
+      markSource("ai",false,(err&&err.name==="AbortError")?"AI timeout":"AI fallback");
+      return {ok:false,source:"local-rule",codex:fallback.codex,claude:fallback.claude,note:"AI endpoint ใช้ไม่ได้ในรอบนี้ จึง fallback เป็น local rule lens",warnings:[]};
+    });
+}
 function renderActionCommand(d,mo,sales,ads){
-  var actions=buildCommandRules(d,mo,sales,ads), top=firstAction(actions), lenses=buildAiLenses(d,mo,sales,ads,actions);
+  var actions=buildCommandRules(d,mo,sales,ads), top=firstAction(actions), fallbackLenses=buildAiLenses(d,mo,sales,ads,actions);
   setText("commandHeadline",top.title||"รอข้อมูลหน้างาน");
   setText("commandReason",top.body||"เมื่อข้อมูลเข้ามา ระบบจะจัดลำดับ action ให้ทันที");
   $("criticalActions").innerHTML=actionHtml(actions,"critical");
@@ -1463,8 +1514,15 @@ function renderActionCommand(d,mo,sales,ads){
   sourceSet("srcBeam",sourceState("sales"),"Beam Sales",hasSales?baht(ssum.paidAmountToday)+" · "+sourceAge("sales"):state.sources.sales.message);
   var adSpend=platformSpend(ads);
   sourceSet("srcAds",sourceState("ads"),"Ads Watch",adSpend>0?baht(adSpend)+" · "+sourceAge("ads"):state.sources.ads.message);
-  $("codexLens").innerHTML=lensHtml("codex",lenses.codex);
-  $("claudeLens").innerHTML=lensHtml("claude",lenses.claude);
+  $("codexLens").innerHTML=lensHtml("codex",fallbackLenses.codex);
+  $("claudeLens").innerHTML=lensHtml("claude",fallbackLenses.claude);
+  setText("aiConn",state.sources.ai.message||"local rule lens");
+  loadAiLenses(d,mo,sales,ads,actions).then(function(lenses){
+    $("codexLens").innerHTML=lensHtml("codex",lenses.codex);
+    $("claudeLens").innerHTML=lensHtml("claude",lenses.claude);
+    setText("aiConn",lenses.ok?"live AI lens":"local rule lens");
+    setText("aiNote",lenses.note||"AI lens พร้อมใช้งาน");
+  });
 }
 function adMetric(label,value){return '<div class="ad-metric"><small>'+esc(label)+'</small><b>'+esc(value)+'</b></div>'}
 function renderPlatformMetrics(id,p){
