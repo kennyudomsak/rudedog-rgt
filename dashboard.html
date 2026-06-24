@@ -263,6 +263,19 @@
   .action-card em{display:inline-block;margin-top:8px;font-style:normal;color:var(--cyan);font-size:11px;font-weight:950}
   .action-card.critical em{color:var(--red)}
   .action-card.focus em{color:var(--gold)}
+  .operator-timeline{margin-top:12px;border:1px solid rgba(43,132,255,.22);border-radius:10px;background:rgba(5,10,14,.30);padding:11px;display:grid;gap:8px}
+  .timeline-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .timeline-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+  .timeline-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+  .timeline-list{display:grid;gap:7px}
+  .timeline-row{display:grid;grid-template-columns:72px 1fr 116px;gap:9px;align-items:start;border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(255,255,255,.02);padding:8px}
+  .timeline-row time{color:var(--muted);font-size:11px;font-weight:950;line-height:1.25}
+  .timeline-row b{display:block;color:var(--text);font-size:13px;font-weight:950;line-height:1.2}
+  .timeline-row span{display:block;color:var(--dim);font-size:10px;font-weight:900;line-height:1.3;margin-top:3px}
+  .timeline-row em{font-style:normal;text-align:right;color:var(--cyan);font-size:10px;font-weight:950;line-height:1.25}
+  .timeline-row.critical em,.timeline-row.hold em{color:var(--red)}
+  .timeline-row.focus em,.timeline-row.watch em{color:var(--gold)}
+  .timeline-row.live em{color:var(--green)}
   .ai-body{padding:14px;display:grid;gap:12px}
   .ai-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   .ai-consensus{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);padding:12px;display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:10px}
@@ -812,6 +825,11 @@
   .lock-cell small{color:#168a54}
   .lock-cell span{color:#63748c}
   .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
+  .operator-timeline{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
+  .timeline-head b,.timeline-row b{color:#172238}
+  .timeline-head small,.timeline-row time{color:#63748c}
+  .timeline-row{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+  .timeline-row span{color:#8b9bb1}
   .command-hero{
     border-color:rgba(24,135,232,.20);
     background:linear-gradient(135deg,rgba(232,243,255,.95),rgba(255,255,255,.68));
@@ -873,6 +891,8 @@
     .status-card,.timer-card{height:66px}
     .kpi{grid-template-columns:56px minmax(0,1fr)}
     .kpi h3{font-size:19px}
+    .timeline-row{grid-template-columns:1fr}
+    .timeline-row em{text-align:left}
     .mission-body,.ai-consensus,.control-lock{grid-template-columns:1fr}
     .mission-lock{display:block}
     .mission-badge{display:inline-block;margin-top:10px}
@@ -1084,6 +1104,12 @@
             <div class="lane"><h3><i class="bi bi-exclamation-triangle-fill"></i> CRITICAL</h3><div id="criticalActions"></div></div>
             <div class="lane"><h3><i class="bi bi-bullseye"></i> FOCUS</h3><div id="focusActions"></div></div>
             <div class="lane"><h3><i class="bi bi-signpost-split"></i> NEXT MOVE</h3><div id="nextActions"></div></div>
+          </div>
+          <div class="operator-timeline" id="operatorTimeline">
+            <div class="timeline-head"><small>OPERATOR ACTION TIMELINE</small><b>Incident Log · standby</b></div>
+            <div class="timeline-list">
+              <div class="timeline-row watch"><time>--:--</time><div><b>รอ action แรก</b><span>ระบบจะบันทึกเมื่อ QR/Beam/AI recommendation มีสถานะใหม่</span></div><em>WATCH</em></div>
+            </div>
           </div>
         </div>
       </section>
@@ -1301,7 +1327,8 @@ var state={
     ads:{ok:false,lastOk:0,lastTry:0,message:"read-only / รอเชื่อม",responseMs:0,failStreak:0,successStreak:0,mode:"read-only",history:[]},
     ai:{ok:false,lastOk:0,lastTry:0,message:"local rule lens",responseMs:0,failStreak:0,successStreak:0,mode:"local",history:[]}
   },
-  control:{day:"1",phase:"phase1"}
+  control:{day:"1",phase:"phase1"},
+  actionTimeline:[]
 };
 var $=function(id){return document.getElementById(id)};
 function fmt(n){return Math.round(Number(n)||0).toLocaleString("en-US")}
@@ -1395,6 +1422,10 @@ function signalHistoryKey(){
   var d=new Date();
   return "rdfair_signal_history_v1_"+d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
 }
+function actionTimelineKey(){
+  var d=new Date();
+  return "rdfair_operator_timeline_v1_"+d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate());
+}
 function stripRuntimeKeys(obj){
   if(!obj||typeof obj!=="object")return obj;
   if(Array.isArray(obj))return obj.map(stripRuntimeKeys);
@@ -1461,6 +1492,38 @@ function loadSignalHistory(){
         state.sources[name].responseMs=rows[rows.length-1].responseMs||0;
       }
     });
+    return true;
+  }catch(e){return false}
+}
+function cleanActionTimeline(rows){
+  rows=Array.isArray(rows)?rows:[];
+  return rows.slice(-8).map(function(row){
+    return {
+      t:Math.max(0,Number(row&&row.t)||Date.now()),
+      title:String(row&&row.title||"รอ action"),
+      body:String(row&&row.body||"รอข้อมูล"),
+      lane:String(row&&row.lane||"watch"),
+      mode:String(row&&row.mode||"WATCH"),
+      confidence:String(row&&row.confidence||"WATCH"),
+      signal:String(row&&row.signal||"QR WAIT · Beam WAIT"),
+      safety:String(row&&row.safety||"No mutation"),
+      signature:String(row&&row.signature||"")
+    };
+  }).filter(function(row){return row.t>0});
+}
+function saveActionTimeline(){
+  try{
+    localStorage.setItem(actionTimelineKey(),JSON.stringify({savedAt:Date.now(),rows:cleanActionTimeline(state.actionTimeline)}));
+  }catch(e){}
+}
+function loadActionTimeline(){
+  try{
+    var raw=localStorage.getItem(actionTimelineKey());
+    if(!raw)return false;
+    var payload=JSON.parse(raw);
+    if(!payload||!payload.savedAt)return false;
+    if(Date.now()-Number(payload.savedAt)>CONFIG.lastGoodMaxAgeMs)return false;
+    state.actionTimeline=cleanActionTimeline(payload.rows);
     return true;
   }catch(e){return false}
 }
@@ -2198,6 +2261,58 @@ function actionHtml(actions,lane){
   if(!arr.length)return '<div class="action-card"><b>ยังไม่มีรายการ</b><span>ระบบจะเติมให้เมื่อข้อมูลรอบถัดไปมีสัญญาณชัดขึ้น</span><em>standby</em></div>';
   return arr.map(function(a){return '<div class="action-card '+esc(a.lane)+'"><b>'+esc(a.title)+'</b><span>'+esc(a.body)+'</span><em>'+esc(a.metric)+'</em></div>'}).join("");
 }
+function timelineModeClass(entry){
+  var lane=String((entry&&entry.lane)||"").toLowerCase();
+  var mode=String((entry&&entry.mode)||"").toLowerCase();
+  if(lane==="critical"||mode.indexOf("hold")>=0)return "hold";
+  if(mode.indexOf("live")>=0)return "live";
+  if(lane==="focus"||mode.indexOf("watch")>=0)return "watch";
+  return "next";
+}
+function timelineRow(entry){
+  var t=new Date(entry.t||Date.now()).toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  var meta=[entry.signal,entry.confidence,entry.safety].filter(Boolean).join(" · ");
+  return '<div class="timeline-row '+esc(timelineModeClass(entry))+'"><time>'+esc(t)+'</time><div><b>'+esc(entry.title)+'</b><span>'+esc(entry.body)+'</span><span>'+esc(meta)+'</span></div><em>'+esc(entry.mode||"WATCH")+'</em></div>';
+}
+function renderOperatorTimeline(){
+  var el=$("operatorTimeline");if(!el)return;
+  var rows=cleanActionTimeline(state.actionTimeline).slice().reverse();
+  el.innerHTML=[
+    '<div class="timeline-head"><small>OPERATOR ACTION TIMELINE</small><b>Incident Log · '+esc(rows.length?rows.length+" events":"standby")+'</b></div>',
+    '<div class="timeline-list">',
+    rows.length?rows.map(timelineRow).join(""):'<div class="timeline-row watch"><time>--:--</time><div><b>รอ action แรก</b><span>ระบบจะบันทึกเมื่อ QR/Beam/AI recommendation มีสถานะใหม่</span></div><em>WATCH</em></div>',
+    '</div>'
+  ].join("");
+}
+function pushOperatorTimeline(top,actions,d,sales,ads){
+  top=top||{};actions=actions||[];
+  var governor=stabilityGovernor(), confidence=decisionConfidence();
+  var mode=(governor.head||"WATCH").split(" · ")[0];
+  var conf=(confidence.head||"WATCH").split(" · ")[0];
+  var critical=actions.filter(function(a){return a.lane==="critical"}).length;
+  var signal="QR "+signalLabel("qr")+" · Beam "+signalLabel("sales");
+  var signature=[top.lane||"focus",top.title||"รอข้อมูล",mode,conf,signal,critical,state.cacheFallback?"cache":"live"].join("|");
+  var rows=cleanActionTimeline(state.actionTimeline);
+  if(rows.length&&rows[rows.length-1].signature===signature){
+    state.actionTimeline=rows;
+    renderOperatorTimeline();
+    return;
+  }
+  rows.push({
+    t:Date.now(),
+    title:top.title||"รอข้อมูลหน้างาน",
+    body:top.body||"ระบบกำลังรอข้อมูลรอบถัดไป",
+    lane:top.lane||"focus",
+    mode:mode,
+    confidence:conf,
+    signal:signal,
+    safety:"No ad mutation · Human confirms",
+    signature:signature
+  });
+  state.actionTimeline=rows.slice(-6);
+  saveActionTimeline();
+  renderOperatorTimeline();
+}
 function lensHtml(type,lens){
   var icon=type==="codex"?"bi-terminal":"bi-braces-asterisk";
   var name=type==="codex"?"Codex Lens":"Claude Lens";
@@ -2297,6 +2412,7 @@ function renderActionCommand(d,mo,sales,ads,actions){
   $("criticalActions").innerHTML=actionHtml(actions,"critical");
   $("focusActions").innerHTML=actionHtml(actions,"focus");
   $("nextActions").innerHTML=actionHtml(actions,"next");
+  pushOperatorTimeline(top,actions,d,sales,ads);
   var total=d.count||0, bs=d.bySource||{}, tagged=((bs.door||{}).parties||0)+((bs.table||{}).parties||0)+((bs.poster||{}).parties||0);
   sourceSet("srcQr",sourceState("qr"),"QR Gate",total?fmt(total)+" scans · "+sourceAge("qr"):state.sources.qr.message);
   var ssum=sales.summary||{}, hasSales=!!(sales.ok&&(ssum.paidAmountToday||ssum.paidOrdersToday||sales.timeline15m.length));
@@ -2548,6 +2664,7 @@ function boot(){
   loadSuiteCfg();
   loadControlCfg();
   loadSignalHistory();
+  loadActionTimeline();
   bindMissionControl();
   setText("refreshLabel",state.refreshMs===15000?"15 วินาที":state.refreshMs===60000?"1 นาที":"5 นาที");
   document.querySelector("#refreshTabs").addEventListener("click",function(e){var b=e.target.closest("button[data-ms]");if(b)setRefresh(Number(b.dataset.ms))});
