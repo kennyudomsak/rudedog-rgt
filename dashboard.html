@@ -119,6 +119,63 @@
   .sale-bar em{font-style:normal;text-align:right;color:var(--muted);font-size:12px;font-weight:900}
   .sale-empty{color:var(--dim);font-weight:850;text-align:center;padding:48px 12px;line-height:1.5}
 
+  .command-grid{display:grid;grid-template-columns:minmax(520px,1.36fr) minmax(360px,.92fr);gap:14px;margin:0 0 14px;align-items:stretch}
+  .command-panel,.ai-panel,.ads-panel{border-color:rgba(22,205,236,.42)}
+  .command-body{padding:14px}
+  .source-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+  .source-pill{min-height:52px;border:1px solid var(--line);border-radius:8px;background:rgba(5,10,14,.46);padding:9px 10px;display:flex;align-items:center;gap:9px;font-size:12px;font-weight:900;color:var(--muted)}
+  .source-pill i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:rgba(22,205,236,.10);color:var(--cyan)}
+  .source-pill b{display:block;color:var(--text);font-size:13px}
+  .source-pill.good i{background:rgba(57,226,107,.12);color:var(--green)}
+  .source-pill.warn i{background:rgba(255,181,30,.13);color:var(--gold)}
+  .command-hero{border:1px solid var(--line-cyan);border-radius:10px;background:linear-gradient(135deg,rgba(22,205,236,.12),rgba(43,132,255,.05));padding:15px;margin-bottom:12px}
+  .command-hero small{display:block;color:var(--muted);font-weight:900;letter-spacing:.08em;margin-bottom:7px}
+  .command-hero b{display:block;font-size:28px;line-height:1.12;font-weight:950;color:var(--text)}
+  .command-hero p{margin:8px 0 0;color:var(--muted);font-weight:800;line-height:1.45}
+  .action-lanes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .lane{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);overflow:hidden}
+  .lane h3{margin:0;padding:10px 11px;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;font-weight:950;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .lane h3 i{color:var(--cyan)}
+  .action-card{padding:10px 11px;border-bottom:1px solid rgba(255,255,255,.055);min-height:88px}
+  .action-card:last-child{border-bottom:0}
+  .action-card b{display:block;color:var(--text);font-size:15px;font-weight:950;line-height:1.25}
+  .action-card span{display:block;color:var(--muted);font-size:12px;font-weight:800;line-height:1.4;margin-top:5px}
+  .action-card em{display:inline-block;margin-top:8px;font-style:normal;color:var(--cyan);font-size:11px;font-weight:950}
+  .action-card.critical em{color:var(--red)}
+  .action-card.focus em{color:var(--gold)}
+  .ai-body{padding:14px;display:grid;gap:12px}
+  .ai-compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .ai-card{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.42);padding:13px;min-height:210px}
+  .ai-card h3{margin:0 0 10px;font-size:18px;font-weight:950;color:var(--text);display:flex;align-items:center;gap:8px}
+  .ai-card h3 i{color:var(--cyan)}
+  .ai-card p{margin:0 0 10px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.45}
+  .ai-card .verdict{font-size:21px;color:var(--text);font-weight:950;line-height:1.22;margin-bottom:9px}
+  .ai-list{display:grid;gap:7px;margin-top:8px}
+  .ai-list div{display:grid;grid-template-columns:74px 1fr;gap:8px;border-top:1px solid rgba(255,255,255,.055);padding-top:7px;font-size:12px;font-weight:850;color:var(--muted)}
+  .ai-list b{color:var(--text)}
+  .readonly-badge{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:8px 11px;color:var(--muted);font-size:12px;font-weight:950;background:rgba(5,10,14,.32)}
+  .readonly-badge.good{color:var(--green);border-color:rgba(57,226,107,.28)}
+
+  .ads-panel{margin:0 0 14px}
+  .ads-body{display:grid;grid-template-columns:minmax(420px,1.2fr) minmax(320px,.95fr);gap:12px;padding:14px}
+  .ads-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 14px 0}
+  .ad-stat{min-height:78px;border:1px solid var(--line);border-radius:8px;background:rgba(5,10,14,.38);padding:11px;display:flex;flex-direction:column;justify-content:space-between}
+  .ad-stat small{color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.04em}
+  .ad-stat b{color:var(--text);font-size:23px;line-height:1;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ads-platforms{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ad-platform,.ad-table{border:1px solid var(--line);border-radius:10px;background:rgba(5,10,14,.34);overflow:hidden}
+  .ad-platform h3,.ad-table h3{margin:0;padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.06);font-size:15px;font-weight:950;color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .ad-platform h3 small,.ad-table h3 small{color:var(--muted);font-size:11px;font-weight:900}
+  .ad-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}
+  .ad-metric{border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:9px;background:rgba(255,255,255,.02)}
+  .ad-metric small{display:block;color:var(--muted);font-size:11px;font-weight:850}
+  .ad-metric b{display:block;color:var(--text);font-size:18px;font-weight:950;margin-top:3px}
+  .campaign-row{display:grid;grid-template-columns:92px 1fr 94px 82px;gap:10px;align-items:center;padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.055);font-size:12px;font-weight:850}
+  .campaign-row:last-child{border-bottom:0}
+  .campaign-row b{color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .campaign-row span{color:var(--muted)}
+  .ad-warning{margin-top:10px;color:var(--muted);font-size:12px;font-weight:850;line-height:1.45}
+
   .grid{display:grid;grid-template-columns:minmax(520px,1.65fr) minmax(320px,.88fr) minmax(340px,1.02fr);grid-template-areas:"left channels signals" "left heat heat";gap:14px;align-items:stretch}
   .left-stack{display:grid;gap:14px}
   .left-stack{grid-area:left}
@@ -234,8 +291,11 @@
     .top{grid-template-columns:1fr 190px 230px}
     .date-card{display:none}
     .kpis{grid-template-columns:repeat(3,1fr)}
+    .command-grid{grid-template-columns:1fr}
     .sales-kpis{grid-template-columns:repeat(3,1fr)}
     .sales-body{grid-template-columns:1fr 1fr}
+    .ads-body,.ads-platforms{grid-template-columns:1fr}
+    .ads-summary{grid-template-columns:repeat(2,1fr)}
     .sales-chart-card{grid-column:span 2}
     .grid{grid-template-columns:1fr;grid-template-areas:"left" "channels" "signals" "heat"}
     .bottom-grid{grid-template-columns:1fr 1fr}
@@ -255,6 +315,7 @@
     .brand p{font-size:13px}
     .dogmark{width:56px;height:50px}
     .kpis{grid-template-columns:1fr}
+    .source-strip,.action-lanes,.ai-compare,.ads-summary{grid-template-columns:1fr}
     .sales-kpis,.sales-body{grid-template-columns:1fr}
     .sales-chart-card{grid-column:span 1}
     .sale-stat b{font-size:24px}
@@ -548,6 +609,31 @@
     border-color:#0d4d91;
     color:white;
   }
+  .command-panel,.ai-panel,.ads-panel{
+    border-color:rgba(24,135,232,.22);
+    background:rgba(255,255,255,.76);
+    box-shadow:0 18px 44px rgba(71,100,132,.13), inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .source-pill,.lane,.ai-card,.ad-stat,.ad-platform,.ad-table{
+    border-color:rgba(112,139,170,.18);
+    background:rgba(248,252,255,.74);
+  }
+  .source-pill i,.sig-row i{background:#e8f3ff;color:#1687e8}
+  .source-pill.good i{background:#e7fbf1;color:#16b86b}
+  .source-pill.warn i{background:#fff6dc;color:#d78a00}
+  .source-pill b,.command-hero b,.action-card b,.ai-card .verdict,.ai-card h3,.ai-list b,.ad-stat b,.ad-platform h3,.ad-table h3,.ad-metric b,.campaign-row b{color:#172238}
+  .command-hero{
+    border-color:rgba(24,135,232,.20);
+    background:linear-gradient(135deg,rgba(232,243,255,.95),rgba(255,255,255,.68));
+  }
+  .lane h3,.ad-platform h3,.ad-table h3,.ai-list div,.action-card,.campaign-row{border-color:rgba(112,139,170,.14)}
+  .ad-metric{border-color:rgba(112,139,170,.12);background:rgba(255,255,255,.56)}
+  .readonly-badge{
+    border-color:rgba(112,139,170,.20);
+    background:rgba(255,255,255,.62);
+    color:#40546d;
+  }
+  .readonly-badge.good{border-color:rgba(22,184,107,.28);color:#168a54}
 
   .gate{
     background:
@@ -618,7 +704,9 @@
       <a class="active" href="#overview"><i class="bi bi-speedometer2"></i><span>ภาพรวม</span></a>
       <a href="#traffic"><i class="bi bi-bar-chart-line-fill"></i><span>ทราฟฟิก</span></a>
       <a href="#channels"><i class="bi bi-card-checklist"></i><span>ลงทะเบียน</span></a>
+      <a href="#command"><i class="bi bi-command"></i><span>คำสั่ง</span></a>
       <a href="#sales"><i class="bi bi-cash-coin"></i><span>ยอดขาย</span></a>
+      <a href="#ads"><i class="bi bi-megaphone"></i><span>แอด</span></a>
       <a href="#signals"><i class="bi bi-siren-fill"></i><span>สัญญาณ</span></a>
       <a href="#products"><i class="bi bi-bag"></i><span>สินค้า</span></a>
       <a href="#heat"><i class="bi bi-grid-3x3-gap"></i><span>รายงาน</span></a>
@@ -672,6 +760,46 @@
       </article>
     </section>
 
+    <section class="command-grid" id="command">
+      <section class="panel command-panel">
+        <div class="panel-head">
+          <div class="panel-title">ACTION COMMAND <small>(ควบคุมหน้างานแบบรวมศูนย์)</small></div>
+          <div class="readonly-badge good"><i class="bi bi-shield-check"></i> Safe mode · ไม่ปรับแอดอัตโนมัติ</div>
+        </div>
+        <div class="command-body">
+          <div class="source-strip">
+            <div class="source-pill warn" id="srcQr"><i class="bi bi-qr-code-scan"></i><span><b>QR Gate</b><small>รอสัญญาณ</small></span></div>
+            <div class="source-pill warn" id="srcBeam"><i class="bi bi-cash-coin"></i><span><b>Beam Sales</b><small>รอรายการขาย</small></span></div>
+            <div class="source-pill warn" id="srcAds"><i class="bi bi-megaphone"></i><span><b>Ads Watch</b><small>display only</small></span></div>
+          </div>
+          <div class="command-hero">
+            <small>คำสั่งหลักตอนนี้</small>
+            <b id="commandHeadline">รอข้อมูลหน้างาน</b>
+            <p id="commandReason">เมื่อ QR, Beam และ Ads มี movement ระบบจะจัดลำดับ action ให้ทันที</p>
+          </div>
+          <div class="action-lanes">
+            <div class="lane"><h3><i class="bi bi-exclamation-triangle-fill"></i> CRITICAL</h3><div id="criticalActions"></div></div>
+            <div class="lane"><h3><i class="bi bi-bullseye"></i> FOCUS</h3><div id="focusActions"></div></div>
+            <div class="lane"><h3><i class="bi bi-signpost-split"></i> NEXT MOVE</h3><div id="nextActions"></div></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel ai-panel">
+        <div class="panel-head">
+          <div class="panel-title">AI SIDE BY SIDE <small>(Codex / Claude lens)</small></div>
+          <div class="readonly-badge"><i class="bi bi-eye"></i> วิเคราะห์เพื่อช่วยตัดสินใจ</div>
+        </div>
+        <div class="ai-body">
+          <div class="ai-compare">
+            <article class="ai-card" id="codexLens"></article>
+            <article class="ai-card" id="claudeLens"></article>
+          </div>
+          <div class="ad-warning">Claude Lens ตอนนี้เป็น rule-simulated lens ในหน้า dashboard เพื่อเทียบมุมคิด ก่อนต่อ Claude API จริงในเฟสถัดไป</div>
+        </div>
+      </section>
+    </section>
+
     <section class="panel sales-panel" id="sales">
       <div class="panel-head">
         <div class="sales-headline"><div class="panel-title">BEAM SALES MOVEMENT <small>(ยอดขาย / ไซซ์ / สินค้า)</small></div></div>
@@ -696,6 +824,35 @@
         <div class="sales-block">
           <h3><span>สินค้าที่ขายออก</span><small>amount</small></h3>
           <div id="salesProductRanks"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel ads-panel" id="ads">
+      <div class="panel-head">
+        <div class="panel-title">ADS WATCH <small>(Meta / TikTok display)</small></div>
+        <div class="readonly-badge"><i class="bi bi-eye-fill"></i> Read-only · ไม่ยิงคำสั่งปรับแอด</div>
+      </div>
+      <div class="ads-summary">
+        <div class="ad-stat"><small>Ad spend วันนี้</small><b id="adsSpend">—</b></div>
+        <div class="ad-stat"><small>ยอดขาย Beam วันนี้</small><b id="adsRevenue">—</b></div>
+        <div class="ad-stat"><small>Ad cost / revenue</small><b id="adsCostPct">—</b></div>
+        <div class="ad-stat"><small>Connector</small><b id="adsConn">รอเชื่อม</b></div>
+      </div>
+      <div class="ads-body">
+        <div class="ads-platforms">
+          <div class="ad-platform">
+            <h3><span><i class="bi bi-facebook"></i> Meta</span><small id="metaStatus">display only</small></h3>
+            <div class="ad-metrics" id="metaMetrics"></div>
+          </div>
+          <div class="ad-platform">
+            <h3><span><i class="bi bi-tiktok"></i> TikTok</span><small id="tiktokStatus">display only</small></h3>
+            <div class="ad-metrics" id="tiktokMetrics"></div>
+          </div>
+        </div>
+        <div class="ad-table">
+          <h3><span>Campaign Watchlist</span><small>อ่านประกอบการตัดสินใจ</small></h3>
+          <div id="adsCampaignRows"></div>
         </div>
       </div>
     </section>
@@ -817,6 +974,7 @@
 var CONFIG={
   endpoint:"https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
   salesEndpoint:"https://rudedog-beam-sales-bridge.rudedog.workers.dev/stats",
+  adsEndpoint:"",
   refreshMs:15000,
   gate:{on:true,key:"rdfair26"}
 };
@@ -865,7 +1023,11 @@ function tick(){
   }
   fetch(CONFIG.endpoint+"?stats=1&t="+Date.now(),{cache:"no-store"})
     .then(function(r){return r.json()})
-    .then(function(d){return loadSales(d).then(function(sales){d.sales=sales;return d})})
+    .then(function(d){
+      return Promise.all([loadSales(d),loadAds(d)]).then(function(res){
+        d.sales=res[0];d.ads=res[1];return d;
+      });
+    })
     .then(function(d){state.data=d;state.lastOk=Date.now();state.nextAt=Date.now()+state.refreshMs;setLive(true);render(d)})
     .catch(function(){setLive(false);state.nextAt=Date.now()+state.refreshMs});
 }
@@ -898,6 +1060,18 @@ function demoData(){
       ],
       bySize:[{label:"L",qty:184,amount:220800},{label:"XL",qty:158,amount:189600},{label:"M",qty:146,amount:175200},{label:"F",qty:112,amount:100800},{label:"S",qty:86,amount:103200}],
       byProduct:[{label:"Basic Tee Black",sku:"RD-TEE-BLK-L",qty:122,amount:146400},{label:"Motion Bag",sku:"ACS-BAG-MOTION",qty:78,amount:202800},{label:"Cap Logo",sku:"RD-CAP-LOGO",qty:96,amount:105600},{label:"Perfume",sku:"RD-PERFUME",qty:64,amount:89600},{label:"Basic Tee White",sku:"RD-TEE-WHT-M",qty:83,amount:99600}]
+    },
+    ads:{
+      ok:true,source:"demo",updatedAt:now.toISOString(),readOnly:true,
+      meta:{spend:4200,reach:38200,clicks:1450,orders:28,revenue:75600,cpa:150,roas:18.0,ctr:.038,status:"demo display"},
+      tiktok:{spend:3800,reach:44100,clicks:1710,orders:22,revenue:59400,cpa:173,roas:15.6,ctr:.039,status:"demo display"},
+      campaigns:[
+        {platform:"Meta",name:"RD Fair Lead / Bangkok",spend:2100,metric:"CTR 4.1%",status:"Watch"},
+        {platform:"Meta",name:"Perfume Free Gift Retarget",spend:1420,metric:"CPA ฿138",status:"Good"},
+        {platform:"TikTok",name:"RGT Gate Traffic",spend:1900,metric:"CPC ฿2.1",status:"Watch"},
+        {platform:"TikTok",name:"Event Lookalike 3%",spend:1260,metric:"ROAS 16.8",status:"Good"}
+      ],
+      warnings:["Demo display เท่านั้น ไม่ได้ปรับงบ/ปิด/เปิดแคมเปญ"]
     },
     timeline:timeline,perMin:perMin
   };
@@ -935,6 +1109,7 @@ function render(d){
   d=d||{};
   var att=d.attendance||{parties:0,people:0}, pace=d.pace||{lastHour:0,last15:0}, today=d.today||{count:0,heads:0};
   var mo=calcMomentum(d.perMin||[]);
+  var sales=normalizeSales(d&&d.sales), ads=normalizeAds(d&&d.ads);
   var total=d.count||0, heads=d.heads||0;
   setText("kAtt",fmt(att.people));
   setText("kReg",fmt(total));
@@ -945,7 +1120,9 @@ function render(d){
   setText("kRegRate",att.people?pc(total/Math.max(1,att.people)):"—");
   setText("kPaceAvg",avg15(d.timeline||[]));
   renderDoorSplit(d);
+  renderActionCommand(d,mo,sales,ads);
   renderSales(d);
+  renderAds(d);
   renderTraffic(d,mo);
   renderChannels(d);
   renderProducts(d);
@@ -1074,6 +1251,190 @@ function loadSales(d){
     .then(function(r){if(!r.ok)throw new Error("sales "+r.status);return r.json()})
     .then(function(s){return normalizeSales(s)})
     .catch(function(){return embedded});
+}
+function emptyAds(){
+  return {
+    ok:false,status:"not_configured",source:"ads-watch",updatedAt:null,readOnly:true,
+    meta:{spend:0,reach:0,clicks:0,orders:0,revenue:0,cpa:0,roas:0,ctr:0,status:"รอ official connector"},
+    tiktok:{spend:0,reach:0,clicks:0,orders:0,revenue:0,cpa:0,roas:0,ctr:0,status:"รอ official connector"},
+    campaigns:[],warnings:["Ads Watch เป็น display/read-only เท่านั้น ไม่ส่งคำสั่งปรับแอด"]
+  };
+}
+function normalizePlatformAd(p){
+  p=p||{};
+  return {
+    spend:Number(p.spend||p.amount_spent||p.cost||0),
+    reach:Number(p.reach||0),
+    clicks:Number(p.clicks||p.linkClicks||0),
+    orders:Number(p.orders||p.purchases||p.conversions||0),
+    revenue:Number(p.revenue||p.gmv||p.purchaseValue||0),
+    cpa:Number(p.cpa||0),
+    roas:Number(p.roas||0),
+    ctr:Number(p.ctr||0),
+    status:String(p.status||p.state||"display only")
+  };
+}
+function normalizeAds(raw){
+  var out=emptyAds(), s=(raw&&raw.ads)||raw;
+  if(!s)return out;
+  out.ok=!!(s.ok||s.status==="ok"||s.source==="demo"||s.meta||s.tiktok||(s.campaigns||[]).length);
+  out.status=s.status||(out.ok?"ok":"empty");
+  out.source=s.source||"ads-watch";
+  out.updatedAt=s.updatedAt||s.asOf||s.generatedAt||null;
+  out.readOnly=s.readOnly!==false;
+  out.meta=normalizePlatformAd(s.meta||s.facebook||s.fb);
+  out.tiktok=normalizePlatformAd(s.tiktok||s.tt);
+  out.campaigns=(s.campaigns||s.ads||[]).map(function(c){
+    c=c||{};
+    return {
+      platform:String(c.platform||c.source||"—"),
+      name:String(c.name||c.campaign||c.campaignName||"—"),
+      spend:Number(c.spend||c.cost||0),
+      metric:String(c.metric||c.kpi||c.result||"—"),
+      status:String(c.status||c.state||"Watch")
+    };
+  }).filter(function(c){return c.name!=="—"||c.spend>0}).slice(0,8);
+  out.warnings=(s.warnings||out.warnings||[]).slice(0,3);
+  return out;
+}
+function loadAds(d){
+  var embedded=normalizeAds(d&&d.ads);
+  if(!CONFIG.adsEndpoint)return Promise.resolve(embedded);
+  var joiner=CONFIG.adsEndpoint.indexOf("?")>=0?"&":"?";
+  return fetch(CONFIG.adsEndpoint+joiner+"range=today&t="+Date.now(),{cache:"no-store"})
+    .then(function(r){if(!r.ok)throw new Error("ads "+r.status);return r.json()})
+    .then(function(s){return normalizeAds(s)})
+    .catch(function(){return embedded});
+}
+function platformSpend(ads){return (ads.meta.spend||0)+(ads.tiktok.spend||0)}
+function sourceSet(id,state,title,sub){
+  var el=$(id);if(!el)return;
+  el.className="source-pill "+(state||"warn");
+  var b=el.querySelector("b"),small=el.querySelector("small");
+  if(b)b.textContent=title;
+  if(small)small.textContent=sub;
+}
+function buildCommandRules(d,mo,sales,ads){
+  d=d||{};sales=sales||emptySales();ads=ads||emptyAds();
+  var total=d.count||0, att=(d.attendance||{}).people||0, pace=(d.pace||{}).last15||0;
+  var bs=d.bySource||{}, tagged=((bs.door||{}).parties||0)+((bs.table||{}).parties||0)+((bs.poster||{}).parties||0);
+  var tagRate=total?tagged/total:0, sum=sales.summary||{}, adSpend=platformSpend(ads);
+  var revenue=sum.paidAmountToday||0, adPct=revenue?adSpend/revenue:0;
+  var topSize=sum.topSize&&sum.topSize!=="—"?sum.topSize:null;
+  var topSku=sum.topSku&&sum.topSku!=="—"?sum.topSku:null;
+  var actions=[];
+  function add(lane,title,body,metric,icon){
+    actions.push({lane:lane,title:title,body:body,metric:metric||"",icon:icon||"bi-lightning-charge"});
+  }
+  if(total<=0){
+    add("focus","เปิดสัญญาณ QR จริงก่อน","ยังไม่มี traffic จากหน้างาน ให้ทีมทดสอบสแกน QR ประตูและบูธก่อนเริ่มใช้ตัวเลขตัดสินใจ","QR: waiting","bi-qr-code-scan");
+  }
+  if(total>0&&tagRate<.75){
+    add("critical","Tag coverage ต่ำ","ตัวเลขจุดที่มาคนเข้างานยังไม่แน่นพอ ถ้าไม่แก้ตอนนี้ Door/Table/Poster จะวิเคราะห์เพี้ยน","tag "+pc(tagRate),"bi-tags-fill");
+  }
+  if(pace>=120&&sum.last15Amount<=0){
+    add("critical","Traffic ขึ้น แต่ยอดขายยังไม่ตาม","คนเข้าเยอะใน 15 นาทีล่าสุด แต่ Beam ยังไม่มียอดขายล่าสุด ให้เช็กแคชเชียร์/ข้อเสนอ/ทางเดินไปจุดขาย","pace "+fmt(pace),"bi-cash-coin");
+  }
+  if(pace>=120&&sum.last15Amount>0){
+    add("focus","โยกคนไปจุดขายและแคชเชียร์","Traffic และยอดขายกำลังวิ่งพร้อมกัน ลดคอขวดด้วยการเพิ่มคนที่จุดรับเงิน/หยิบสินค้า","15m "+baht(sum.last15Amount),"bi-people-fill");
+  }
+  if(topSize){
+    add("next","เช็กสต็อกไซซ์ "+topSize,"Top size กำลังออก ให้ทีมหลังบ้านเตรียมหยิบ/เติมไซซ์นี้ก่อนเกิดสินค้าขาด","top size","bi-box-seam");
+  }
+  if(topSku){
+    add("next","ดันสินค้า "+topSku,"ใช้สินค้านี้เป็น anchor ในหน้าบูธและข้อความเรียกลูกค้า เพราะตอนนี้ขายนำจาก Beam","top SKU","bi-bag-check");
+  }
+  if(adSpend>0&&total<=0){
+    add("focus","Ads มี spend แต่ QR ยังเงียบ","อย่าเพิ่งปรับแอด ให้เช็กว่าคนจากแอดมาถึงจุดสแกนหรือ QR ถูกวางตรงทางเข้าหรือยัง","spend "+baht(adSpend),"bi-eye-fill");
+  }
+  if(adPct>.35){
+    add("critical","Ad cost สูงเมื่อเทียบยอดขาย","ใช้เป็นสัญญาณเตือนสำหรับตัดสินใจเอง ไม่ปรับงบอัตโนมัติ ให้ดู campaign watchlist ประกอบ","ad cost "+pc(adPct),"bi-shield-exclamation");
+  }else if(adSpend>0){
+    add("next","ดู Ads เป็นตัวประกอบ ไม่ใช่คำสั่ง","Meta/TikTok แสดง spend และ campaign เพื่อช่วยตัดสินใจ แต่ระบบนี้ไม่ยิง action ไปปรับแอด","read-only","bi-eye");
+  }
+  if((d.consent||{}).rate>=.85){
+    add("next","เตรียม audience หลังงาน","Consent rate ดี ใช้ทำ list หลังงานได้ แต่ต้อง export เฉพาะคนที่ยินยอม","consent "+pc((d.consent||{}).rate),"bi-database-check");
+  }
+  if(!actions.length)add("focus","รอข้อมูลรอบถัดไป","ระบบพร้อมแล้ว แต่ยังไม่มีสัญญาณแรงพอให้สั่ง action เพิ่ม","standby","bi-hourglass-split");
+  return actions;
+}
+function firstAction(actions){
+  return actions.filter(function(a){return a.lane==="critical"})[0]||actions.filter(function(a){return a.lane==="focus"})[0]||actions[0];
+}
+function actionHtml(actions,lane){
+  var arr=actions.filter(function(a){return a.lane===lane}).slice(0,3);
+  if(!arr.length)return '<div class="action-card"><b>ยังไม่มีรายการ</b><span>ระบบจะเติมให้เมื่อข้อมูลรอบถัดไปมีสัญญาณชัดขึ้น</span><em>standby</em></div>';
+  return arr.map(function(a){return '<div class="action-card '+esc(a.lane)+'"><b>'+esc(a.title)+'</b><span>'+esc(a.body)+'</span><em>'+esc(a.metric)+'</em></div>'}).join("");
+}
+function lensHtml(type,lens){
+  var icon=type==="codex"?"bi-terminal":"bi-braces-asterisk";
+  var name=type==="codex"?"Codex Lens":"Claude Lens";
+  return '<h3><i class="bi '+icon+'"></i> '+name+'</h3><div class="verdict">'+esc(lens.verdict)+'</div><p>'+esc(lens.summary)+'</p><div class="ai-list"><div><span>แปลว่า</span><b>'+esc(lens.meaning)+'</b></div><div><span>ทำต่อ</span><b>'+esc(lens.next)+'</b></div><div><span>ระวัง</span><b>'+esc(lens.risk)+'</b></div></div>';
+}
+function buildAiLenses(d,mo,sales,ads,actions){
+  var top=firstAction(actions)||{}, sum=(sales.summary||{}), adSpend=platformSpend(ads), total=d.count||0;
+  var codex={
+    verdict:top.title||"รอสัญญาณ",
+    summary:"มุม Codex จะเน้น action ที่ทำได้ทันทีจาก QR, Beam และ Ads display ในรอบล่าสุด",
+    meaning:total?("มี traffic "+fmt(total)+" scans และยอดขาย "+baht(sum.paidAmountToday||0)):"ยังไม่มี QR traffic จริง",
+    next:top.body||"รอข้อมูลรอบถัดไป",
+    risk:adSpend>0?"Ads เป็นข้อมูลประกอบเท่านั้น ห้ามตีความเป็นยอดขายจริง":"ยังไม่มี Ads connector จริง"
+  };
+  var claude={
+    verdict:actions.some(function(a){return a.lane==="critical"})?"ตรวจความเสี่ยงก่อนขยาย action":"ระบบยังอยู่ในกรอบควบคุมได้",
+    summary:"มุม Claude จะเน้นความครบถ้วน ความเสี่ยงของข้อมูล และสิ่งที่ต้องไม่มองข้ามก่อนสั่งทีม",
+    meaning:(sum.last15Amount>0?"Beam มี movement ล่าสุด ":"Beam ยังไม่ยืนยันยอดล่าสุด ")+(ads.ok?"และ Ads มี display":"และ Ads ยังรอเชื่อม"),
+    next:actions.filter(function(a){return a.lane==="critical"})[0]?actions.filter(function(a){return a.lane==="critical"})[0].body:"เก็บภาพรวมต่ออีก 1 รอบ refresh แล้วค่อยตัดสินใจหนัก",
+    risk:"ถ้า QR tag หรือ Beam delay ตัวเลข conversion จะหลอกตาได้"
+  };
+  return{codex:codex,claude:claude};
+}
+function renderActionCommand(d,mo,sales,ads){
+  var actions=buildCommandRules(d,mo,sales,ads), top=firstAction(actions), lenses=buildAiLenses(d,mo,sales,ads,actions);
+  setText("commandHeadline",top.title||"รอข้อมูลหน้างาน");
+  setText("commandReason",top.body||"เมื่อข้อมูลเข้ามา ระบบจะจัดลำดับ action ให้ทันที");
+  $("criticalActions").innerHTML=actionHtml(actions,"critical");
+  $("focusActions").innerHTML=actionHtml(actions,"focus");
+  $("nextActions").innerHTML=actionHtml(actions,"next");
+  var total=d.count||0, bs=d.bySource||{}, tagged=((bs.door||{}).parties||0)+((bs.table||{}).parties||0)+((bs.poster||{}).parties||0);
+  sourceSet("srcQr",total&&tagged?"good":"warn","QR Gate",total?fmt(total)+" scans":"รอสัญญาณ");
+  var ssum=sales.summary||{}, hasSales=!!(sales.ok&&(ssum.paidAmountToday||ssum.paidOrdersToday||sales.timeline15m.length));
+  sourceSet("srcBeam",hasSales?"good":"warn","Beam Sales",hasSales?baht(ssum.paidAmountToday):"รอรายการขาย");
+  var adSpend=platformSpend(ads);
+  sourceSet("srcAds",adSpend>0?"good":"warn","Ads Watch",adSpend>0?baht(adSpend):"read-only / รอเชื่อม");
+  $("codexLens").innerHTML=lensHtml("codex",lenses.codex);
+  $("claudeLens").innerHTML=lensHtml("claude",lenses.claude);
+}
+function adMetric(label,value){return '<div class="ad-metric"><small>'+esc(label)+'</small><b>'+esc(value)+'</b></div>'}
+function renderPlatformMetrics(id,p){
+  $(id).innerHTML=[
+    adMetric("Spend",baht(p.spend)),
+    adMetric("Reach",fmt(p.reach)),
+    adMetric("Clicks",fmt(p.clicks)),
+    adMetric("Orders",fmt(p.orders)),
+    adMetric("CPA",p.cpa?baht(p.cpa):"—"),
+    adMetric("ROAS",p.roas?p.roas.toFixed(1)+"x":"—")
+  ].join("");
+}
+function renderAds(d){
+  var ads=normalizeAds(d&&d.ads), sales=normalizeSales(d&&d.sales), sum=sales.summary||{};
+  var spend=platformSpend(ads), revenue=sum.paidAmountToday||0, pct=revenue?spend/revenue:0;
+  setText("adsSpend",spend?baht(spend):"—");
+  setText("adsRevenue",revenue?baht(revenue):"—");
+  setText("adsCostPct",spend&&revenue?pc(pct):"—");
+  setText("adsConn",spend?(ads.source==="demo"?"DEMO":"พร้อมแสดง"):(CONFIG.adsEndpoint?"รอข้อมูล":"รอ official connector"));
+  $("adsConn").style.color=spend?"var(--green)":"var(--gold)";
+  setText("metaStatus",ads.meta.status||"display only");
+  setText("tiktokStatus",ads.tiktok.status||"display only");
+  renderPlatformMetrics("metaMetrics",ads.meta);
+  renderPlatformMetrics("tiktokMetrics",ads.tiktok);
+  if(!ads.campaigns.length){
+    $("adsCampaignRows").innerHTML='<div class="sale-empty">ยังไม่มี Ads connector จริง<br>พื้นที่นี้จะใช้แสดง campaign จาก Meta / TikTok แบบ read-only</div>';
+    return;
+  }
+  $("adsCampaignRows").innerHTML=ads.campaigns.map(function(c){
+    return '<div class="campaign-row"><span>'+esc(c.platform)+'</span><b title="'+esc(c.name)+'">'+esc(c.name)+'</b><span>'+baht(c.spend)+'</span><span>'+esc(c.metric||c.status)+'</span></div>';
+  }).join("")+(ads.warnings&&ads.warnings.length?'<div class="ad-warning">'+ads.warnings.map(esc).join(" · ")+'</div>':"");
 }
 function renderSales(d){
   var sales=normalizeSales(d&&d.sales), sum=sales.summary||{};
