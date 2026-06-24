@@ -334,7 +334,17 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .success .tk-no .rd{display:inline;color:var(--red);}
 .success .reel-digit{display:inline;width:auto;min-width:0;}
 .success .tk-prize{font-size:13px;color:var(--ink-soft);font-weight:800;}
-.success .echo,.success .btn-follow,.success .cta5{display:none;}
+.success .echo,.success .cta5{display:none;}
+.success .btn-follow{
+  display:block;
+  background:linear-gradient(#12d96b,#06c755);
+  color:#07180d;
+  border:3px solid #063b18;
+  border-radius:7px;
+  box-shadow:0 5px 0 #05863a,4px 8px 0 rgba(23,18,14,.55);
+  margin:12px 0 12px;
+  font-size:16px;
+}
 .success .steps{gap:8px;margin-top:14px;}
 .success .step{background:#171717;border:1px solid #2b2b2b;border-radius:6px;padding:10px 11px;color:#fff;font-weight:900;}
 .success .st-n{width:28px;height:28px;border-radius:50%;background:var(--coin);color:#111;border:2px solid #111;font-weight:900;}
@@ -509,7 +519,9 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 const CONFIG = {
   endpoint: "https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
   countEndpoint: "https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
-  tiktokProfileUrl: "https://www.tiktok.com/@rudedog.co",  // ปุ่ม follow หน้า success
+  lineFriendId: "@364hcacg",
+  lineFriendUrl: "https://line.me/R/ti/p/%40364hcacg",       // ปุ่ม Add LINE Friend หน้า success
+  tiktokProfileUrl: "https://www.tiktok.com/@rudedog.co",  // สำรอง: ถ้าจะกลับไปใช้ TikTok ภายหลัง
   tiktokPixelId: "D8P500BC77UFFED94BJ0",                   // ดึงจากธีม rudedog.co
   metaPixelId: "863556705699201",                          // ดึงจากธีม rudedog.co
   ga4Id: "G-TR11ZDPCN2",                                   // ดึงจากธีม rudedog.co
@@ -1056,8 +1068,8 @@ function buildSuccess(){
   const digits=state.ticket.replace("RD26-","");
   const reel=[...digits].map(()=>'<span class="reel-digit">0</span>').join("");
   const echo=Q4_ECHO[state.answers.interest]; const cta5=Q5_CTA[state.answers.forwho];
-  const follow=CONFIG.tiktokProfileUrl
-    ? `<a class="btn-follow" id="followBtn" href="${CONFIG.tiktokProfileUrl}" target="_blank" rel="noopener">🎵 ติดตาม TikTok รับโปรลับ</a>` : "";
+  const follow=CONFIG.lineFriendUrl
+    ? `<a class="btn-follow" id="followBtn" href="${CONFIG.lineFriendUrl}" target="_blank" rel="noopener">เพิ่มเพื่อน LINE ${CONFIG.lineFriendId}</a>` : "";
   const node=h(`
     <div class="screen success">
       ${ambientLayer()}
@@ -1082,7 +1094,7 @@ function buildSuccess(){
         <button class="btn-cta" id="restartBtn">ให้เพื่อนเล่นต่อ →</button>
       </div>
     </div>`);
-  const fb=node.querySelector("#followBtn"); if(fb) fb.addEventListener("click",()=>{ Audio.coin(); track("follow_click"); });
+  const fb=node.querySelector("#followBtn"); if(fb) fb.addEventListener("click",()=>{ Audio.coin(); track("line_friend_click"); });
   node.querySelector("#restartBtn").addEventListener("click",()=>{ Audio.thunk(); vibrate(12); resetState(); go("welcome"); });
   return node;
 }
