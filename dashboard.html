@@ -1296,7 +1296,12 @@ function loadSales(d){
   if(!CONFIG.salesEndpoint){markSource("sales",false,"ไม่มี endpoint");return Promise.resolve(embedded)}
   var joiner=CONFIG.salesEndpoint.indexOf("?")>=0?"&":"?";
   return fetchJson(CONFIG.salesEndpoint+joiner+"range=today&t="+Date.now(),CONFIG.requestTimeoutMs)
-    .then(function(s){markSource("sales",true,"สด");return normalizeSales(s)})
+    .then(function(s){
+      var normalized=normalizeSales(s), sum=normalized.summary||{};
+      var hasMovement=!!(sum.paidAmountToday||sum.paidOrdersToday||normalized.timeline15m.length||normalized.byProduct.length);
+      markSource("sales",true,hasMovement?"สด":"สด / รอรายการขาย");
+      return normalized;
+    })
     .catch(function(err){
       markSource("sales",false,(err&&err.name==="AbortError")?"timeout":"ต่อไม่ได้");
       return embedded;
