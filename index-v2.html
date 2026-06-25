@@ -322,9 +322,9 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 }
 .success .pad{position:relative;z-index:1;padding:42px 24px 28px;}
 .success .clear-banner{
-  display:block;font-size:25px;color:#fff;margin:0 -2px 16px;letter-spacing:0;font-family:var(--ff);
-  background:linear-gradient(#74c939,#4f9b22);border:3px solid #162d0f;border-radius:5px;padding:12px 8px;
-  box-shadow:0 4px 0 rgba(0,0,0,.65);font-weight:900;transform:rotate(-1deg);
+  display:block;width:max-content;max-width:86%;font-size:20px;color:#fff;margin:0 auto 16px;letter-spacing:0;font-family:var(--ff);
+  background:linear-gradient(#f64034,var(--red));border:3px solid #111;border-radius:5px;padding:9px 18px;
+  box-shadow:0 4px 0 rgba(0,0,0,.65);font-weight:900;text-align:center;
 }
 .success .burst{font-size:40px;margin:0 0 4px;}
 .success .won{display:none;}
@@ -1056,7 +1056,7 @@ function buildSuccess(){
     <div class="screen success">
       ${ambientLayer()}
       <div class="pad center">
-        <div class="clear-banner">รับสิทธิ์เรียบร้อย!</div>
+        <div class="clear-banner">ลงทะเบียนเรียบร้อย</div>
         ${salesHeadlineLayer(SALES_HEADLINES[4])}
         <div class="burst" tabindex="-1" data-focus>🎉</div>
         <h2 class="won">รับสิทธิ์เรียบร้อย!</h2>
