@@ -1,0 +1,835 @@
+{
+  "generatedAt": "2026-06-25T22:38:58",
+  "eventDate": "2026-06-25",
+  "qr": {
+    "ok": true,
+    "asOf": "2026-06-25 22:30:31",
+    "cacheTtlSec": 8,
+    "count": 717,
+    "heads": 1526,
+    "today": {
+      "count": 708,
+      "heads": 1507
+    },
+    "pace": {
+      "lastHour": 0,
+      "last15": 0
+    },
+    "attendance": {
+      "parties": 669,
+      "people": 1416
+    },
+    "bySource": {
+      "door": {
+        "parties": 669,
+        "people": 1416
+      },
+      "table": {
+        "parties": 36,
+        "people": 86
+      },
+      "poster": {
+        "parties": 3,
+        "people": 5
+      },
+      "other": {
+        "parties": 9,
+        "people": 19
+      }
+    },
+    "bySourceToday": {
+      "door": {
+        "parties": 669,
+        "people": 1416
+      },
+      "table": {
+        "parties": 36,
+        "people": 86
+      },
+      "poster": {
+        "parties": 3,
+        "people": 5
+      },
+      "other": {
+        "parties": 0,
+        "people": 0
+      }
+    },
+    "channel": {
+      "codex_test": 1,
+      "tiktok": 249,
+      "signage": 124,
+      "facebook": 293,
+      "wom_other": 50
+    },
+    "visit": {
+      "first": 405,
+      "loyal": 312,
+      "unknown": 0
+    },
+    "style": {
+      "minimal": 36,
+      "sporty": 27,
+      "street": 6,
+      "boss": 39,
+      "other": 609
+    },
+    "interest": {
+      "shirt": 1,
+      "apparel": 604,
+      "perfume": 42,
+      "bag": 45,
+      "cap": 25
+    },
+    "forwho": {
+      "self": 68,
+      "partner": 10,
+      "family": 25,
+      "gift": 5,
+      "other": 609
+    },
+    "group": {
+      "1": 193,
+      "2": 349,
+      "3": 112,
+      "4": 29,
+      "5": 16,
+      "6+": 18
+    },
+    "provinceTop": [
+      {
+        "name": "นนทบุรี",
+        "n": 504
+      },
+      {
+        "name": "กรุงเทพฯ",
+        "n": 137
+      },
+      {
+        "name": "อื่น ๆ",
+        "n": 29
+      },
+      {
+        "name": "ปทุมธานี",
+        "n": 25
+      },
+      {
+        "name": "Bangkok",
+        "n": 1
+      }
+    ],
+    "seg": {
+      "door": {
+        "n": 669,
+        "channel": {
+          "signage": 117,
+          "facebook": 276,
+          "tiktok": 228,
+          "wom_other": 48
+        },
+        "interest": {
+          "apparel": 572,
+          "cap": 22,
+          "bag": 41,
+          "perfume": 34
+        },
+        "style": {
+          "boss": 36,
+          "minimal": 30,
+          "sporty": 24,
+          "street": 4,
+          "other": 575
+        },
+        "forwho": {
+          "family": 21,
+          "partner": 8,
+          "self": 62,
+          "gift": 3,
+          "other": 575
+        },
+        "visit": {
+          "first": 380,
+          "loyal": 289,
+          "unknown": 0
+        }
+      },
+      "inEvent": {
+        "n": 39,
+        "channel": {
+          "tiktok": 18,
+          "facebook": 16,
+          "signage": 5
+        },
+        "interest": {
+          "apparel": 28,
+          "cap": 3,
+          "perfume": 6,
+          "bag": 2
+        },
+        "style": {
+          "minimal": 2,
+          "boss": 1,
+          "street": 1,
+          "sporty": 1,
+          "other": 34
+        },
+        "forwho": {
+          "self": 3,
+          "partner": 1,
+          "family": 1,
+          "other": 34
+        },
+        "visit": {
+          "first": 16,
+          "loyal": 23,
+          "unknown": 0
+        }
+      }
+    },
+    "consent": {
+      "yes": 717,
+      "total": 717,
+      "rate": 1
+    },
+    "score": {
+      "avg": 65.8926080892608,
+      "max": 100,
+      "n": 717
+    },
+    "timeline": [
+      0,
+      1,
+      100,
+      97,
+      90,
+      78,
+      87,
+      79,
+      53,
+      58,
+      44,
+      19,
+      2,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "perMin": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "sales": {
+    "ok": true,
+    "source": "beam-worker-aggregate",
+    "date": "2026-06-25",
+    "updatedAt": "2026-06-25T11:35:58.248Z",
+    "summary": {
+      "paidAmountToday": 407052,
+      "paidOrdersToday": 320,
+      "itemsToday": 320,
+      "last15Amount": 0,
+      "last15Orders": 0,
+      "last15Items": 0,
+      "topSize": "UNKNOWN",
+      "topSku": "Dl4FJrWBEbzPkakPO6PY-TI4BJULUZXA5PTCF284Z"
+    },
+    "timeline15m": [
+      {
+        "label": "09:00",
+        "qty": 0,
+        "amount": 597,
+        "orders": 2,
+        "items": 2
+      },
+      {
+        "label": "09:15",
+        "qty": 0,
+        "amount": 3943,
+        "orders": 3,
+        "items": 3
+      },
+      {
+        "label": "09:30",
+        "qty": 0,
+        "amount": 1886,
+        "orders": 3,
+        "items": 3
+      },
+      {
+        "label": "09:45",
+        "qty": 0,
+        "amount": 18360,
+        "orders": 11,
+        "items": 11
+      },
+      {
+        "label": "10:00",
+        "qty": 0,
+        "amount": 19572,
+        "orders": 21,
+        "items": 21
+      },
+      {
+        "label": "10:15",
+        "qty": 0,
+        "amount": 6745,
+        "orders": 5,
+        "items": 5
+      },
+      {
+        "label": "10:30",
+        "qty": 0,
+        "amount": 7266,
+        "orders": 8,
+        "items": 8
+      },
+      {
+        "label": "10:45",
+        "qty": 0,
+        "amount": 13654,
+        "orders": 11,
+        "items": 11
+      },
+      {
+        "label": "11:00",
+        "qty": 0,
+        "amount": 11350,
+        "orders": 11,
+        "items": 11
+      },
+      {
+        "label": "11:15",
+        "qty": 0,
+        "amount": 15218,
+        "orders": 9,
+        "items": 9
+      },
+      {
+        "label": "11:30",
+        "qty": 0,
+        "amount": 11029,
+        "orders": 6,
+        "items": 6
+      },
+      {
+        "label": "11:45",
+        "qty": 0,
+        "amount": 66438,
+        "orders": 15,
+        "items": 15
+      },
+      {
+        "label": "12:00",
+        "qty": 0,
+        "amount": 4679,
+        "orders": 7,
+        "items": 7
+      },
+      {
+        "label": "12:15",
+        "qty": 0,
+        "amount": 12184,
+        "orders": 7,
+        "items": 7
+      },
+      {
+        "label": "12:30",
+        "qty": 0,
+        "amount": 22631,
+        "orders": 12,
+        "items": 12
+      },
+      {
+        "label": "12:45",
+        "qty": 0,
+        "amount": 3717,
+        "orders": 6,
+        "items": 6
+      },
+      {
+        "label": "13:00",
+        "qty": 0,
+        "amount": 6272,
+        "orders": 8,
+        "items": 8
+      },
+      {
+        "label": "13:15",
+        "qty": 0,
+        "amount": 12247,
+        "orders": 8,
+        "items": 8
+      },
+      {
+        "label": "13:30",
+        "qty": 0,
+        "amount": 4347,
+        "orders": 7,
+        "items": 7
+      },
+      {
+        "label": "13:45",
+        "qty": 0,
+        "amount": 12880,
+        "orders": 12,
+        "items": 12
+      },
+      {
+        "label": "14:00",
+        "qty": 0,
+        "amount": 6288,
+        "orders": 10,
+        "items": 10
+      },
+      {
+        "label": "14:15",
+        "qty": 0,
+        "amount": 7720,
+        "orders": 7,
+        "items": 7
+      },
+      {
+        "label": "14:30",
+        "qty": 0,
+        "amount": 8283,
+        "orders": 8,
+        "items": 8
+      },
+      {
+        "label": "14:45",
+        "qty": 0,
+        "amount": 12425,
+        "orders": 10,
+        "items": 10
+      },
+      {
+        "label": "15:00",
+        "qty": 0,
+        "amount": 7241,
+        "orders": 9,
+        "items": 9
+      },
+      {
+        "label": "15:15",
+        "qty": 0,
+        "amount": 1850,
+        "orders": 6,
+        "items": 6
+      },
+      {
+        "label": "15:30",
+        "qty": 0,
+        "amount": 12612,
+        "orders": 13,
+        "items": 13
+      },
+      {
+        "label": "15:45",
+        "qty": 0,
+        "amount": 4061,
+        "orders": 2,
+        "items": 2
+      },
+      {
+        "label": "16:00",
+        "qty": 0,
+        "amount": 11791,
+        "orders": 16,
+        "items": 16
+      },
+      {
+        "label": "16:15",
+        "qty": 0,
+        "amount": 6701,
+        "orders": 6,
+        "items": 6
+      },
+      {
+        "label": "16:30",
+        "qty": 0,
+        "amount": 6398,
+        "orders": 10,
+        "items": 10
+      },
+      {
+        "label": "16:45",
+        "qty": 0,
+        "amount": 30490,
+        "orders": 4,
+        "items": 4
+      },
+      {
+        "label": "17:00",
+        "qty": 0,
+        "amount": 5769,
+        "orders": 6,
+        "items": 6
+      },
+      {
+        "label": "17:15",
+        "qty": 0,
+        "amount": 5209,
+        "orders": 5,
+        "items": 5
+      },
+      {
+        "label": "17:30",
+        "qty": 0,
+        "amount": 10188,
+        "orders": 9,
+        "items": 9
+      },
+      {
+        "label": "17:45",
+        "qty": 0,
+        "amount": 4805,
+        "orders": 8,
+        "items": 8
+      },
+      {
+        "label": "18:00",
+        "qty": 0,
+        "amount": 3846,
+        "orders": 12,
+        "items": 12
+      },
+      {
+        "label": "18:15",
+        "qty": 0,
+        "amount": 3045,
+        "orders": 4,
+        "items": 4
+      },
+      {
+        "label": "18:30",
+        "qty": 0,
+        "amount": 3315,
+        "orders": 3,
+        "items": 3
+      }
+    ],
+    "bySize": [
+      {
+        "label": "UNKNOWN",
+        "qty": 320,
+        "amount": 0
+      }
+    ],
+    "byProduct": [
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-TI4BJULUZXA5PTCF284Z",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-TI4BJULUZXA5PTCF284Z"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-K2X5GL2IEY88GJXJ526I",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-K2X5GL2IEY88GJXJ526I"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-7BA1611A14VD1P5BH55Q",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-7BA1611A14VD1P5BH55Q"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-JDF5JWRXLWWUM8WIW8PH",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-JDF5JWRXLWWUM8WIW8PH"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-M45QJXFW9GS4AU9M01LM",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-M45QJXFW9GS4AU9M01LM"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-FYMP9ZULY17A19Y1TX3E",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-FYMP9ZULY17A19Y1TX3E"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-X8SQVIEHGXQM2VPD4OX3",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-X8SQVIEHGXQM2VPD4OX3"
+      },
+      {
+        "label": "Dl4FJrWBEbzPkakPO6PY-WYUIPR6GNCA529YSB7ZI",
+        "qty": 1,
+        "amount": 0,
+        "sku": "Dl4FJrWBEbzPkakPO6PY-WYUIPR6GNCA529YSB7ZI"
+      }
+    ]
+  },
+  "adsHealth": {
+    "ok": true,
+    "service": "rudedog-ads-watch-bridge",
+    "readOnly": true,
+    "preflight": {
+      "readOnly": true,
+      "mutationEndpoints": false,
+      "corsOrigin": "https://fair.rudedog.co",
+      "meta": {
+        "ready": false,
+        "accountConfigured": true,
+        "tokenConfigured": false,
+        "missing": [
+          "META_ADS_ACCESS_TOKEN"
+        ]
+      },
+      "tiktok": {
+        "ready": false,
+        "tokenConfigured": false,
+        "mappingConfigured": false,
+        "missing": [
+          "TIKTOK_ADS_ACCESS_TOKEN"
+        ]
+      },
+      "dashboardKeyConfigured": true,
+      "snapshot": {
+        "ready": false,
+        "adminTokenConfigured": false
+      }
+    }
+  },
+  "adsStatsProbe": {
+    "ok": false,
+    "error": "bad_dashboard_key",
+    "readOnly": true,
+    "status": "pending",
+    "source": "error",
+    "meta": {
+      "spend": 0,
+      "reach": 0,
+      "clicks": 0,
+      "orders": 0,
+      "revenue": 0,
+      "cpa": 0,
+      "roas": 0,
+      "ctr": 0,
+      "status": "รอ official Meta read-only token"
+    },
+    "tiktok": {
+      "spend": 0,
+      "reach": 0,
+      "clicks": 0,
+      "orders": 0,
+      "revenue": 0,
+      "cpa": 0,
+      "roas": 0,
+      "ctr": 0,
+      "status": "รอ official TikTok read-only token/export"
+    },
+    "campaigns": [],
+    "warnings": [
+      "Ads Watch is display/read-only only."
+    ]
+  },
+  "derived": {
+    "registrationsToday": 708,
+    "headsToday": 1507,
+    "attendancePeople": 1416,
+    "salesAmount": 407052,
+    "orders": 320,
+    "aov": 1272.0375,
+    "salesPerHead": 270.107498341075,
+    "salesPerRegistration": 574.9322033898305,
+    "orderRegistrationProxy": 0.4519774011299435,
+    "averageHeadsPerRegistration": 2.128531073446328,
+    "channelsCleaned": {
+      "tiktok": 249,
+      "signage": 124,
+      "facebook": 293,
+      "wom_other": 50
+    },
+    "provinceNormalized": [
+      {
+        "name": "นนทบุรี",
+        "value": 504
+      },
+      {
+        "name": "กรุงเทพฯ",
+        "value": 138
+      },
+      {
+        "name": "อื่น ๆ",
+        "value": 29
+      },
+      {
+        "name": "ปทุมธานี",
+        "value": 25
+      }
+    ],
+    "hourlySales": [
+      {
+        "hour": "09:00",
+        "amount": 24786,
+        "orders": 19,
+        "items": 19
+      },
+      {
+        "hour": "10:00",
+        "amount": 47237,
+        "orders": 45,
+        "items": 45
+      },
+      {
+        "hour": "11:00",
+        "amount": 104035,
+        "orders": 41,
+        "items": 41
+      },
+      {
+        "hour": "12:00",
+        "amount": 43211,
+        "orders": 32,
+        "items": 32
+      },
+      {
+        "hour": "13:00",
+        "amount": 35746,
+        "orders": 35,
+        "items": 35
+      },
+      {
+        "hour": "14:00",
+        "amount": 34716,
+        "orders": 35,
+        "items": 35
+      },
+      {
+        "hour": "15:00",
+        "amount": 25764,
+        "orders": 30,
+        "items": 30
+      },
+      {
+        "hour": "16:00",
+        "amount": 55380,
+        "orders": 36,
+        "items": 36
+      },
+      {
+        "hour": "17:00",
+        "amount": 25971,
+        "orders": 28,
+        "items": 28
+      },
+      {
+        "hour": "18:00",
+        "amount": 10206,
+        "orders": 19,
+        "items": 19
+      }
+    ],
+    "top15mSales": [
+      {
+        "label": "11:45",
+        "qty": 0,
+        "amount": 66438,
+        "orders": 15,
+        "items": 15
+      },
+      {
+        "label": "16:45",
+        "qty": 0,
+        "amount": 30490,
+        "orders": 4,
+        "items": 4
+      },
+      {
+        "label": "12:30",
+        "qty": 0,
+        "amount": 22631,
+        "orders": 12,
+        "items": 12
+      },
+      {
+        "label": "10:00",
+        "qty": 0,
+        "amount": 19572,
+        "orders": 21,
+        "items": 21
+      },
+      {
+        "label": "09:45",
+        "qty": 0,
+        "amount": 18360,
+        "orders": 11,
+        "items": 11
+      }
+    ]
+  }
+}
