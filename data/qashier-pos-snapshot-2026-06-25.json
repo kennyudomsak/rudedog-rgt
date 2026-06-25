@@ -1,0 +1,125 @@
+{
+  "ok": true,
+  "source": "qashier-full-report-browser-read",
+  "sourceUrl": "https://hq.qashier.com/full-report",
+  "reportName": "RD Mid Year Sale 2026",
+  "date": "2026-06-25",
+  "rangeLabel": "25/06/2026 00:00:00 ~ 25/06/2026 23:59:59",
+  "asOf": "2026-06-25 19:53:28",
+  "capturedAt": "2026-06-25T23:05:00+07:00",
+  "currency": "THB",
+  "scope": "aggregate-only-no-customer-or-transaction-pii",
+  "summary": {
+    "grossSales": 847036,
+    "discounts": 59842,
+    "totalSales": 787194,
+    "netSales": 787194,
+    "transactions": 653,
+    "aov": 1205.5,
+    "expenses": 30739,
+    "grossProfit": 756455,
+    "refundCount": 0,
+    "cancelledTransactions": 1,
+    "cancelledAmount": 3409,
+    "memberSales": 0,
+    "nonMemberSales": 787194,
+    "memberTransactions": 0,
+    "nonMemberTransactions": 649
+  },
+  "paymentMethods": [
+    { "method": "PromptPay", "quantity": 345, "amount": 427870 },
+    { "method": "Visa Manual", "quantity": 95, "amount": 172039 },
+    { "method": "Cash", "quantity": 160, "amount": 109711 },
+    { "method": "Mastercard Manual", "quantity": 49, "amount": 70690 },
+    { "method": "UnionPay Manual", "quantity": 2, "amount": 3872 },
+    { "method": "QR PAYMENT (Manual)", "quantity": 1, "amount": 2635 },
+    { "method": "Other PC (Manual)", "quantity": 1, "amount": 377 }
+  ],
+  "salesWindows": [
+    { "name": "RD Appareal #1", "quantity": 2516, "grossSales": 491422, "discounts": 229.96 },
+    { "name": "RD Acs", "quantity": 821, "grossSales": 205065, "discounts": 59189.48 },
+    { "name": "RD Appareal #2", "quantity": 1221, "grossSales": 116546, "discounts": 38.74 },
+    { "name": "RD Friend", "quantity": 121, "grossSales": 32245, "discounts": 383.82 },
+    { "name": "Customized Product", "quantity": 9, "grossSales": 1758, "discounts": 0 }
+  ],
+  "categoryVisiblePage": [
+    { "category": "TS", "quantity": 1035, "grossSales": 206385, "discounts": 76.66 },
+    { "category": "Bag", "quantity": 240, "grossSales": 86399, "discounts": 141.17 },
+    { "category": "น้ำหอม", "quantity": 404, "grossSales": 78463, "discounts": 59048.31 },
+    { "category": "ขาสั้น", "quantity": 384, "grossSales": 64896, "discounts": 14.75 },
+    { "category": "Z-F", "quantity": 683, "grossSales": 45067, "discounts": 4.28 }
+  ],
+  "productVisiblePage": [
+    {
+      "product": "กางเกงขาสั้น CityChill (คละแบบ/คละไซส์)",
+      "category": "ขาสั้น",
+      "quantity": 384,
+      "grossSales": 64896,
+      "discounts": 14.75,
+      "expenses": 0,
+      "grossProfit": 64881.25
+    },
+    {
+      "product": "เสื้อยืดแขนสั้น(N)-L",
+      "category": "TS",
+      "quantity": 209,
+      "grossSales": 49951,
+      "discounts": 37.66,
+      "expenses": 0,
+      "grossProfit": 49913.34
+    },
+    {
+      "product": "เสื้อยืดแขนสั้น(N)-M",
+      "category": "TS",
+      "quantity": 200,
+      "grossSales": 47800,
+      "discounts": 0,
+      "expenses": 0,
+      "grossProfit": 47800
+    },
+    {
+      "product": "น้ำหอม BloomingGrace-10 ml.",
+      "category": "น้ำหอม",
+      "quantity": 245,
+      "grossSales": 46305,
+      "discounts": 45415,
+      "expenses": 0,
+      "grossProfit": 890
+    },
+    {
+      "product": "F-โปโล (คละแบบ/ไซส์)",
+      "category": "Z-F",
+      "quantity": 521,
+      "grossSales": 35949,
+      "discounts": 0,
+      "expenses": 0,
+      "grossProfit": 35949
+    }
+  ],
+  "reconciliation": {
+    "beamAmount": 407052,
+    "beamOrders": 320,
+    "beamUpdatedAt": "2026-06-25T11:35:58.248Z",
+    "qashierPromptPayAmount": 427870,
+    "qashierPromptPayTransactions": 345,
+    "promptPayGapAmount": 20818,
+    "promptPayGapTransactions": 25,
+    "posGapAmount": 380142,
+    "posGapTransactions": 333,
+    "interpretation": "Qashier is total POS sales truth. Beam is a payment/channel bridge and must not be treated as total sales."
+  },
+  "automationStatus": {
+    "dashboardCanUseNow": true,
+    "methodNow": "static aggregate JSON snapshot from authenticated Qashier report page",
+    "needsForLiveAutomation": [
+      "official Qashier API or scheduled export",
+      "hourly POS sales series for true acceleration",
+      "full product export for all 182 product rows"
+    ],
+    "doNotUse": [
+      "public dashboard scraping authenticated Qashier session",
+      "customer-level data on public dashboard",
+      "Beam total as POS total"
+    ]
+  }
+}
