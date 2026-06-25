@@ -122,6 +122,7 @@ body{
 <script>
 const KEY='rdfair26';
 const CONFIG={
+  qashierBridge:'https://rudedog-qashier-pos-bridge.rudedog.workers.dev/stats?date=2026-06-25',
   qashier:'data/qashier-pos-snapshot-2026-06-25.json',
   day1:'data/day1-snapshot-2026-06-25.json',
   qr:'https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec?stats=1',
@@ -137,6 +138,18 @@ $('keyBtn').onclick=()=>{localStorage.setItem('rdfair-key',$('keyInput').value.t
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('th-TH',{hour12:false})}
 setInterval(tick,1000);tick();
 async function getJson(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()}
+async function getQashierJson(){
+  try{
+    const d=await getJson(CONFIG.qashierBridge);
+    d.__dashboardSource="bridge";
+    return d;
+  }catch(err){
+    const d=await getJson(CONFIG.qashier);
+    d.__dashboardSource="static-fallback";
+    d.__bridgeError=String(err&&err.message||err);
+    return d;
+  }
+}
 function shiftedTimeline(qr){const raw=Array.isArray(qr?.timeline)?qr.timeline.slice(0,24):[];while(raw.length<24)raw.push(0);const out=Array(24).fill(0);for(let i=0;i<24;i++)out[(i+CONFIG.qrTimelineOffsetHours)%24]=Number(raw[i])||0;return out}
 function renderBars(id,rows,opts={}){rows=rows||[];const max=Math.max(...rows.map(r=>Math.abs(r.value)),1);$(id).innerHTML=rows.length?rows.map((r,i)=>`<div class="rowbar"><div class="name" title="${r.name}">${r.name}</div><div class="track"><div class="fill" style="width:${Math.max(2,Math.abs(r.value)/max*100)}%;background:${opts.colors?.[i%opts.colors.length]||''}"></div></div><div class="value">${r.display||fmt(r.value)}</div></div>`).join(''):'<div class="sub">ไม่มีข้อมูล</div>'}
 function renderChart(id,values){const max=Math.max(...values,1);$(id).innerHTML=values.map(v=>`<div class="bar" style="height:${Math.max(2,v/max*100)}%"></div>`).join('')}
@@ -167,12 +180,13 @@ function render(data){
   const convScan=scans?s.transactions/scans:0, convHead=people?s.transactions/people:0;
   $('convInsight').textContent=`บิล / QR scan = ${pct(convScan)} และ บิล / คนเข้า = ${pct(convHead)} ใช้เป็น proxy ได้ แต่ยังไม่ใช่ match รายคน`;
   const d=(pa.discountAlerts||[])[0]; $('discountInsight').textContent=d?`${d.product} discount ${pct(d.discountRate)} · gross ${money(d.grossSales)} เหลือ net ${money(d.netSales)} ต้องเช็คว่าเป็นโปรของแถมหรือ mapping ผิด`:'ไม่มี discount anomaly ใหญ่';
-  $('statusText').textContent='POS snapshot loaded';
-  $('foot').textContent=`Sources: Qashier Full Report aggregate (${q.asOf}) · QR ${qr.asOf||'-'} · Beam ${rec.beamUpdatedAt||'-'}`;
+  const sourceLabel=q.__dashboardSource==="bridge"?(q.bridge&&q.bridge.fallback?`POS bridge · ${q.bridge.fallback}`:"POS bridge loaded"):"POS static fallback";
+  $('statusText').textContent=sourceLabel;
+  $('foot').textContent=`Sources: Qashier bridge (${q.asOf}) · QR ${qr.asOf||'-'} · Beam reconciliation ${rec.beamUpdatedAt||'-'}`;
 }
 async function init(){
   try{
-    const [qashier,day1,qrLive,beamLive]=await Promise.allSettled([getJson(CONFIG.qashier),getJson(CONFIG.day1),getJson(CONFIG.qr),getJson(CONFIG.beam)]);
+    const [qashier,day1,qrLive,beamLive]=await Promise.allSettled([getQashierJson(),getJson(CONFIG.day1),getJson(CONFIG.qr),getJson(CONFIG.beam)]);
     if(qashier.status!=='fulfilled')throw qashier.reason;
     const data={qashier:qashier.value,day1:day1.value||{},qr:qrLive.value||(day1.value&&day1.value.qr)||null,beam:beamLive.value||null};
     if(data.beam&&data.qashier.reconciliation){data.qashier.reconciliation.beamAmount=Number(data.beam.amount||data.beam.paidAmountToday||data.qashier.reconciliation.beamAmount)||0;data.qashier.reconciliation.beamOrders=Number(data.beam.orders||data.beam.paidOrdersToday||data.qashier.reconciliation.beamOrders)||0}
