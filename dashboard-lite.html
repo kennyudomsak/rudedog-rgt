@@ -58,7 +58,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 .refresh button{height:38px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);font-weight:900;padding:0 11px;cursor:pointer}
 .refresh button:last-child{border-right:0}
 .refresh button.on{background:rgba(19,215,255,.14);color:var(--cyan)}
-.layout{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(330px,.62fr);gap:14px}
+.layout{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
 .hero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}
 .kpi,.panel,.signal-tile{
   border:1px solid var(--line);
@@ -75,7 +75,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 .kpi.visitor{--accent:var(--cyan)}
 .kpi.scan{--accent:var(--green)}
 .kpi.sale{--accent:var(--amber)}
-.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.quick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px}
 .metric{padding:13px 14px;border:1px solid var(--line);background:rgba(13,18,27,.82);min-height:92px}
 .metric b{display:block;margin-top:8px;font:800 28px/1 "Space Grotesk","Noto Sans Thai",sans-serif}
 .metric span{display:block;margin-top:7px;color:var(--dim);font-size:12px;font-weight:800}
@@ -92,6 +92,9 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 .gridline{stroke:rgba(255,255,255,.075);stroke-width:1}
 .line-people{fill:none;stroke:var(--cyan);stroke-width:4;filter:drop-shadow(0 0 8px rgba(19,215,255,.42))}
 .line-scans{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:6 5}
+.line-sales{fill:none;stroke:var(--amber);stroke-width:4;filter:drop-shadow(0 0 8px rgba(255,206,92,.32))}
+.area-people{fill:rgba(19,215,255,.12)}
+.area-sales{fill:rgba(255,206,92,.12)}
 .sales-bar{fill:rgba(255,206,92,.68)}
 .chart-label{fill:var(--muted);font-size:12px;font-weight:800}
 .empty-note{color:var(--muted);display:grid;place-items:center;min-height:210px;font-weight:900;text-align:center}
@@ -107,7 +110,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 .rank em{font-style:normal;color:var(--cyan);font:800 14px/1 "Space Grotesk",sans-serif}
 .rank b{font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .rank small{text-align:right;color:var(--muted);font-size:12px}
-.side-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.side-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .signal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
 .signal-tile{padding:12px;min-height:82px;box-shadow:none}
 .signal-tile b{display:block;margin-top:6px;font:800 23px/1 "Space Grotesk","Noto Sans Thai",sans-serif}
@@ -126,6 +129,8 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
   .layout{grid-template-columns:1fr}
   .hero{grid-template-columns:1fr 1fr}
   .kpi.sale{grid-column:span 2}
+  .quick{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .side-grid{grid-template-columns:1fr}
 }
 @media (max-width:760px){
   .shell{padding:12px}
@@ -134,6 +139,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
   .kpi.sale{grid-column:span 1}
   .chart{min-height:260px}
   .signal-grid{grid-template-columns:1fr}
+  .side-grid{grid-template-columns:1fr}
   .bar-row{grid-template-columns:minmax(70px,92px) 1fr auto}
   h1{font-size:30px}
 }
@@ -186,9 +192,10 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 
   <section class="quick">
     <div class="metric"><small>Conversion</small><b id="conversion">—</b><span>orders / QR scans</span></div>
-    <div class="metric"><small>Revenue / Scan</small><b id="revPerScan">—</b><span>ยอดขายเฉลี่ยต่อ scan</span></div>
+    <div class="metric"><small>AOV</small><b id="aov">—</b><span>ยอดเฉลี่ยต่อ order</span></div>
+    <div class="metric"><small>Sales Accel</small><b id="salesAccel">—</b><span>รอบล่าสุดเทียบรอบก่อน</span></div>
+    <div class="metric"><small>People Accel</small><b id="peopleAccel">—</b><span>ชั่วโมงล่าสุดเทียบก่อนหน้าไทย</span></div>
     <div class="metric"><small>Scans Last 15m</small><b id="scan15">—</b><span>สัญญาณ traffic ล่าสุด</span></div>
-    <div class="metric"><small>Sales Last 15m</small><b id="sale15">—</b><span>ยอดขายรอบล่าสุด</span></div>
   </section>
 
   <main class="layout">
@@ -196,16 +203,28 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
       <section class="panel">
         <div class="panel-head">
           <div class="panel-title">
-            <b>Trend หลัก: คนเข้า / QR / ยอดขาย</b>
-            <small>เส้น = traffic, แท่ง = sales 15 นาทีล่าสุด</small>
+            <b>Trend คนเข้างาน</b>
+            <small>ประมาณจาก QR รายชั่วโมง x คนต่อสแกนเฉลี่ย แสดงเป็นเวลาไทย แยกจากยอดขาย</small>
           </div>
           <div class="legend">
             <span><i style="--c:var(--cyan)"></i>คนเข้า</span>
             <span><i style="--c:var(--green)"></i>QR</span>
+          </div>
+        </div>
+        <div class="chart" id="peopleChart"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <b>Trend ยอดขาย Beam</b>
+            <small>อิงยอดขายทุก 15 นาที แยกจาก traffic ไม่ใช้แกนร่วม</small>
+          </div>
+          <div class="legend">
             <span><i style="--c:var(--amber)"></i>ยอดขาย</span>
           </div>
         </div>
-        <div class="chart" id="mainChart"></div>
+        <div class="chart" id="salesChart"></div>
       </section>
 
       <section class="split">
@@ -245,13 +264,6 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
         <div class="pulse sales" id="salesPulse"></div>
       </section>
 
-      <section class="panel">
-        <div class="panel-head">
-          <div class="panel-title"><b>Top Products</b><small>ขายอะไร / ไซซ์อะไร</small></div>
-        </div>
-        <div class="rank-list" id="productRank"></div>
-      </section>
-
       <section class="decision">
         <b id="decisionTitle">กำลังรอข้อมูลสด</b>
         <p id="decisionBody">เมื่อ QR และ Beam เข้ามาครบ หน้า Lite จะสรุปว่าควรเร่งคนเข้า, เร่งปิดการขาย, หรือคงจังหวะเดิม</p>
@@ -270,7 +282,8 @@ var CONFIG={
   qrEndpoint:"https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
   salesEndpoint:"https://rudedog-beam-sales-bridge.rudedog.workers.dev/stats",
   refreshMs:15000,
-  timeoutMs:9000
+  timeoutMs:9000,
+  qrTimelineOffsetHours:7
 };
 var state={timer:null,ticker:null,nextAt:0,refreshMs:CONFIG.refreshMs,lastData:null};
 var LABELS={
@@ -322,16 +335,20 @@ function entries(obj,labels){
 }
 function qrPeople(qr){return Number((qr.attendance&&qr.attendance.people)||qr.heads||(qr.today&&qr.today.heads)||0)}
 function qrScans(qr){return Number((qr.today&&qr.today.count)||qr.count||0)}
-function getHourlyPeople(qr){
-  var tl=Array.isArray(qr.timeline)?qr.timeline.slice(0,24):[];
-  while(tl.length<24)tl.push(0);
-  var ratio=qrScans(qr)>0?qrPeople(qr)/Math.max(1,qrScans(qr)):1;
-  return tl.map(function(v){return Math.round(Number(v||0)*ratio)});
-}
-function getHourlyScans(qr){
+function getRawHourlyScans(qr){
   var tl=Array.isArray(qr.timeline)?qr.timeline.slice(0,24):[];
   while(tl.length<24)tl.push(0);
   return tl.map(function(v){return Number(v)||0});
+}
+function getHourlyScans(qr){
+  var raw=getRawHourlyScans(qr), shifted=[];
+  for(var i=0;i<24;i++)shifted[(i+CONFIG.qrTimelineOffsetHours)%24]=raw[i];
+  return shifted;
+}
+function getHourlyPeople(qr){
+  var tl=getHourlyScans(qr);
+  var ratio=qrScans(qr)>0?qrPeople(qr)/Math.max(1,qrScans(qr)):1;
+  return tl.map(function(v){return Math.round(Number(v||0)*ratio)});
 }
 function setStatus(cls,text){
   var el=$("liveStatus");
@@ -340,6 +357,9 @@ function setStatus(cls,text){
 }
 function renderKpis(qr,sales){
   var people=qrPeople(qr), scans=qrScans(qr), amount=sales.amount, orders=sales.orders;
+  var aov=orders?amount/orders:0;
+  var salesAccel=calcAccel(sales.timeline.map(function(x){return x.amount}));
+  var peopleAccel=calcAccel(getHourlyPeople(qr));
   setText("peopleTotal",fmt(people));
   setText("scanTotal",fmt(scans));
   setText("salesTotal",baht(amount));
@@ -347,9 +367,10 @@ function renderKpis(qr,sales){
   setText("scanNote","วันนี้ "+fmt(scans)+" scans · ทั้งหมด "+fmt(qr.count||scans));
   setText("salesNote",fmt(orders)+" orders · "+fmt(sales.items)+" items");
   setText("conversion",scans?pct(orders/scans):"—");
-  setText("revPerScan",scans?fullBaht(amount/scans):"—");
+  setText("aov",orders?fullBaht(aov):"—");
+  setText("salesAccel",formatAccel(salesAccel));
+  setText("peopleAccel",formatAccel(peopleAccel));
   setText("scan15",fmt((qr.pace&&qr.pace.last15)||lastSum(qr.perMin,15)));
-  setText("sale15",baht(sales.last15Amount));
   setText("peopleTrend","PEOPLE");
   setText("scanTrend","+"+fmt((qr.pace&&qr.pace.lastHour)||lastSum(qr.perMin,60))+" / 1H");
   setText("salesTrend","+"+baht(sales.last15Amount)+" / 15M");
@@ -358,33 +379,63 @@ function lastSum(arr,n){
   arr=Array.isArray(arr)?arr:[];
   return arr.slice(-n).reduce(function(a,b){return a+Number(b||0)},0);
 }
-function renderMainChart(qr,sales){
-  var people=getHourlyPeople(qr), scans=getHourlyScans(qr), salesBars=sales.timeline.slice(-24);
-  var saleByHour=new Array(24).fill(0);
-  salesBars.forEach(function(row){
-    var h=Number(String(row.label||"").slice(0,2));
-    if(!isNaN(h)&&h>=0&&h<24)saleByHour[h]+=Number(row.amount)||0;
-  });
+function calcAccel(values){
+  values=(values||[]).map(function(v){return Number(v)||0}).filter(function(v){return v>0});
+  if(values.length<2)return {value:null,last:values[values.length-1]||0,prev:0};
+  var last=values[values.length-1], prev=values[values.length-2];
+  if(prev<=0)return {value:last>0?1:null,last:last,prev:prev};
+  return {value:(last-prev)/prev,last:last,prev:prev};
+}
+function formatAccel(acc){
+  if(!acc||acc.value==null)return "—";
+  var v=Math.round(acc.value*100);
+  return (v>0?"+":"")+v+"%";
+}
+function trendClass(acc){
+  if(!acc||acc.value==null)return "warn";
+  return acc.value>=0?"good":"bad";
+}
+function renderPeopleChart(qr){
+  var people=getHourlyPeople(qr), scans=getHourlyScans(qr);
   var W=980,H=330,L=50,R=18,T=20,B=36;
   var maxTraffic=Math.max.apply(null,people.concat(scans).concat([1]));
-  var maxSales=Math.max.apply(null,saleByHour.concat([1]));
   var x=function(i){return L+i/23*(W-L-R)};
   var yTraffic=function(v){return H-B-(Number(v)||0)/maxTraffic*(H-T-B)};
-  var ySales=function(v){return H-B-(Number(v)||0)/maxSales*(H-T-B)*.86};
   var line=function(vals,yfn){return "M"+vals.map(function(v,i){return x(i).toFixed(1)+","+yfn(v).toFixed(1)}).join(" L")};
+  var area=line(people,yTraffic)+" L"+x(23).toFixed(1)+","+(H-B)+" L"+x(0).toFixed(1)+","+(H-B)+" Z";
   var grid="",labs="",bars="";
   for(var g=0;g<=4;g++){
     var yy=T+g*(H-T-B)/4;
-    grid+='<line class="gridline" x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'"/>';
+    grid+='<line class="gridline" x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'"/><text class="chart-label" x="'+(L-10)+'" y="'+(yy+4)+'" text-anchor="end">'+fmt(maxTraffic*(4-g)/4)+'</text>';
   }
   for(var i=0;i<24;i++){
     if(i%3===0)labs+='<text class="chart-label" x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle">'+pad(i)+':00</text>';
-    var bw=(W-L-R)/24*.58, bh=(H-B-ySales(saleByHour[i]));
-    bars+='<rect class="sales-bar" x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(H-B-bh).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(2,bh).toFixed(1)+'"/>';
   }
-  var has=people.concat(scans,saleByHour).some(function(v){return Number(v)>0});
+  var has=people.concat(scans).some(function(v){return Number(v)>0});
   var empty=has?"":'<foreignObject x="220" y="112" width="540" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="empty-note">รอ movement สดจากหน้างาน</div></foreignObject>';
-  $("mainChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" aria-label="Trend chart">'+grid+bars+'<path class="line-people" d="'+line(people,yTraffic)+'"/><path class="line-scans" d="'+line(scans,yTraffic)+'"/><line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>'+labs+empty+'</svg>';
+  $("peopleChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" aria-label="People trend chart">'+grid+'<path class="area-people" d="'+area+'"/><path class="line-people" d="'+line(people,yTraffic)+'"/><path class="line-scans" d="'+line(scans,yTraffic)+'"/><line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>'+labs+empty+'</svg>';
+}
+function renderSalesChart(sales){
+  var rows=(sales.timeline||[]).slice(-32);
+  var vals=rows.map(function(r){return Number(r.amount)||0});
+  var W=980,H=330,L=58,R=18,T=20,B=42;
+  var max=Math.max.apply(null,vals.concat([1]));
+  var x=function(i){return L+(rows.length<=1?0:i/(rows.length-1)*(W-L-R))};
+  var y=function(v){return H-B-(Number(v)||0)/max*(H-T-B)};
+  var line=rows.length?"M"+vals.map(function(v,i){return x(i).toFixed(1)+","+y(v).toFixed(1)}).join(" L"):"";
+  var area=line?line+" L"+x(rows.length-1).toFixed(1)+","+(H-B)+" L"+x(0).toFixed(1)+","+(H-B)+" Z":"";
+  var grid="",labs="",bars="";
+  for(var g=0;g<=4;g++){
+    var yy=T+g*(H-T-B)/4;
+    grid+='<line class="gridline" x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'"/><text class="chart-label" x="'+(L-10)+'" y="'+(yy+4)+'" text-anchor="end">'+baht(max*(4-g)/4)+'</text>';
+  }
+  rows.forEach(function(row,i){
+    var bw=Math.max(4,(W-L-R)/Math.max(1,rows.length)*.48), bh=H-B-y(row.amount);
+    bars+='<rect class="sales-bar" x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(H-B-bh).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(2,bh).toFixed(1)+'"/>';
+    if(i%Math.max(1,Math.ceil(rows.length/6))===0)labs+='<text class="chart-label" x="'+x(i)+'" y="'+(H-12)+'" text-anchor="middle">'+esc(row.label||"")+'</text>';
+  });
+  var empty=rows.length?"":'<foreignObject x="220" y="112" width="540" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="empty-note">รอยอดขาย Beam 15 นาที</div></foreignObject>';
+  $("salesChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" aria-label="Sales trend chart">'+grid+bars+(area?'<path class="area-sales" d="'+area+'"/>':'')+(line?'<path class="line-sales" d="'+line+'"/>':'')+'<line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>'+labs+empty+'</svg>';
 }
 function renderBars(id,rows){
   var el=$(id), max=Math.max.apply(null,rows.map(function(r){return r.value}).concat([1]));
@@ -393,19 +444,6 @@ function renderBars(id,rows){
     var width=Math.max(2,r.value/max*100);
     return '<div class="bar-row"><label>'+esc(r.label)+'</label><div class="bar-track"><i style="width:'+width.toFixed(1)+'%"></i></div><strong>'+fmt(r.value)+'</strong></div>';
   }).join("");
-}
-function renderRanks(sales){
-  var rows=sales.products.length?sales.products:sales.sizes;
-  if(!rows.length){$("productRank").innerHTML='<div class="empty-note">ยังไม่มีสินค้าแยก SKU</div>';return}
-  $("productRank").innerHTML=rows.slice(0,6).map(function(r,i){
-    var val=r.amount?baht(r.amount):fmt(r.qty);
-    return '<div class="rank"><em>'+(i+1)+'</em><b title="'+esc(r.label)+'">'+esc(cleanSku(r.label))+'</b><small>'+val+'</small></div>';
-  }).join("");
-}
-function cleanSku(label){
-  label=String(label||"");
-  if(label.length>24&&/^[A-Za-z0-9_-]+$/.test(label))return label.slice(0,10)+"..."+label.slice(-6);
-  return label;
 }
 function renderPulse(id,values){
   var el=$(id), max=Math.max.apply(null,values.concat([1]));
@@ -419,14 +457,16 @@ function renderSignals(qr,sales){
   setSignal("qrSignal",qrOk?"good":"bad",qrOk?"LIVE":"FAIL");
   setSignal("beamSignal",beamOk?"good":"bad",beamOk?"LIVE":"FAIL");
   var scans=qrScans(qr), orders=sales.orders, conv=scans?orders/scans:0;
+  var salesAccel=calcAccel(sales.timeline.map(function(x){return x.amount}));
+  var peopleAccel=calcAccel(getHourlyPeople(qr));
   var mode=(qrOk&&beamOk&&conv>=.08)?"GO":(qrOk&&beamOk)?"WATCH":"HOLD";
   setSignal("modeSignal",mode==="GO"?"good":mode==="WATCH"?"warn":"bad",mode);
   if(mode==="GO"){
     setText("decisionTitle","สัญญาณดี: traffic และยอดขายเดินพร้อมกัน");
-    setText("decisionBody","คง refresh 15 วินาที ดู source ที่โตเร็ว และเติมทีมขายที่จุด top source ได้เลย");
+    setText("decisionBody","Sales accel "+formatAccel(salesAccel)+" · People accel "+formatAccel(peopleAccel)+" · AOV "+(orders?fullBaht(sales.amount/orders):"—")+" ให้ดูจังหวะปิดการขายต่อเนื่อง");
   }else if(mode==="WATCH"){
     setText("decisionTitle","WATCH: มีข้อมูลสด แต่ conversion ยังต้องดูใกล้");
-    setText("decisionBody","ดู Revenue / Scan และ Sales Last 15m ถ้าตกต่อเนื่อง ให้เร่งปิดการขายหรือย้ายคนไปจุดที่ scan เยอะ");
+    setText("decisionBody","ดู AOV, Sales Accel และ People Accel ถ้ายอดขายเร่งช้ากว่าคนเข้า ให้ดันทีมปิดการขายทันที");
   }else{
     setText("decisionTitle","HOLD: ข้อมูลสดยังไม่ครบ");
     setText("decisionBody","ตรวจ QR endpoint / Beam endpoint ก่อนใช้ตัวเลขตัดสินใจหน้างาน อย่าเพิ่งสรุปจาก trend ที่ยังขาด");
@@ -440,10 +480,10 @@ function render(qr,salesRaw){
   state.lastData={qr:qr,sales:salesRaw};
   setText("asOf",(qr.asOf||"สด")+" · Beam "+(sales.updatedAt?new Date(sales.updatedAt).toLocaleTimeString("th-TH"):"รอ"));
   renderKpis(qr,sales);
-  renderMainChart(qr,sales);
+  renderPeopleChart(qr);
+  renderSalesChart(sales);
   renderBars("sourceMix",entries(qr.bySource,LABELS.source));
   renderBars("channelMix",entries(qr.channel,LABELS.channel));
-  renderRanks(sales);
   renderPulse("scanPulse",Array.isArray(qr.perMin)?qr.perMin:getHourlyScans(qr));
   renderPulse("salesPulse",sales.timeline.map(function(x){return x.amount}));
   renderSignals(qr,sales);
