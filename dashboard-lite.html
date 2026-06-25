@@ -75,7 +75,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 .kpi.visitor{--accent:var(--cyan)}
 .kpi.scan{--accent:var(--green)}
 .kpi.sale{--accent:var(--amber)}
-.quick{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.quick{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;margin-bottom:14px}
 .metric{padding:13px 14px;border:1px solid var(--line);background:rgba(13,18,27,.82);min-height:92px}
 .metric b{display:block;margin-top:8px;font:800 28px/1 "Space Grotesk","Noto Sans Thai",sans-serif}
 .metric span{display:block;margin-top:7px;color:var(--dim);font-size:12px;font-weight:800}
@@ -98,7 +98,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
 .sales-bar{fill:rgba(255,206,92,.68)}
 .chart-label{fill:var(--muted);font-size:12px;font-weight:800}
 .empty-note{color:var(--muted);display:grid;place-items:center;min-height:210px;font-weight:900;text-align:center}
-.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.split{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .bars{display:grid;gap:10px}
 .bar-row{display:grid;grid-template-columns:minmax(80px,120px) 1fr auto;gap:10px;align-items:center}
 .bar-row label{font-weight:900;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -193,6 +193,7 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
   <section class="quick">
     <div class="metric"><small>Conversion</small><b id="conversion">—</b><span>orders / QR scans</span></div>
     <div class="metric"><small>AOV</small><b id="aov">—</b><span>ยอดเฉลี่ยต่อ order</span></div>
+    <div class="metric"><small>New Visitor</small><b id="newRate">—</b><span>คนใหม่จาก QR</span></div>
     <div class="metric"><small>Sales Accel</small><b id="salesAccel">—</b><span>รอบล่าสุดเทียบรอบก่อน</span></div>
     <div class="metric"><small>People Accel</small><b id="peopleAccel">—</b><span>ชั่วโมงล่าสุดเทียบก่อนหน้าไทย</span></div>
     <div class="metric"><small>Scans Last 15m</small><b id="scan15">—</b><span>สัญญาณ traffic ล่าสุด</span></div>
@@ -239,6 +240,12 @@ h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",s
             <div class="panel-title"><b>Channel Mix</b><small>ช่องทางที่คนรู้จักงาน</small></div>
           </div>
           <div class="bars" id="channelMix"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><b>New / Returning Mix</b><small>เคยมางาน RUDEDOG แล้วหรือยัง</small></div>
+          </div>
+          <div class="bars" id="visitMix"></div>
         </div>
       </section>
     </div>
@@ -288,7 +295,8 @@ var CONFIG={
 var state={timer:null,ticker:null,nextAt:0,refreshMs:CONFIG.refreshMs,lastData:null};
 var LABELS={
   source:{door:"ประตู",table:"โต๊ะ/บูธ",poster:"โปสเตอร์",other:"อื่นๆ"},
-  channel:{tiktok:"TikTok",facebook:"Facebook",signage:"ป้าย",wom_other:"เพื่อนชวน",codex_test:"Test",other:"ไม่ระบุ"}
+  channel:{tiktok:"TikTok",facebook:"Facebook",signage:"ป้าย",wom_other:"เพื่อนชวน",codex_test:"Test",other:"ไม่ระบุ"},
+  visit:{first:"คนใหม่",loyal:"เคยมาแล้ว",unknown:"ไม่ระบุ"}
 };
 var $=function(id){return document.getElementById(id)};
 function fmt(n){return Math.round(Number(n)||0).toLocaleString("en-US")}
@@ -357,6 +365,7 @@ function setStatus(cls,text){
 }
 function renderKpis(qr,sales){
   var people=qrPeople(qr), scans=qrScans(qr), amount=sales.amount, orders=sales.orders;
+  var visit=qr.visit||{}, knownVisits=Number(visit.first||0)+Number(visit.loyal||0);
   var aov=orders?amount/orders:0;
   var salesAccel=calcAccel(sales.timeline.map(function(x){return x.amount}));
   var peopleAccel=calcAccel(getHourlyPeople(qr));
@@ -368,6 +377,7 @@ function renderKpis(qr,sales){
   setText("salesNote",fmt(orders)+" orders · "+fmt(sales.items)+" items");
   setText("conversion",scans?pct(orders/scans):"—");
   setText("aov",orders?fullBaht(aov):"—");
+  setText("newRate",knownVisits?pct(Number(visit.first||0)/knownVisits):"—");
   setText("salesAccel",formatAccel(salesAccel));
   setText("peopleAccel",formatAccel(peopleAccel));
   setText("scan15",fmt((qr.pace&&qr.pace.last15)||lastSum(qr.perMin,15)));
@@ -484,6 +494,7 @@ function render(qr,salesRaw){
   renderSalesChart(sales);
   renderBars("sourceMix",entries(qr.bySource,LABELS.source));
   renderBars("channelMix",entries(qr.channel,LABELS.channel));
+  renderBars("visitMix",entries(qr.visit,LABELS.visit));
   renderPulse("scanPulse",Array.isArray(qr.perMin)?qr.perMin:getHourlyScans(qr));
   renderPulse("salesPulse",sales.timeline.map(function(x){return x.amount}));
   renderSignals(qr,sales);
