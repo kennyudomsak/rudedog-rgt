@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>RUDEDOG FAIR POS Command</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+<style>
+:root{
+  --bg:#05080d; --panel:#0b111b; --panel2:#111a28; --line:rgba(157,210,255,.16);
+  --ink:#f7fbff; --muted:#96a8bd; --soft:#d8e7f7; --cyan:#18d8ff; --blue:#2b8cff;
+  --green:#67e536; --lime:#b7ff35; --yellow:#ffd338; --red:#ff4d3f; --orange:#ff9d2d;
+  --shadow:0 18px 54px rgba(0,0,0,.42); --font:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:radial-gradient(circle at 16% 0%,rgba(24,216,255,.17),transparent 28%),
+  radial-gradient(circle at 84% 0%,rgba(103,229,54,.13),transparent 28%),linear-gradient(180deg,#06101a,#05080d 48%,#030509);
+  color:var(--ink);font-family:var(--font);font-variant-numeric:tabular-nums;line-height:1.42;
+}
+.gate{position:fixed;inset:0;display:none;place-items:center;background:#05080d;z-index:5}
+.gate.show{display:grid}.gateBox{width:min(420px,92vw);border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:22px;box-shadow:var(--shadow)}
+.gateBox h1{margin:0 0 10px;font-size:24px}.gateBox input{width:100%;margin:10px 0 12px;padding:13px;border-radius:10px;border:1px solid var(--line);background:#06101a;color:var(--ink);font:inherit}.gateBox button{width:100%;padding:12px;border:0;border-radius:10px;background:var(--cyan);font-weight:900;color:#021018}
+.app{display:grid;grid-template-columns:74px 1fr;min-height:100vh}
+.rail{position:sticky;top:0;height:100vh;border-right:1px solid var(--line);background:rgba(5,8,13,.88);backdrop-filter:blur(18px);padding:14px 8px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.logo{width:48px;height:48px;border-radius:14px;border:1px solid var(--line);display:grid;place-items:center;font-size:24px;background:linear-gradient(145deg,rgba(24,216,255,.12),rgba(103,229,54,.10))}
+.nav{display:grid;gap:8px;margin-top:10px;width:100%}.nav a{height:54px;border-radius:12px;color:var(--muted);display:grid;place-items:center;text-decoration:none;border:1px solid transparent}.nav a.active{color:var(--cyan);border-color:rgba(24,216,255,.35);background:rgba(24,216,255,.09)}.nav i{font-size:22px}
+.main{padding:14px 16px 26px;min-width:0}
+.topbar{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-bottom:12px}
+.brand{display:flex;align-items:center;gap:14px}.brand h1{font-size:31px;letter-spacing:0;margin:0;font-weight:1000}.brand b{color:var(--cyan)}.tag{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);font-weight:900;color:var(--soft);white-space:nowrap}.dot{width:10px;height:10px;border-radius:50%;background:#19db54;box-shadow:0 0 22px #19db54}.clock{font-size:28px;font-weight:1000;color:var(--cyan)}
+.grid{display:grid;gap:10px}.kpi{grid-template-columns:1.05fr 1.05fr 1.2fr}.mini{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:1.45fr .95fr}.three{grid-template-columns:repeat(3,1fr)}
+.card{border:1px solid var(--line);border-radius:8px;background:linear-gradient(180deg,rgba(17,26,40,.92),rgba(7,12,20,.96));box-shadow:var(--shadow);padding:18px;min-width:0}
+.cardHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.title{font-size:22px;font-weight:1000;display:flex;gap:11px;align-items:center}.title small{font-size:14px;color:var(--muted);font-weight:850}.label{color:var(--muted);font-weight:900;font-size:13px;text-transform:uppercase}.num{font-size:clamp(42px,6vw,72px);line-height:1;font-weight:1000;letter-spacing:0;margin:10px 0}.num.cyan{color:var(--cyan)}.num.green{color:var(--green)}.num.lime{color:var(--lime)}.num.yellow{color:var(--yellow)}.num.red{color:var(--red)}.unit{font-size:18px;color:var(--soft);font-weight:900;margin-left:6px}.sub{color:var(--muted);font-size:14px;font-weight:800}.up{color:var(--green)}.down{color:var(--red)}.warn{color:var(--yellow)}
+.metric{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.metric b{font-size:36px}.metric span{color:var(--muted);font-weight:850}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--soft);font-size:12px;font-weight:900}.pill.good{border-color:rgba(103,229,54,.45);color:var(--green)}.pill.warn{border-color:rgba(255,211,56,.5);color:var(--yellow)}
+.chart{height:268px;display:grid;grid-template-columns:52px 1fr;gap:8px}.axis{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;color:var(--muted);font-size:11px;font-weight:900;padding:8px 0 28px}.plot{position:relative;border-left:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}.plot:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,rgba(157,210,255,.12),rgba(157,210,255,.12) 1px,transparent 1px,transparent 25%)}.bars{position:absolute;inset:12px 8px 26px;display:flex;align-items:end;gap:5px}.bar{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--cyan),rgba(24,216,255,.16));min-height:2px}.sales .bar{background:linear-gradient(180deg,var(--green),rgba(103,229,54,.14))}.xlabels{position:absolute;left:8px;right:8px;bottom:3px;display:flex;justify-content:space-between;color:var(--muted);font-size:10px;font-weight:900}
+.barsList{display:grid;gap:10px}.rowbar{display:grid;grid-template-columns:minmax(105px,1fr) 1.5fr auto;gap:12px;align-items:center}.rowbar .name{font-weight:900;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.track{height:12px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue))}.rowbar .value{font-weight:1000;text-align:right;white-space:nowrap}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:10px 7px;text-align:left;font-size:14px}.table th{color:var(--muted);font-size:12px;text-transform:uppercase}.table td:nth-child(n+3),.table th:nth-child(n+3){text-align:right}.insight{border:1px solid rgba(255,211,56,.34);background:rgba(255,211,56,.08);border-radius:8px;padding:14px;color:var(--soft);font-weight:850}.insight b{color:var(--yellow)}.risk{border-color:rgba(255,77,63,.38);background:rgba(255,77,63,.08)}.risk b{color:#ff9b91}
+.footer{margin-top:14px;color:var(--muted);font-size:12px;font-weight:750;text-align:center}.hide{display:none!important}
+@media(max-width:1040px){.app{grid-template-columns:1fr}.rail{display:none}.topbar,.kpi,.mini,.two,.three{grid-template-columns:1fr}.clock{font-size:22px}.brand h1{font-size:26px}.num{font-size:50px}.chart{height:220px}}
+</style>
+</head>
+<body>
+<div class="gate" id="gate"><div class="gateBox"><h1>RUDEDOG FAIR POS</h1><p class="sub">ใส่ key เพื่อเปิด Dashboard</p><input id="keyInput" autocomplete="off" placeholder="key"><button id="keyBtn">เปิดบอร์ด</button></div></div>
+<div class="app" id="app">
+  <aside class="rail">
+    <div class="logo"><i class="bi bi-lightning-charge-fill"></i></div>
+    <nav class="nav">
+      <a class="active" title="ภาพรวม"><i class="bi bi-speedometer2"></i></a>
+      <a title="คนเข้า"><i class="bi bi-people-fill"></i></a>
+      <a title="ยอดขาย POS"><i class="bi bi-bag-check-fill"></i></a>
+      <a title="สินค้า"><i class="bi bi-box-seam-fill"></i></a>
+      <a title="ชำระเงิน"><i class="bi bi-credit-card-2-front-fill"></i></a>
+      <a title="คุณภาพข้อมูล"><i class="bi bi-shield-check"></i></a>
+    </nav>
+  </aside>
+  <main class="main">
+    <div class="topbar">
+      <div class="brand"><h1>RUDEDOG FAIR <b>POS COMMAND</b></h1><span class="pill good"><i class="bi bi-database-check"></i> Qashier truth</span></div>
+      <div class="tag"><span class="dot"></span><span id="statusText">กำลังโหลดข้อมูล</span></div>
+      <div class="tag"><i class="bi bi-clock"></i><span class="clock" id="clock">--:--:--</span></div>
+    </div>
+
+    <section class="grid kpi">
+      <div class="card"><div class="title"><i class="bi bi-people-fill"></i> คนเข้า <small>QR headcount</small></div><div class="num cyan" id="people">-</div><div class="sub" id="peopleSub">-</div></div>
+      <div class="card"><div class="title"><i class="bi bi-qr-code-scan"></i> QR สแกน <small>registration</small></div><div class="num cyan" id="scans">-</div><div class="sub" id="scanSub">-</div></div>
+      <div class="card"><div class="title"><i class="bi bi-bag-check-fill"></i> ยอดขาย POS <small>Qashier net</small></div><div class="num green" id="posSales">-<span class="unit">บาท</span></div><div class="sub" id="salesSub">-</div></div>
+    </section>
+
+    <section class="grid mini" style="margin-top:10px">
+      <div class="card"><div class="label">Transactions</div><div class="metric"><b id="tx">-</b><span>บิล</span></div><div class="sub">Qashier POS</div></div>
+      <div class="card"><div class="label">AOV</div><div class="metric"><b id="aov">-</b><span>บาท/บิล</span></div><div class="sub">ยอดขายเฉลี่ยต่อรายการ</div></div>
+      <div class="card"><div class="label">Sales / Head</div><div class="metric"><b id="salesHead">-</b><span>บาท/คน</span></div><div class="sub">POS net / คนเข้างาน</div></div>
+      <div class="card"><div class="label">POS vs Beam</div><div class="metric"><b id="gap">-</b><span>บาท</span></div><div class="sub">ยอด POS ที่ไม่อยู่ใน Beam</div></div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card">
+        <div class="cardHead"><div class="title">กราฟฟิกเข้างาน <small>คนเข้า / scan แยกอิสระ</small></div><span class="pill good" id="trafficPeak">peak -</span></div>
+        <div class="chart"><div class="axis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div class="plot"><div class="bars" id="trafficBars"></div><div class="xlabels"><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span></div></div></div>
+      </div>
+      <div class="card">
+        <div class="cardHead"><div class="title">ยอดขายรายชั่วโมง <small>Qashier POS</small></div><span class="pill good" id="salesPeak">peak -</span></div>
+        <div class="chart sales"><div class="axis"><span>200K</span><span>150K</span><span>100K</span><span>50K</span><span>0</span></div><div class="plot"><div class="bars" id="salesBars"></div><div class="xlabels"><span>09</span><span>11</span><span>13</span><span>15</span><span>17</span><span>19</span></div></div></div>
+      </div>
+    </section>
+
+    <section class="grid three" style="margin-top:10px">
+      <div class="card"><div class="title">ใหม่ / เคยมาแล้ว</div><div class="barsList" id="visitMix"></div><div class="sub" id="visitNote"></div></div>
+      <div class="card"><div class="title">Payment Mix</div><div class="barsList" id="paymentMix"></div></div>
+      <div class="card"><div class="title">Qashier Reconcile</div><div class="insight"><b>POS truth = Qashier net ฿787,194</b><br>Beam ตอนนี้เป็นแหล่งข้อมูลบางช่องทาง จึงห้ามใช้เป็นยอดขายรวม</div><div class="sub" id="reconcileNote" style="margin-top:10px"></div></div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card"><div class="cardHead"><div class="title">Product / Category Signals</div><span class="pill" id="productCoverage">Qashier aggregate</span></div><div id="categoryBars" class="barsList"></div></div>
+      <div class="card"><div class="title">Purchase Behavior</div><div class="grid" style="gap:10px;margin-top:10px">
+        <div class="insight"><b>Conversion proxy สูงมาก</b><br><span id="convInsight">-</span></div>
+        <div class="insight"><b>ส่วนลดอธิบายยอดต่าง</b><br>Gross ฿847,036 - Discount ฿59,842 = Net ฿787,194</div>
+        <div class="insight risk"><b>Discount Alert</b><br><span id="discountInsight">-</span></div>
+      </div></div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card">
+        <div class="cardHead"><div class="title">Top Products</div><span class="pill good" id="productRowsPill">182 rows</span></div>
+        <table class="table" id="productTable"></table>
+      </div>
+      <div class="card">
+        <div class="cardHead"><div class="title">Product Families</div><span class="pill">Marketing angle</span></div>
+        <div id="familyBars" class="barsList"></div>
+      </div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card"><div class="cardHead"><div class="title">Size Mix</div><span class="pill">จากชื่อสินค้า</span></div><div id="sizeBars" class="barsList"></div></div>
+      <div class="card"><div class="cardHead"><div class="title">Discount / Bundle Watch</div><span class="pill warn">ควรเช็คโปร</span></div><table class="table" id="discountTable"></table></div>
+    </section>
+
+    <div class="footer" id="foot">Sources: Qashier Full Report aggregate · QR registration endpoint · Beam reconciliation endpoint</div>
+  </main>
+</div>
+<script>
+const KEY='rdfair26';
+const CONFIG={
+  qashierBridge:'https://rudedog-qashier-pos-bridge.rudedog.workers.dev/stats?date=2026-06-25',
+  qashier:'data/qashier-pos-snapshot-2026-06-25.json',
+  day1:'data/day1-snapshot-2026-06-25.json',
+  qr:'https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec?stats=1',
+  beam:'https://rudedog-beam-sales-bridge.rudedog.workers.dev/stats?range=today',
+  qrTimelineOffsetHours:7
+};
+const $=id=>document.getElementById(id);
+const fmt=n=>new Intl.NumberFormat('th-TH').format(Math.round(Number(n)||0));
+const money=n=>'฿'+fmt(n);
+const pct=n=>(Number(n)*100).toFixed(1)+'%';
+function checkGate(){const key=(location.hash.match(/key=([^&]+)/)||[])[1]||localStorage.getItem('rdfair-key');if(key===KEY){localStorage.setItem('rdfair-key',KEY);$('gate').classList.remove('show');return true}$('gate').classList.add('show');return false}
+$('keyBtn').onclick=()=>{localStorage.setItem('rdfair-key',$('keyInput').value.trim());if(checkGate()) init()};
+function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('th-TH',{hour12:false})}
+setInterval(tick,1000);tick();
+async function getJson(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()}
+async function getQashierJson(){
+  try{
+    const d=await getJson(CONFIG.qashierBridge);
+    d.__dashboardSource="bridge";
+    return d;
+  }catch(err){
+    const d=await getJson(CONFIG.qashier);
+    d.__dashboardSource="static-fallback";
+    d.__bridgeError=String(err&&err.message||err);
+    return d;
+  }
+}
+function shiftedTimeline(qr){const raw=Array.isArray(qr?.timeline)?qr.timeline.slice(0,24):[];while(raw.length<24)raw.push(0);const out=Array(24).fill(0);for(let i=0;i<24;i++)out[(i+CONFIG.qrTimelineOffsetHours)%24]=Number(raw[i])||0;return out}
+function renderBars(id,rows,opts={}){rows=rows||[];const max=Math.max(...rows.map(r=>Math.abs(r.value)),1);$(id).innerHTML=rows.length?rows.map((r,i)=>`<div class="rowbar"><div class="name" title="${r.name}">${r.name}</div><div class="track"><div class="fill" style="width:${Math.max(2,Math.abs(r.value)/max*100)}%;background:${opts.colors?.[i%opts.colors.length]||''}"></div></div><div class="value">${r.display||fmt(r.value)}</div></div>`).join(''):'<div class="sub">ไม่มีข้อมูล</div>'}
+function renderChart(id,values){const max=Math.max(...values,1);$(id).innerHTML=values.map(v=>`<div class="bar" style="height:${Math.max(2,v/max*100)}%"></div>`).join('')}
+function renderProducts(rows){$('productTable').innerHTML='<tr><th>สินค้า</th><th>หมวด</th><th>Qty</th><th>Net</th><th>Unit</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${r.category}</td><td>${fmt(r.quantity)}</td><td>${money(r.netSales??r.grossSales)}</td><td>${money(r.avgUnitNet||((r.netSales||r.grossSales||0)/(r.quantity||1)))}</td></tr>`).join('')}
+function renderDiscounts(rows){$('discountTable').innerHTML='<tr><th>สินค้า</th><th>Gross</th><th>Disc.</th><th>Net</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${money(r.grossSales)}</td><td class="down">${pct(r.discountRate)}</td><td>${money(r.netSales)}</td></tr>`).join('')}
+function topHour(values){let ix=0;values.forEach((v,i)=>{if(v>values[ix])ix=i});return {hour:String(ix).padStart(2,'0')+':00',value:values[ix]}}
+function render(data){
+  const q=data.qashier, qr=data.qr||data.day1.qr||{}, day=data.day1||{}, s=q.summary, rec=q.reconciliation||{};
+  const people=Number(qr.attendance?.people||qr.heads||qr.today?.heads||0), scans=Number(qr.today?.count||qr.count||0);
+  $('people').textContent=fmt(people); $('peopleSub').textContent=`${fmt(qr.attendance?.parties||0)} กลุ่ม · เฉลี่ย ${people&&qr.attendance?.parties?(people/qr.attendance.parties).toFixed(2):'-'} คน/กลุ่ม`;
+  $('scans').textContent=fmt(scans); $('scanSub').textContent=`วันนี้ ${fmt(qr.today?.count||scans)} scans · as of ${qr.asOf||'-'}`;
+  $('posSales').innerHTML=fmt(s.netSales)+'<span class="unit">บาท</span>'; $('salesSub').textContent=`Qashier ${q.reportName} · ${q.asOf}`;
+  $('tx').textContent=fmt(s.transactions); $('aov').textContent=fmt(s.aov); $('salesHead').textContent=people?fmt(s.netSales/people):'-'; $('gap').textContent=fmt(rec.posGapAmount||0);
+  const traffic=shiftedTimeline(qr); renderChart('trafficBars',traffic); const peak=topHour(traffic); $('trafficPeak').textContent=`peak ${peak.hour} · ${fmt(peak.value)}`;
+  const hourlyRows=(q.posHourly&&q.posHourly.rows)||((day.derived&&day.derived.hourlySales)||day.hourlySales||[]);
+  const hourly=hourlyRows.map(r=>Number(r.amount)||0); renderChart('salesBars',hourly); const salesPeak=hourlyRows.slice().sort((a,b)=>(b.amount||0)-(a.amount||0))[0]||{hour:'-',amount:0}; $('salesPeak').textContent=`peak ${salesPeak.hour} · ${money(salesPeak.amount||0)}`;
+  const visit=qr.visit||{}; const known=(Number(visit.first)||0)+(Number(visit.loyal)||0); renderBars('visitMix',[{name:'ลูกค้าใหม่',value:Number(visit.first)||0,display:fmt(visit.first||0)+' · '+(known?pct((visit.first||0)/known):'-')},{name:'เคยมาแล้ว',value:Number(visit.loyal)||0,display:fmt(visit.loyal||0)+' · '+(known?pct((visit.loyal||0)/known):'-')}],{colors:['var(--cyan)','var(--green)']}); $('visitNote').textContent='ข้อมูลนี้มาจาก QR ไม่ใช่ Qashier member เพราะ Qashier member = 0';
+  const pay=q.paymentMethods.map(r=>({name:r.method,value:r.amount,display:money(r.amount)+' · '+pct(r.amount/s.netSales)})); renderBars('paymentMix',pay,{colors:['var(--green)','var(--blue)','var(--yellow)','var(--cyan)','var(--orange)']});
+  const pa=q.productAnalysis||{}, cats=pa.topCategoriesByNetSales||q.categoryRows||q.categoryVisiblePage||[], products=pa.topProductsByNetSales||q.productRows||q.productVisiblePage||[];
+  $('productCoverage').textContent=`${pa.productRowCount||products.length} สินค้า · ${pa.categoryRowCount||cats.length} หมวด`;
+  $('productRowsPill').textContent=`Top ${Math.min(12,products.length)} / ${pa.productRowCount||products.length} rows`;
+  renderBars('categoryBars',cats.slice(0,10).map(r=>({name:r.category,value:r.netSales??r.grossSales,display:`${money(r.netSales??r.grossSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)','var(--orange)']});
+  renderProducts(products.slice(0,12));
+  renderBars('familyBars',(pa.topFamiliesByNetSales||[]).slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--green)','var(--cyan)','var(--blue)','var(--yellow)']});
+  renderBars('sizeBars',(pa.sizeMixByNetSales||[]).filter(r=>r.name!=='UNKNOWN').slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)']});
+  renderDiscounts((pa.discountAlerts||[]).slice(0,6));
+  $('reconcileNote').textContent=`PromptPay Qashier ${money(rec.qashierPromptPayAmount)} vs Beam ${money(rec.beamAmount)} · gap ${money(rec.promptPayGapAmount)}`;
+  const convScan=scans?s.transactions/scans:0, convHead=people?s.transactions/people:0;
+  $('convInsight').textContent=`บิล / QR scan = ${pct(convScan)} และ บิล / คนเข้า = ${pct(convHead)} ใช้เป็น proxy ได้ แต่ยังไม่ใช่ match รายคน`;
+  const d=(pa.discountAlerts||[])[0]; $('discountInsight').textContent=d?`${d.product} discount ${pct(d.discountRate)} · gross ${money(d.grossSales)} เหลือ net ${money(d.netSales)} ต้องเช็คว่าเป็นโปรของแถมหรือ mapping ผิด`:'ไม่มี discount anomaly ใหญ่';
+  const sourceLabel=q.__dashboardSource==="bridge"?(q.bridge&&q.bridge.fallback?`POS bridge · ${q.bridge.fallback}`:"POS bridge loaded"):"POS static fallback";
+  $('statusText').textContent=sourceLabel;
+  $('foot').textContent=`Sources: Qashier bridge (${q.asOf}) · QR ${qr.asOf||'-'} · Beam reconciliation ${rec.beamUpdatedAt||'-'}`;
+}
+async function init(){
+  try{
+    const [qashier,day1,qrLive,beamLive]=await Promise.allSettled([getQashierJson(),getJson(CONFIG.day1),getJson(CONFIG.qr),getJson(CONFIG.beam)]);
+    if(qashier.status!=='fulfilled')throw qashier.reason;
+    const data={qashier:qashier.value,day1:day1.value||{},qr:qrLive.value||(day1.value&&day1.value.qr)||null,beam:beamLive.value||null};
+    if(data.beam&&data.qashier.reconciliation){data.qashier.reconciliation.beamAmount=Number(data.beam.amount||data.beam.paidAmountToday||data.qashier.reconciliation.beamAmount)||0;data.qashier.reconciliation.beamOrders=Number(data.beam.orders||data.beam.paidOrdersToday||data.qashier.reconciliation.beamOrders)||0}
+    render(data);
+  }catch(err){$('statusText').textContent='โหลดข้อมูลไม่ได้';console.error(err)}
+}
+if(checkGate()) init();
+</script>
+</body>
+</html>
