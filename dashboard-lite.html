@@ -284,7 +284,7 @@ function fetchJson(url){
   var started=Date.now();
   var ctrl=new AbortController();
   var timer=setTimeout(function(){ctrl.abort()},CONFIG.timeoutMs);
-  return fetch(url,{cache:"no-store",signal:ctrl.signal})
+  return fetch(url,{signal:ctrl.signal})
     .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()})
     .then(function(d){d.__ms=Date.now()-started;return d})
     .finally(function(){clearTimeout(timer)});
