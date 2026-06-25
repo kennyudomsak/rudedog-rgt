@@ -780,9 +780,9 @@ const World = (() => {
 /* ============================================================
    STATE + helpers (in-memory เท่านั้น — ห้าม localStorage)
    ============================================================ */
-const state={ screen:"welcome", step:0, answers:{}, scored:{}, score:0, name:"", phone:"", province:"", consent:false, ticket:"", sending:false, muted:false };
+const state={ screen:"welcome", step:0, answers:{}, scored:{}, score:0, name:"", phone:"", province:"", consent:true, ticket:"", sending:false, muted:false };
 const UTM=Object.fromEntries(new URLSearchParams(location.search));
-function resetState(){ state.step=0; state.answers={}; state.scored={}; state.score=0; state.name=""; state.phone=""; state.province=""; state.consent=false; state.ticket=""; state.sending=false; }
+function resetState(){ state.step=0; state.answers={}; state.scored={}; state.score=0; state.name=""; state.phone=""; state.province=""; state.consent=true; state.ticket=""; state.sending=false; }
 function h(html){ const t=document.createElement("template"); t.innerHTML=html.trim(); return t.content.firstElementChild; }
 function vibrate(ms){ if(navigator.vibrate) navigator.vibrate(ms); }
 
@@ -1014,7 +1014,7 @@ function buildContact(){
         <div class="err" id="phoneErr" aria-live="polite"></div>
         <div class="field"><span class="lab">มาจากจังหวัดไหน? <em>(ไม่บังคับ)</em></span>
           <div class="provbtns">${provBtns}</div></div>
-        <label class="consent"><input id="consent" type="checkbox" aria-label="ยินยอมตามนโยบาย PDPA">
+        <label class="consent"><input id="consent" type="checkbox" aria-label="ยินยอมตามนโยบาย PDPA" checked>
           <span>ยินยอมรับข่าวสาร โปรโมชัน และใช้ทำกลุ่มเป้าหมายโฆษณา ยกเลิกได้ทุกเมื่อ</span></label>
         <button class="btn-cta" id="submitBtn">รับรหัสสิทธิ์</button>
         <p class="trust">1 เบอร์ = 1 สิทธิ์ต่อวัน</p>
@@ -1023,7 +1023,7 @@ function buildContact(){
     </div>`);
   const phoneI=node.querySelector("#phone"), consentI=node.querySelector("#consent"),
         err=node.querySelector("#phoneErr"), submitBtn=node.querySelector("#submitBtn");
-  phoneI.value=state.phone||""; consentI.checked=!!state.consent;
+  phoneI.value=state.phone||""; consentI.checked=state.consent!==false;
   node.querySelectorAll(".provbtn").forEach(b=>{
     if(b.dataset.p===state.province) b.classList.add("sel");
     b.addEventListener("click",()=>{ Audio.tap();
