@@ -280,12 +280,11 @@ function pct(n){return isFinite(n)?Math.round(n*100)+"%":"—"}
 function setText(id,v){var el=$(id);if(el)el.textContent=v}
 function pad(n){return String(n).padStart(2,"0")}
 function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
-function dashboardKey(){var m=String(location.href).match(/[?#&]key=([^&#]+)/);return m?decodeURIComponent(m[1]):"rdfair26"}
 function fetchJson(url){
   var started=Date.now();
   var ctrl=new AbortController();
   var timer=setTimeout(function(){ctrl.abort()},CONFIG.timeoutMs);
-  return fetch(url,{cache:"no-store",signal:ctrl.signal,headers:{"x-dashboard-key":dashboardKey()}})
+  return fetch(url,{cache:"no-store",signal:ctrl.signal})
     .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()})
     .then(function(d){d.__ms=Date.now()-started;return d})
     .finally(function(){clearTimeout(timer)});
@@ -446,19 +445,21 @@ function render(qr,salesRaw){
 }
 function tick(){
   state.nextAt=Date.now()+state.refreshMs;
-  Promise.all([
+  Promise.allSettled([
     fetchJson(CONFIG.qrEndpoint+"?stats=1&t="+Date.now()),
     fetchJson(CONFIG.salesEndpoint+"?range=today&t="+Date.now())
   ]).then(function(res){
-    setStatus("good","LIVE");
-    render(res[0],res[1]);
-  }).catch(function(err){
-    setStatus("bad","DATA FAIL");
-    if(state.lastData)render(state.lastData.qr,state.lastData.sales);
-    else {
-      setText("decisionTitle","โหลดข้อมูลไม่สำเร็จ");
-      setText("decisionBody",String(err&&err.message||err||"unknown error"));
+    var qrOk=res[0].status==="fulfilled", salesOk=res[1].status==="fulfilled";
+    var last=state.lastData||{};
+    if(qrOk||salesOk){
+      setStatus(qrOk&&salesOk?"good":"warn",qrOk&&salesOk?"LIVE":"PARTIAL");
+      render(qrOk?res[0].value:(last.qr||{}),salesOk?res[1].value:(last.sales||{}));
+      return;
     }
+    setStatus("bad","DATA FAIL");
+    if(last.qr||last.sales)render(last.qr||{},last.sales||{});
+    setText("decisionTitle","โหลดข้อมูลไม่สำเร็จ");
+    setText("decisionBody","QR และ Beam endpoint ยังไม่ตอบกลับในรอบนี้");
   });
 }
 function clock(){
