@@ -80,8 +80,8 @@ body{
         <div class="chart"><div class="axis"><span>100</span><span>75</span><span>50</span><span>25</span><span>0</span></div><div class="plot"><div class="bars" id="trafficBars"></div><div class="xlabels"><span>08</span><span>10</span><span>12</span><span>14</span><span>16</span><span>18</span><span>20</span></div></div></div>
       </div>
       <div class="card">
-        <div class="cardHead"><div class="title">ยอดขายรายชั่วโมง <small>Beam proxy</small></div><span class="pill warn">ไม่ใช่ POS ทั้งหมด</span></div>
-        <div class="chart sales"><div class="axis"><span>100K</span><span>75K</span><span>50K</span><span>25K</span><span>0</span></div><div class="plot"><div class="bars" id="salesBars"></div><div class="xlabels"><span>09</span><span>11</span><span>13</span><span>15</span><span>17</span><span>18</span></div></div></div>
+        <div class="cardHead"><div class="title">ยอดขายรายชั่วโมง <small>Qashier POS</small></div><span class="pill good" id="salesPeak">peak -</span></div>
+        <div class="chart sales"><div class="axis"><span>200K</span><span>150K</span><span>100K</span><span>50K</span><span>0</span></div><div class="plot"><div class="bars" id="salesBars"></div><div class="xlabels"><span>09</span><span>11</span><span>13</span><span>15</span><span>17</span><span>19</span></div></div></div>
       </div>
     </section>
 
@@ -92,29 +92,28 @@ body{
     </section>
 
     <section class="grid two" style="margin-top:10px">
-      <div class="card"><div class="cardHead"><div class="title">Product / Category Signals</div><span class="pill">จาก Qashier aggregate</span></div><div id="categoryBars" class="barsList"></div></div>
+      <div class="card"><div class="cardHead"><div class="title">Product / Category Signals</div><span class="pill" id="productCoverage">Qashier aggregate</span></div><div id="categoryBars" class="barsList"></div></div>
       <div class="card"><div class="title">Purchase Behavior</div><div class="grid" style="gap:10px;margin-top:10px">
         <div class="insight"><b>Conversion proxy สูงมาก</b><br><span id="convInsight">-</span></div>
         <div class="insight"><b>ส่วนลดอธิบายยอดต่าง</b><br>Gross ฿847,036 - Discount ฿59,842 = Net ฿787,194</div>
-        <div class="insight risk"><b>น้ำหอมมี discount หนัก</b><br>BloomingGrace gross ฿46,305 แต่ gross profit เหลือ ฿890 ต้องเช็คว่าเป็นโปรตั้งใจหรือ mapping ผิด</div>
+        <div class="insight risk"><b>Discount Alert</b><br><span id="discountInsight">-</span></div>
       </div></div>
     </section>
 
     <section class="grid two" style="margin-top:10px">
       <div class="card">
-        <div class="cardHead"><div class="title">Product Detail Visible Page</div><span class="pill warn">5 / 182 rows</span></div>
+        <div class="cardHead"><div class="title">Top Products</div><span class="pill good" id="productRowsPill">182 rows</span></div>
         <table class="table" id="productTable"></table>
       </div>
       <div class="card">
-        <div class="title">สิ่งที่ Dashboard ดึงได้จาก Qashier</div>
-        <table class="table">
-          <tr><th>ข้อมูล</th><th>สถานะ</th><th>ใช้ทำอะไร</th></tr>
-          <tr><td>ยอดขายรวม / net / discount</td><td class="up">พร้อม</td><td>ยอดจริงผู้บริหาร</td></tr>
-          <tr><td>Payment mix</td><td class="up">พร้อม</td><td>เทียบ Beam / เงินสด / บัตร</td></tr>
-          <tr><td>หมวด / สินค้า</td><td class="warn">เห็นหน้าแรก</td><td>ต้อง export/API เพื่อครบ 182 แถว</td></tr>
-          <tr><td>Hourly POS trend</td><td class="warn">ต้องเพิ่ม</td><td>ต้องใช้ Qashier export/API ไม่ใช้ Beam แทน</td></tr>
-        </table>
+        <div class="cardHead"><div class="title">Product Families</div><span class="pill">Marketing angle</span></div>
+        <div id="familyBars" class="barsList"></div>
       </div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card"><div class="cardHead"><div class="title">Size Mix</div><span class="pill">จากชื่อสินค้า</span></div><div id="sizeBars" class="barsList"></div></div>
+      <div class="card"><div class="cardHead"><div class="title">Discount / Bundle Watch</div><span class="pill warn">ควรเช็คโปร</span></div><table class="table" id="discountTable"></table></div>
     </section>
 
     <div class="footer" id="foot">Sources: Qashier Full Report aggregate · QR registration endpoint · Beam reconciliation endpoint</div>
@@ -139,9 +138,10 @@ function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('
 setInterval(tick,1000);tick();
 async function getJson(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()}
 function shiftedTimeline(qr){const raw=Array.isArray(qr?.timeline)?qr.timeline.slice(0,24):[];while(raw.length<24)raw.push(0);const out=Array(24).fill(0);for(let i=0;i<24;i++)out[(i+CONFIG.qrTimelineOffsetHours)%24]=Number(raw[i])||0;return out}
-function renderBars(id,rows,opts={}){const max=Math.max(...rows.map(r=>Math.abs(r.value)),1);$(id).innerHTML=rows.map((r,i)=>`<div class="rowbar"><div class="name" title="${r.name}">${r.name}</div><div class="track"><div class="fill" style="width:${Math.max(2,Math.abs(r.value)/max*100)}%;background:${opts.colors?.[i%opts.colors.length]||''}"></div></div><div class="value">${r.display||fmt(r.value)}</div></div>`).join('')}
+function renderBars(id,rows,opts={}){rows=rows||[];const max=Math.max(...rows.map(r=>Math.abs(r.value)),1);$(id).innerHTML=rows.length?rows.map((r,i)=>`<div class="rowbar"><div class="name" title="${r.name}">${r.name}</div><div class="track"><div class="fill" style="width:${Math.max(2,Math.abs(r.value)/max*100)}%;background:${opts.colors?.[i%opts.colors.length]||''}"></div></div><div class="value">${r.display||fmt(r.value)}</div></div>`).join(''):'<div class="sub">ไม่มีข้อมูล</div>'}
 function renderChart(id,values){const max=Math.max(...values,1);$(id).innerHTML=values.map(v=>`<div class="bar" style="height:${Math.max(2,v/max*100)}%"></div>`).join('')}
-function renderProducts(rows){$('productTable').innerHTML='<tr><th>สินค้า</th><th>หมวด</th><th>Qty</th><th>Gross</th><th>Profit</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${r.category}</td><td>${fmt(r.quantity)}</td><td>${money(r.grossSales)}</td><td>${money(r.grossProfit)}</td></tr>`).join('')}
+function renderProducts(rows){$('productTable').innerHTML='<tr><th>สินค้า</th><th>หมวด</th><th>Qty</th><th>Net</th><th>Unit</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${r.category}</td><td>${fmt(r.quantity)}</td><td>${money(r.netSales??r.grossSales)}</td><td>${money(r.avgUnitNet||((r.netSales||r.grossSales||0)/(r.quantity||1)))}</td></tr>`).join('')}
+function renderDiscounts(rows){$('discountTable').innerHTML='<tr><th>สินค้า</th><th>Gross</th><th>Disc.</th><th>Net</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${money(r.grossSales)}</td><td class="down">${pct(r.discountRate)}</td><td>${money(r.netSales)}</td></tr>`).join('')}
 function topHour(values){let ix=0;values.forEach((v,i)=>{if(v>values[ix])ix=i});return {hour:String(ix).padStart(2,'0')+':00',value:values[ix]}}
 function render(data){
   const q=data.qashier, qr=data.qr||data.day1.qr||{}, day=data.day1||{}, s=q.summary, rec=q.reconciliation||{};
@@ -151,14 +151,22 @@ function render(data){
   $('posSales').innerHTML=fmt(s.netSales)+'<span class="unit">บาท</span>'; $('salesSub').textContent=`Qashier ${q.reportName} · ${q.asOf}`;
   $('tx').textContent=fmt(s.transactions); $('aov').textContent=fmt(s.aov); $('salesHead').textContent=people?fmt(s.netSales/people):'-'; $('gap').textContent=fmt(rec.posGapAmount||0);
   const traffic=shiftedTimeline(qr); renderChart('trafficBars',traffic); const peak=topHour(traffic); $('trafficPeak').textContent=`peak ${peak.hour} · ${fmt(peak.value)}`;
-  const hourly=((day.derived&&day.derived.hourlySales)||day.hourlySales||[]).map(r=>Number(r.amount)||0); renderChart('salesBars',hourly);
+  const hourlyRows=(q.posHourly&&q.posHourly.rows)||((day.derived&&day.derived.hourlySales)||day.hourlySales||[]);
+  const hourly=hourlyRows.map(r=>Number(r.amount)||0); renderChart('salesBars',hourly); const salesPeak=hourlyRows.slice().sort((a,b)=>(b.amount||0)-(a.amount||0))[0]||{hour:'-',amount:0}; $('salesPeak').textContent=`peak ${salesPeak.hour} · ${money(salesPeak.amount||0)}`;
   const visit=qr.visit||{}; const known=(Number(visit.first)||0)+(Number(visit.loyal)||0); renderBars('visitMix',[{name:'ลูกค้าใหม่',value:Number(visit.first)||0,display:fmt(visit.first||0)+' · '+(known?pct((visit.first||0)/known):'-')},{name:'เคยมาแล้ว',value:Number(visit.loyal)||0,display:fmt(visit.loyal||0)+' · '+(known?pct((visit.loyal||0)/known):'-')}],{colors:['var(--cyan)','var(--green)']}); $('visitNote').textContent='ข้อมูลนี้มาจาก QR ไม่ใช่ Qashier member เพราะ Qashier member = 0';
   const pay=q.paymentMethods.map(r=>({name:r.method,value:r.amount,display:money(r.amount)+' · '+pct(r.amount/s.netSales)})); renderBars('paymentMix',pay,{colors:['var(--green)','var(--blue)','var(--yellow)','var(--cyan)','var(--orange)']});
-  renderBars('categoryBars',q.categoryVisiblePage.map(r=>({name:r.category,value:r.grossSales,display:`${money(r.grossSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)','var(--orange)']});
-  renderProducts(q.productVisiblePage);
+  const pa=q.productAnalysis||{}, cats=pa.topCategoriesByNetSales||q.categoryRows||q.categoryVisiblePage||[], products=pa.topProductsByNetSales||q.productRows||q.productVisiblePage||[];
+  $('productCoverage').textContent=`${pa.productRowCount||products.length} สินค้า · ${pa.categoryRowCount||cats.length} หมวด`;
+  $('productRowsPill').textContent=`Top ${Math.min(12,products.length)} / ${pa.productRowCount||products.length} rows`;
+  renderBars('categoryBars',cats.slice(0,10).map(r=>({name:r.category,value:r.netSales??r.grossSales,display:`${money(r.netSales??r.grossSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)','var(--orange)']});
+  renderProducts(products.slice(0,12));
+  renderBars('familyBars',(pa.topFamiliesByNetSales||[]).slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--green)','var(--cyan)','var(--blue)','var(--yellow)']});
+  renderBars('sizeBars',(pa.sizeMixByNetSales||[]).filter(r=>r.name!=='UNKNOWN').slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)']});
+  renderDiscounts((pa.discountAlerts||[]).slice(0,6));
   $('reconcileNote').textContent=`PromptPay Qashier ${money(rec.qashierPromptPayAmount)} vs Beam ${money(rec.beamAmount)} · gap ${money(rec.promptPayGapAmount)}`;
   const convScan=scans?s.transactions/scans:0, convHead=people?s.transactions/people:0;
   $('convInsight').textContent=`บิล / QR scan = ${pct(convScan)} และ บิล / คนเข้า = ${pct(convHead)} ใช้เป็น proxy ได้ แต่ยังไม่ใช่ match รายคน`;
+  const d=(pa.discountAlerts||[])[0]; $('discountInsight').textContent=d?`${d.product} discount ${pct(d.discountRate)} · gross ${money(d.grossSales)} เหลือ net ${money(d.netSales)} ต้องเช็คว่าเป็นโปรของแถมหรือ mapping ผิด`:'ไม่มี discount anomaly ใหญ่';
   $('statusText').textContent='POS snapshot loaded';
   $('foot').textContent=`Sources: Qashier Full Report aggregate (${q.asOf}) · QR ${qr.asOf||'-'} · Beam ${rec.beamUpdatedAt||'-'}`;
 }
