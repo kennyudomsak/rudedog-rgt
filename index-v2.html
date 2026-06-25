@@ -253,7 +253,6 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .echo .e-k{display:block;font-size:11px;font-weight:700;color:var(--red-deep);margin-bottom:4px;letter-spacing:.3px;}
 .btn-follow{width:100%;background:var(--ink);color:#fff;border:4px solid #000;font-family:var(--ff);font-weight:800;font-size:17px;padding:13px;border-radius:12px;box-shadow:0 5px 0 #000,4px 8px 0 var(--shadow);cursor:pointer;margin-bottom:10px;text-decoration:none;display:block;text-align:center;}
 .btn-follow:active{transform:translateY(4px);box-shadow:0 1px 0 #000,4px 4px 0 var(--shadow);}
-.cta5{font-size:12.5px;color:var(--red-deep);font-weight:600;margin:0 0 14px;text-align:center;}
 .steps{text-align:left;margin:6px 4px 16px;display:flex;flex-direction:column;gap:10px;}
 .step{display:flex;gap:11px;align-items:center;font-size:14.5px;line-height:1.3;font-weight:700;}
 .st-n{flex:none;width:27px;height:27px;border-radius:7px;background:var(--red);color:#fff;border:3px solid var(--ink);font-family:var(--ff);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;}
@@ -335,7 +334,7 @@ input.bad{border-color:var(--red)!important;background:#fff5f3;}
 .success .tk-no .rd{display:inline;color:var(--red);}
 .success .reel-digit{display:inline;width:auto;min-width:0;}
 .success .tk-prize{font-size:13px;color:var(--ink-soft);font-weight:800;}
-.success .echo,.success .cta5{display:none;}
+.success .echo{display:none;}
 .success .btn-follow{
   display:block;
   background:linear-gradient(#12d96b,#06c755);
@@ -532,10 +531,10 @@ const CONFIG = {
 };
 
 /* ============================================================
-   DATA: QUESTIONS (6 ข้อ — hot:true = ตัวเลือกร้อน → พ่นไฟ)
+   DATA: QUESTIONS (3 ด่าน — hot:true = ตัวเลือกร้อน → พ่นไฟ)
    ============================================================ */
 const QUESTIONS = [
-  { id:"source", meta:"WORLD 1–5", q:"รู้จักงานนี้จากไหน?",
+  { id:"source", meta:"WORLD 1–3", q:"รู้จักงานนี้จากไหน?",
     hint:'',
     opts:[
       {em:"🎵",lb:'<span class="hl">TikTok</span>',v:"tiktok"},
@@ -543,32 +542,16 @@ const QUESTIONS = [
       {em:"🚗",lb:'ป้ายหน้าโกดัง',v:"signage"},
       {em:"🔮",lb:"เพื่อนชวน - มันว่า เสื้อถูกกว่า กาแฟหนึ่งแก้วอีก",v:"wom_other"},
     ]},
-  { id:"visit", meta:"WORLD 2–5", combo:true, counter:true, q:"มากันแบบไหน?",
+  { id:"visit", meta:"WORLD 2–3", combo:true, counter:true, q:"มากันแบบไหน?",
     visitOpts:[ {em:"🆕",lb:"ครั้งแรก",v:"first"}, {em:"👑",lb:"เคยมาหลายครั้ง",v:"loyal"} ],
     pad:6 },
-  { id:"style", meta:"WORLD 3–5", q:"สไตล์คุณวันนี้คือแบบไหน?",
-    hint:'',
-    opts:[
-      {em:"🖤",lb:"มินิมอล",v:"minimal"},
-      {em:"🔥",lb:"สตรีท",v:"street",hot:true},
-      {em:"🧢",lb:"สปอร์ต",v:"sporty"},
-      {em:"😎",lb:"สไตล์ RUDEDOG คุ้ม นุ่ม ทน พรีเมี่ยม",v:"boss"},
-    ]},
-  { id:"interest", meta:"WORLD 4–5", q:'วันนี้สนใจอะไรที่สุด?',
+  { id:"interest", meta:"WORLD 3–3 — ด่านสุดท้าย", last:true, q:'วันนี้สนใจอะไรที่สุด?',
     hint:'',
     opts:[
       {em:"👕",lb:'เสื้อยืด - นวัตกรรม"นุ่ม"',v:"apparel"},
       {em:"🧢",lb:'หมวก - ปรับหน้าเล็ก',v:"cap"},
       {em:"🧴",lb:'น้ำหอม - 8 ชั่วโมง',v:"perfume"},
       {em:"🎒",lb:'กระเป๋า - กันน้ำ',v:"bag"},
-    ]},
-  { id:"forwho", meta:"WORLD 5–5 — ด่านสุดท้าย", last:true, q:"วันนี้ซื้อให้ใคร?",
-    hint:'',
-    opts:[
-      {em:"🙋",lb:"ตัวเอง",v:"self"},
-      {em:"💑",lb:"แฟน / คนคุย",v:"partner"},
-      {em:"👨‍👩‍👧",lb:"ครอบครัว",v:"family"},
-      {em:"🎁",lb:"เพื่อน / ของฝาก",v:"gift"},
     ]},
 ];
 const TOTAL=QUESTIONS.length, MAXSCORE=TOTAL*20;
@@ -580,13 +563,6 @@ const Q4_ECHO={
   perfume:"น้ำหอมโปรพิเศษ รอคุณไปรับสิทธิ์",
   bag:"กระเป๋าใบคุ้ม รอคุณไปจัดแล้ว"
 };
-const Q5_CTA={
-  self:"วันนี้ตามใจตัวเองให้คุ้ม",
-  partner:"ซื้อคู่ ยิ่งคุ้มที่บูธ",
-  family:"พาครอบครัวมาช้อปได้เลย",
-  gift:"ของฝากมีให้เลือกที่บูธ"
-};
-
 const PROVINCES=["กรุงเทพมหานคร","นนทบุรี","ปทุมธานี","สมุทรปราการ","สมุทรสาคร","นครปฐม","กระบี่","กาญจนบุรี","กาฬสินธุ์","กำแพงเพชร","ขอนแก่น","จันทบุรี","ฉะเชิงเทรา","ชลบุรี","ชัยนาท","ชัยภูมิ","ชุมพร","เชียงราย","เชียงใหม่","ตรัง","ตราด","ตาก","นครนายก","นครพนม","นครราชสีมา","นครศรีธรรมราช","นครสวรรค์","นราธิวาส","น่าน","บึงกาฬ","บุรีรัมย์","ประจวบคีรีขันธ์","ปราจีนบุรี","ปัตตานี","พระนครศรีอยุธยา","พังงา","พัทลุง","พิจิตร","พิษณุโลก","เพชรบุรี","เพชรบูรณ์","แพร่","พะเยา","ภูเก็ต","มหาสารคาม","มุกดาหาร","แม่ฮ่องสอน","ยโสธร","ยะลา","ร้อยเอ็ด","ระนอง","ระยอง","ราชบุรี","ลพบุรี","ลำปาง","ลำพูน","เลย","ศรีสะเกษ","สกลนคร","สงขลา","สตูล","สระแก้ว","สระบุรี","สิงห์บุรี","สุโขทัย","สุพรรณบุรี","สุราษฎร์ธานี","สุรินทร์","หนองคาย","หนองบัวลำภู","อ่างทอง","อำนาจเจริญ","อุดรธานี","อุตรดิตถ์","อุทัยธานี","อุบลราชธานี"];
 
 /* ============================================================
@@ -889,6 +865,10 @@ function ambientLayer(){
 function salesHeadlineLayer(headline=SALES_HEADLINES[0]){
   return `<div class="sales-headline ${headline.cls}" aria-hidden="true"><b>${headline.big}</b><br><small>${headline.small}</small></div>`;
 }
+function headlineForQuestion(q, step){
+  const map={ source:0, visit:1, interest:3 };
+  return SALES_HEADLINES[map[q.id] ?? (step % SALES_HEADLINES.length)];
+}
 
 function buildWelcome(){
   const node=h(`
@@ -901,15 +881,15 @@ function buildWelcome(){
       ${salesHeadlineLayer(SALES_HEADLINES[0])}
       <div class="pad">
         <div class="evinfo">${CONFIG.eventDates} · ถ.รัตนาธิเบศร์ นนทบุรี</div>
-        <div class="eyebrow"><span class="blink px">▶</span>&nbsp;<span class="px">PRESS START</span> · ลงทะเบียน 30 วิ</div>
-        <h1 class="h1" tabindex="-1" data-focus>30 วิ / แตะ 5 ที จบ!<br>รับ <span class="red">2 สิทธิ์น้ำหอม</span></h1>
+        <div class="eyebrow"><span class="blink px">▶</span>&nbsp;<span class="px">PRESS START</span> · ลงทะเบียน 15 วิ</div>
+        <h1 class="h1" tabindex="-1" data-focus>15 วิ / 3 ด่าน จบ!<br>รับ <span class="red">2 สิทธิ์น้ำหอม</span></h1>
         <p class="sub">โชว์รหัสที่บูธ แล้วรับสิทธิ์ได้เลย</p>
         <div class="deals">
           <div class="deal"><span class="deal-n">1</span><div><b>น้ำหอม ฿${CONFIG.perfumeNormal} เหลือ <span class="hl">฿${CONFIG.perfumeDeal}</span></b><small>ลงทะเบียนก็รับสิทธิ์</small></div></div>
           <div class="deal"><span class="deal-n">2</span><div><b>ซื้อครบ ฿${CONFIG.freeThreshold.toLocaleString()} รับ<span class="save">น้ำหอมฟรี</span></b><small>โชว์รหัสตอนชำระเงิน</small></div></div>
         </div>
         <div class="pitch">🔥 โปรหน้างาน · <span class="save">ยิ่งตุน ยิ่งคุ้ม</span></div>
-        <div class="chips"><span class="chip">5 ข้อ</span><span class="chip">30 วิ</span><span class="chip">รับรหัสทันที</span></div>
+        <div class="chips"><span class="chip">3 ด่าน</span><span class="chip">15 วิ</span><span class="chip">รับรหัสทันที</span></div>
         <button class="btn-cta" id="startBtn">▶ เริ่มเล่นเลย</button>
         <p class="fine">เล่นจบ รับรหัสทันที</p>
       </div>
@@ -956,7 +936,7 @@ function buildQuiz(){
         <div class="mtrack" role="progressbar" aria-valuemin="0" aria-valuemax="${TOTAL}" aria-valuenow="${state.step}" aria-label="ความคืบหน้าภารกิจ">${cells}<span class="mflag">🏁</span></div>
         <div class="mleft">${leftMsg}</div>
       </div>
-      ${salesHeadlineLayer(SALES_HEADLINES[state.step % SALES_HEADLINES.length])}
+      ${salesHeadlineLayer(headlineForQuestion(q,state.step))}
       <div class="pad">
         <div class="quest-card">
           <h2 class="q" tabindex="-1" data-focus>${q.q}</h2>
@@ -1023,7 +1003,7 @@ function buildContact(){
       <div class="hud">
         <div class="hud-row"><div class="mission-ttl">ภารกิจ <b>สำเร็จ!</b></div><div class="coinhud px">🪙×<b>${state.score}</b></div></div>
         <div class="mtrack">${QUESTIONS.map(()=>'<div class="mcell done"></div>').join("")}<span class="mflag">🏁</span></div>
-        <div class="mleft"><span class="hot">เคลียร์ครบ 5 ข้อ! รับรหัสได้เลย</span></div>
+        <div class="mleft"><span class="hot">เคลียร์ครบ 3 ด่าน! รับรหัสได้เลย</span></div>
       </div>
       ${salesHeadlineLayer(SALES_HEADLINES[4])}
       <div class="pad">
@@ -1068,7 +1048,7 @@ function buildSuccess(){
   const name=state.name||"เพื่อนรู้ดด็อก";
   const digits=state.ticket.replace("RD26-","");
   const reel=[...digits].map(()=>'<span class="reel-digit">0</span>').join("");
-  const echo=Q4_ECHO[state.answers.interest]; const cta5=Q5_CTA[state.answers.forwho];
+  const echo=Q4_ECHO[state.answers.interest];
   const follow=CONFIG.lineFriendUrl
     ? `<a class="btn-follow" id="followBtn" href="${CONFIG.lineFriendUrl}" target="_blank" rel="noopener">เพิ่มเพื่อน LINE ${CONFIG.lineFriendId}</a>` : "";
   const node=h(`
@@ -1086,7 +1066,6 @@ function buildSuccess(){
         </div>
         ${echo?`<div class="echo"><span class="e-k">🎯 ของที่คุณเล็งไว้</span>${echo}</div>`:""}
         ${follow}
-        ${cta5?`<p class="cta5">${cta5}</p>`:""}
         <div class="steps">
           <div class="step"><span class="st-n">1</span><span>โชว์รหัสนี้ที่บูธ</span></div>
           <div class="step"><span class="st-n">2</span><span>รับสิทธิ์น้ำหอม ฿${CONFIG.perfumeDeal}</span></div>
