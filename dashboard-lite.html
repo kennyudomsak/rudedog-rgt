@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RUDEDOG FAIR LITE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+:root{
+  --bg:#06080d;
+  --surface:#0d121b;
+  --surface2:#111925;
+  --line:#253244;
+  --line2:#31445b;
+  --text:#f5fbff;
+  --muted:#9eb0c4;
+  --dim:#708298;
+  --cyan:#13d7ff;
+  --green:#6dff8d;
+  --amber:#ffce5c;
+  --red:#ff5b6e;
+  --blue:#7aa7ff;
+  --shadow:0 24px 80px rgba(0,0,0,.42);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:"Noto Sans Thai",system-ui,sans-serif;letter-spacing:0}
+body{
+  background:
+    linear-gradient(90deg,rgba(19,215,255,.035) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(0deg,rgba(19,215,255,.032) 1px,transparent 1px) 0 0/48px 48px,
+    radial-gradient(circle at 18% 4%,rgba(19,215,255,.16),transparent 34%),
+    radial-gradient(circle at 92% 0%,rgba(109,255,141,.11),transparent 32%),
+    var(--bg);
+}
+button{font:inherit}
+.shell{max-width:1500px;margin:0 auto;padding:18px 18px 28px}
+.topbar{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:14px;min-width:0}
+.mark{width:44px;height:44px;border:1px solid rgba(19,215,255,.58);background:linear-gradient(135deg,rgba(19,215,255,.25),rgba(109,255,141,.14));display:grid;place-items:center;box-shadow:0 0 32px rgba(19,215,255,.2)}
+.mark i{font-size:23px;color:var(--cyan)}
+h1{margin:0;font:800 clamp(26px,3.2vw,46px)/1 "Space Grotesk","Noto Sans Thai",sans-serif}
+.subtitle{margin-top:5px;color:var(--muted);font-weight:800;font-size:13px;display:flex;gap:10px;flex-wrap:wrap}
+.ops{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.chip,.status{border:1px solid var(--line);background:rgba(13,18,27,.86);padding:9px 11px;font-weight:900;font-size:13px;color:var(--muted);display:inline-flex;align-items:center;gap:8px;min-height:38px}
+.status.good{color:var(--green);border-color:rgba(109,255,141,.42)}
+.status.warn{color:var(--amber);border-color:rgba(255,206,92,.42)}
+.status.bad{color:var(--red);border-color:rgba(255,91,110,.45)}
+.dot{width:9px;height:9px;background:currentColor;box-shadow:0 0 16px currentColor}
+.refresh{display:flex;border:1px solid var(--line);background:rgba(13,18,27,.84)}
+.refresh button{height:38px;border:0;border-right:1px solid var(--line);background:transparent;color:var(--muted);font-weight:900;padding:0 11px;cursor:pointer}
+.refresh button:last-child{border-right:0}
+.refresh button.on{background:rgba(19,215,255,.14);color:var(--cyan)}
+.layout{display:grid;grid-template-columns:minmax(0,1.38fr) minmax(330px,.62fr);gap:14px}
+.hero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.kpi,.panel,.signal-tile{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(17,25,37,.92),rgba(8,12,19,.92));
+  box-shadow:var(--shadow);
+}
+.kpi{min-height:172px;padding:18px;position:relative;overflow:hidden}
+.kpi:before{content:"";position:absolute;inset:0;border-top:2px solid var(--accent,var(--cyan));opacity:.75}
+.kpi small,.panel-title small,.metric small,.rank small{display:block;color:var(--muted);font-size:12px;font-weight:900;text-transform:uppercase}
+.kpi h2{margin:18px 0 0;font:800 clamp(34px,4.2vw,64px)/.95 "Space Grotesk","Noto Sans Thai",sans-serif;color:var(--text);white-space:nowrap}
+.kpi .unit{font-size:20px;color:var(--muted);margin-left:3px}
+.kpi p{margin:12px 0 0;color:var(--muted);font-weight:800}
+.kpi .mini{position:absolute;right:16px;bottom:15px;color:var(--accent,var(--cyan));font:700 13px/1 "Space Grotesk",sans-serif}
+.kpi.visitor{--accent:var(--cyan)}
+.kpi.scan{--accent:var(--green)}
+.kpi.sale{--accent:var(--amber)}
+.quick{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.metric{padding:13px 14px;border:1px solid var(--line);background:rgba(13,18,27,.82);min-height:92px}
+.metric b{display:block;margin-top:8px;font:800 28px/1 "Space Grotesk","Noto Sans Thai",sans-serif}
+.metric span{display:block;margin-top:7px;color:var(--dim);font-size:12px;font-weight:800}
+.panel{padding:14px;margin-bottom:14px;overflow:hidden}
+.panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:12px}
+.panel-title b{display:block;font-size:18px;font-weight:950}
+.panel-title small{margin-top:3px;color:var(--dim)}
+.legend{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.legend span{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-size:12px;font-weight:900}
+.legend i{width:9px;height:9px;background:var(--c)}
+.chart{min-height:310px}
+.chart svg{width:100%;height:100%;display:block}
+.axis{stroke:rgba(255,255,255,.18);stroke-width:1}
+.gridline{stroke:rgba(255,255,255,.075);stroke-width:1}
+.line-people{fill:none;stroke:var(--cyan);stroke-width:4;filter:drop-shadow(0 0 8px rgba(19,215,255,.42))}
+.line-scans{fill:none;stroke:var(--green);stroke-width:3;stroke-dasharray:6 5}
+.sales-bar{fill:rgba(255,206,92,.68)}
+.chart-label{fill:var(--muted);font-size:12px;font-weight:800}
+.empty-note{color:var(--muted);display:grid;place-items:center;min-height:210px;font-weight:900;text-align:center}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bars{display:grid;gap:10px}
+.bar-row{display:grid;grid-template-columns:minmax(80px,120px) 1fr auto;gap:10px;align-items:center}
+.bar-row label{font-weight:900;color:var(--text);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{height:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+.bar-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cyan),var(--green))}
+.bar-row strong{font:800 14px/1 "Space Grotesk",sans-serif;color:var(--muted);min-width:44px;text-align:right}
+.rank-list{display:grid;gap:9px}
+.rank{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
+.rank em{font-style:normal;color:var(--cyan);font:800 14px/1 "Space Grotesk",sans-serif}
+.rank b{font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank small{text-align:right;color:var(--muted);font-size:12px}
+.side-grid{display:grid;grid-template-columns:1fr;gap:14px}
+.signal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.signal-tile{padding:12px;min-height:82px;box-shadow:none}
+.signal-tile b{display:block;margin-top:6px;font:800 23px/1 "Space Grotesk","Noto Sans Thai",sans-serif}
+.signal-tile.good{border-color:rgba(109,255,141,.35)}
+.signal-tile.warn{border-color:rgba(255,206,92,.35)}
+.signal-tile.bad{border-color:rgba(255,91,110,.4)}
+.pulse{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;height:92px;align-items:end}
+.pulse i{display:block;min-height:3px;background:linear-gradient(180deg,var(--cyan),rgba(19,215,255,.18));border:1px solid rgba(255,255,255,.06)}
+.pulse.sales i{background:linear-gradient(180deg,var(--amber),rgba(255,206,92,.15))}
+.decision{border:1px solid rgba(19,215,255,.35);background:linear-gradient(135deg,rgba(19,215,255,.13),rgba(109,255,141,.08));padding:14px}
+.decision b{display:block;font-size:20px;font-weight:950}
+.decision p{margin:8px 0 0;color:var(--muted);font-weight:800}
+.foot{display:flex;justify-content:space-between;gap:12px;align-items:center;color:var(--dim);font-size:12px;font-weight:800;margin-top:12px}
+.link{color:var(--cyan);text-decoration:none}
+@media (max-width:1100px){
+  .layout{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr 1fr}
+  .kpi.sale{grid-column:span 2}
+}
+@media (max-width:760px){
+  .shell{padding:12px}
+  .topbar,.hero,.quick,.split{grid-template-columns:1fr}
+  .ops{justify-content:flex-start}
+  .kpi.sale{grid-column:span 1}
+  .chart{min-height:260px}
+  .signal-grid{grid-template-columns:1fr}
+  .bar-row{grid-template-columns:minmax(70px,92px) 1fr auto}
+  h1{font-size:30px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark"><i class="bi bi-cpu"></i></div>
+      <div>
+        <h1>RUDEDOG FAIR LITE</h1>
+        <div class="subtitle">
+          <span>Tech command board</span>
+          <span id="asOf">รอข้อมูลสด</span>
+        </div>
+      </div>
+    </div>
+    <div class="ops">
+      <div class="status warn" id="liveStatus"><i class="dot"></i><span>CONNECTING</span></div>
+      <div class="chip"><i class="bi bi-stopwatch"></i><span id="countdown">00:15</span></div>
+      <div class="refresh" id="refreshTabs">
+        <button data-ms="15000" class="on">15s</button>
+        <button data-ms="60000">1m</button>
+        <button data-ms="300000">5m</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="kpi visitor">
+      <small>คนเข้า</small>
+      <h2 id="peopleTotal">—<span class="unit">คน</span></h2>
+      <p id="peopleNote">รวม headcount จาก QR gate</p>
+      <div class="mini" id="peopleTrend">LIVE</div>
+    </div>
+    <div class="kpi scan">
+      <small>QR สแกน</small>
+      <h2 id="scanTotal">—<span class="unit">scan</span></h2>
+      <p id="scanNote">จำนวน submission วันนี้</p>
+      <div class="mini" id="scanTrend">LAST 15M</div>
+    </div>
+    <div class="kpi sale">
+      <small>ยอดขาย</small>
+      <h2 id="salesTotal">—</h2>
+      <p id="salesNote">Beam paid amount วันนี้</p>
+      <div class="mini" id="salesTrend">BEAM</div>
+    </div>
+  </section>
+
+  <section class="quick">
+    <div class="metric"><small>Conversion</small><b id="conversion">—</b><span>orders / QR scans</span></div>
+    <div class="metric"><small>Revenue / Scan</small><b id="revPerScan">—</b><span>ยอดขายเฉลี่ยต่อ scan</span></div>
+    <div class="metric"><small>Scans Last 15m</small><b id="scan15">—</b><span>สัญญาณ traffic ล่าสุด</span></div>
+    <div class="metric"><small>Sales Last 15m</small><b id="sale15">—</b><span>ยอดขายรอบล่าสุด</span></div>
+  </section>
+
+  <main class="layout">
+    <div>
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title">
+            <b>Trend หลัก: คนเข้า / QR / ยอดขาย</b>
+            <small>เส้น = traffic, แท่ง = sales 15 นาทีล่าสุด</small>
+          </div>
+          <div class="legend">
+            <span><i style="--c:var(--cyan)"></i>คนเข้า</span>
+            <span><i style="--c:var(--green)"></i>QR</span>
+            <span><i style="--c:var(--amber)"></i>ยอดขาย</span>
+          </div>
+        </div>
+        <div class="chart" id="mainChart"></div>
+      </section>
+
+      <section class="split">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><b>Scan Source Mix</b><small>คนมาจากจุดไหน</small></div>
+          </div>
+          <div class="bars" id="sourceMix"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title"><b>Channel Mix</b><small>ช่องทางที่คนรู้จักงาน</small></div>
+          </div>
+          <div class="bars" id="channelMix"></div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="side-grid">
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><b>Signal</b><small>อ่านก่อนตัดสินใจ</small></div>
+        </div>
+        <div class="signal-grid">
+          <div class="signal-tile warn" id="qrSignal"><small>QR</small><b>WAIT</b></div>
+          <div class="signal-tile warn" id="beamSignal"><small>Beam</small><b>WAIT</b></div>
+          <div class="signal-tile warn" id="modeSignal"><small>Mode</small><b>WATCH</b></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><b>15m Pulse</b><small>ความร้อนของหน้างาน</small></div>
+        </div>
+        <div class="pulse" id="scanPulse"></div>
+        <div style="height:10px"></div>
+        <div class="pulse sales" id="salesPulse"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div class="panel-title"><b>Top Products</b><small>ขายอะไร / ไซซ์อะไร</small></div>
+        </div>
+        <div class="rank-list" id="productRank"></div>
+      </section>
+
+      <section class="decision">
+        <b id="decisionTitle">กำลังรอข้อมูลสด</b>
+        <p id="decisionBody">เมื่อ QR และ Beam เข้ามาครบ หน้า Lite จะสรุปว่าควรเร่งคนเข้า, เร่งปิดการขาย, หรือคงจังหวะเดิม</p>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="foot">
+    <span>Lite board reads QR Apps Script + Beam Worker only. Ads/AI are intentionally excluded.</span>
+    <a class="link" href="./dashboard.html#key=rdfair26">เปิด Control Panel ใหญ่</a>
+  </footer>
+</div>
+
+<script>
+var CONFIG={
+  qrEndpoint:"https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec",
+  salesEndpoint:"https://rudedog-beam-sales-bridge.rudedog.workers.dev/stats",
+  refreshMs:15000,
+  timeoutMs:9000
+};
+var state={timer:null,ticker:null,nextAt:0,refreshMs:CONFIG.refreshMs,lastData:null};
+var LABELS={
+  source:{door:"ประตู",table:"โต๊ะ/บูธ",poster:"โปสเตอร์",other:"อื่นๆ"},
+  channel:{tiktok:"TikTok",facebook:"Facebook",signage:"ป้าย",wom_other:"เพื่อนชวน",codex_test:"Test",other:"ไม่ระบุ"}
+};
+var $=function(id){return document.getElementById(id)};
+function fmt(n){return Math.round(Number(n)||0).toLocaleString("en-US")}
+function baht(n){n=Number(n)||0;if(n>=1000000)return "฿"+(n/1000000).toFixed(2)+"M";if(n>=1000)return "฿"+(n/1000).toFixed(1)+"k";return "฿"+fmt(n)}
+function fullBaht(n){return "฿"+fmt(n)}
+function pct(n){return isFinite(n)?Math.round(n*100)+"%":"—"}
+function setText(id,v){var el=$(id);if(el)el.textContent=v}
+function pad(n){return String(n).padStart(2,"0")}
+function esc(v){return String(v==null?"":v).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]})}
+function dashboardKey(){var m=String(location.href).match(/[?#&]key=([^&#]+)/);return m?decodeURIComponent(m[1]):"rdfair26"}
+function fetchJson(url){
+  var started=Date.now();
+  var ctrl=new AbortController();
+  var timer=setTimeout(function(){ctrl.abort()},CONFIG.timeoutMs);
+  return fetch(url,{cache:"no-store",signal:ctrl.signal,headers:{"x-dashboard-key":dashboardKey()}})
+    .then(function(r){if(!r.ok)throw new Error("http "+r.status);return r.json()})
+    .then(function(d){d.__ms=Date.now()-started;return d})
+    .finally(function(){clearTimeout(timer)});
+}
+function normalizeSales(raw){
+  raw=raw||{};
+  var sum=raw.summary||{};
+  var timeline=Array.isArray(raw.timeline15m)?raw.timeline15m:[];
+  var products=Array.isArray(raw.byProduct)?raw.byProduct:[];
+  var sizes=Array.isArray(raw.bySize)?raw.bySize:[];
+  return {
+    ok:!!raw.ok,
+    updatedAt:raw.updatedAt||raw.asOf||"",
+    amount:Number(sum.paidAmountToday||sum.paidAmount||sum.amount||0),
+    orders:Number(sum.paidOrdersToday||sum.orders||sum.orderCount||0),
+    items:Number(sum.itemsToday||sum.items||0),
+    last15Amount:Number(sum.last15Amount||0),
+    last15Orders:Number(sum.last15Orders||0),
+    timeline:timeline.map(function(x){return{label:String(x.label||""),amount:Number(x.amount||0),orders:Number(x.orders||0),items:Number(x.items||x.qty||0)}}).slice(-24),
+    products:products.map(function(x){return{label:String(x.label||x.name||x.sku||"—"),sku:String(x.sku||""),qty:Number(x.qty||x.items||0),amount:Number(x.amount||0)}}).filter(function(x){return x.qty||x.amount}).slice(0,6),
+    sizes:sizes.map(function(x){return{label:String(x.label||"—"),qty:Number(x.qty||0),amount:Number(x.amount||0)}}).filter(function(x){return x.qty||x.amount}).slice(0,4)
+  };
+}
+function entries(obj,labels){
+  obj=obj||{};
+  return Object.keys(obj).map(function(k){
+    var v=obj[k], n=typeof v==="number"?v:Number((v&&v.people)||(v&&v.parties)||v||0);
+    return {key:k,label:(labels&&labels[k])||k,value:n};
+  }).filter(function(x){return x.value>0}).sort(function(a,b){return b.value-a.value});
+}
+function qrPeople(qr){return Number((qr.attendance&&qr.attendance.people)||qr.heads||(qr.today&&qr.today.heads)||0)}
+function qrScans(qr){return Number((qr.today&&qr.today.count)||qr.count||0)}
+function getHourlyPeople(qr){
+  var tl=Array.isArray(qr.timeline)?qr.timeline.slice(0,24):[];
+  while(tl.length<24)tl.push(0);
+  var ratio=qrScans(qr)>0?qrPeople(qr)/Math.max(1,qrScans(qr)):1;
+  return tl.map(function(v){return Math.round(Number(v||0)*ratio)});
+}
+function getHourlyScans(qr){
+  var tl=Array.isArray(qr.timeline)?qr.timeline.slice(0,24):[];
+  while(tl.length<24)tl.push(0);
+  return tl.map(function(v){return Number(v)||0});
+}
+function setStatus(cls,text){
+  var el=$("liveStatus");
+  el.className="status "+cls;
+  el.querySelector("span").textContent=text;
+}
+function renderKpis(qr,sales){
+  var people=qrPeople(qr), scans=qrScans(qr), amount=sales.amount, orders=sales.orders;
+  setText("peopleTotal",fmt(people));
+  setText("scanTotal",fmt(scans));
+  setText("salesTotal",baht(amount));
+  setText("peopleNote",fmt((qr.attendance&&qr.attendance.parties)||scans)+" กลุ่ม / "+fmt(people)+" คน");
+  setText("scanNote","วันนี้ "+fmt(scans)+" scans · ทั้งหมด "+fmt(qr.count||scans));
+  setText("salesNote",fmt(orders)+" orders · "+fmt(sales.items)+" items");
+  setText("conversion",scans?pct(orders/scans):"—");
+  setText("revPerScan",scans?fullBaht(amount/scans):"—");
+  setText("scan15",fmt((qr.pace&&qr.pace.last15)||lastSum(qr.perMin,15)));
+  setText("sale15",baht(sales.last15Amount));
+  setText("peopleTrend","PEOPLE");
+  setText("scanTrend","+"+fmt((qr.pace&&qr.pace.lastHour)||lastSum(qr.perMin,60))+" / 1H");
+  setText("salesTrend","+"+baht(sales.last15Amount)+" / 15M");
+}
+function lastSum(arr,n){
+  arr=Array.isArray(arr)?arr:[];
+  return arr.slice(-n).reduce(function(a,b){return a+Number(b||0)},0);
+}
+function renderMainChart(qr,sales){
+  var people=getHourlyPeople(qr), scans=getHourlyScans(qr), salesBars=sales.timeline.slice(-24);
+  var saleByHour=new Array(24).fill(0);
+  salesBars.forEach(function(row){
+    var h=Number(String(row.label||"").slice(0,2));
+    if(!isNaN(h)&&h>=0&&h<24)saleByHour[h]+=Number(row.amount)||0;
+  });
+  var W=980,H=330,L=50,R=18,T=20,B=36;
+  var maxTraffic=Math.max.apply(null,people.concat(scans).concat([1]));
+  var maxSales=Math.max.apply(null,saleByHour.concat([1]));
+  var x=function(i){return L+i/23*(W-L-R)};
+  var yTraffic=function(v){return H-B-(Number(v)||0)/maxTraffic*(H-T-B)};
+  var ySales=function(v){return H-B-(Number(v)||0)/maxSales*(H-T-B)*.86};
+  var line=function(vals,yfn){return "M"+vals.map(function(v,i){return x(i).toFixed(1)+","+yfn(v).toFixed(1)}).join(" L")};
+  var grid="",labs="",bars="";
+  for(var g=0;g<=4;g++){
+    var yy=T+g*(H-T-B)/4;
+    grid+='<line class="gridline" x1="'+L+'" y1="'+yy+'" x2="'+(W-R)+'" y2="'+yy+'"/>';
+  }
+  for(var i=0;i<24;i++){
+    if(i%3===0)labs+='<text class="chart-label" x="'+x(i)+'" y="'+(H-10)+'" text-anchor="middle">'+pad(i)+':00</text>';
+    var bw=(W-L-R)/24*.58, bh=(H-B-ySales(saleByHour[i]));
+    bars+='<rect class="sales-bar" x="'+(x(i)-bw/2).toFixed(1)+'" y="'+(H-B-bh).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+Math.max(2,bh).toFixed(1)+'"/>';
+  }
+  var has=people.concat(scans,saleByHour).some(function(v){return Number(v)>0});
+  var empty=has?"":'<foreignObject x="220" y="112" width="540" height="88"><div xmlns="http://www.w3.org/1999/xhtml" class="empty-note">รอ movement สดจากหน้างาน</div></foreignObject>';
+  $("mainChart").innerHTML='<svg viewBox="0 0 '+W+' '+H+'" aria-label="Trend chart">'+grid+bars+'<path class="line-people" d="'+line(people,yTraffic)+'"/><path class="line-scans" d="'+line(scans,yTraffic)+'"/><line class="axis" x1="'+L+'" y1="'+(H-B)+'" x2="'+(W-R)+'" y2="'+(H-B)+'"/>'+labs+empty+'</svg>';
+}
+function renderBars(id,rows){
+  var el=$(id), max=Math.max.apply(null,rows.map(function(r){return r.value}).concat([1]));
+  if(!rows.length){el.innerHTML='<div class="empty-note">ยังไม่มีข้อมูล</div>';return}
+  el.innerHTML=rows.slice(0,6).map(function(r){
+    var width=Math.max(2,r.value/max*100);
+    return '<div class="bar-row"><label>'+esc(r.label)+'</label><div class="bar-track"><i style="width:'+width.toFixed(1)+'%"></i></div><strong>'+fmt(r.value)+'</strong></div>';
+  }).join("");
+}
+function renderRanks(sales){
+  var rows=sales.products.length?sales.products:sales.sizes;
+  if(!rows.length){$("productRank").innerHTML='<div class="empty-note">ยังไม่มีสินค้าแยก SKU</div>';return}
+  $("productRank").innerHTML=rows.slice(0,6).map(function(r,i){
+    var val=r.amount?baht(r.amount):fmt(r.qty);
+    return '<div class="rank"><em>'+(i+1)+'</em><b title="'+esc(r.label)+'">'+esc(cleanSku(r.label))+'</b><small>'+val+'</small></div>';
+  }).join("");
+}
+function cleanSku(label){
+  label=String(label||"");
+  if(label.length>24&&/^[A-Za-z0-9_-]+$/.test(label))return label.slice(0,10)+"..."+label.slice(-6);
+  return label;
+}
+function renderPulse(id,values){
+  var el=$(id), max=Math.max.apply(null,values.concat([1]));
+  el.innerHTML=values.slice(-24).map(function(v){
+    var h=Math.max(4,Number(v||0)/max*92);
+    return '<i style="height:'+h.toFixed(1)+'%"></i>';
+  }).join("");
+}
+function renderSignals(qr,sales){
+  var qrOk=!!qr.ok, beamOk=!!sales.ok;
+  setSignal("qrSignal",qrOk?"good":"bad",qrOk?"LIVE":"FAIL");
+  setSignal("beamSignal",beamOk?"good":"bad",beamOk?"LIVE":"FAIL");
+  var scans=qrScans(qr), orders=sales.orders, conv=scans?orders/scans:0;
+  var mode=(qrOk&&beamOk&&conv>=.08)?"GO":(qrOk&&beamOk)?"WATCH":"HOLD";
+  setSignal("modeSignal",mode==="GO"?"good":mode==="WATCH"?"warn":"bad",mode);
+  if(mode==="GO"){
+    setText("decisionTitle","สัญญาณดี: traffic และยอดขายเดินพร้อมกัน");
+    setText("decisionBody","คง refresh 15 วินาที ดู source ที่โตเร็ว และเติมทีมขายที่จุด top source ได้เลย");
+  }else if(mode==="WATCH"){
+    setText("decisionTitle","WATCH: มีข้อมูลสด แต่ conversion ยังต้องดูใกล้");
+    setText("decisionBody","ดู Revenue / Scan และ Sales Last 15m ถ้าตกต่อเนื่อง ให้เร่งปิดการขายหรือย้ายคนไปจุดที่ scan เยอะ");
+  }else{
+    setText("decisionTitle","HOLD: ข้อมูลสดยังไม่ครบ");
+    setText("decisionBody","ตรวจ QR endpoint / Beam endpoint ก่อนใช้ตัวเลขตัดสินใจหน้างาน อย่าเพิ่งสรุปจาก trend ที่ยังขาด");
+  }
+}
+function setSignal(id,cls,text){
+  var el=$(id);el.className="signal-tile "+cls;el.querySelector("b").textContent=text;
+}
+function render(qr,salesRaw){
+  var sales=normalizeSales(salesRaw);
+  state.lastData={qr:qr,sales:salesRaw};
+  setText("asOf",(qr.asOf||"สด")+" · Beam "+(sales.updatedAt?new Date(sales.updatedAt).toLocaleTimeString("th-TH"):"รอ"));
+  renderKpis(qr,sales);
+  renderMainChart(qr,sales);
+  renderBars("sourceMix",entries(qr.bySource,LABELS.source));
+  renderBars("channelMix",entries(qr.channel,LABELS.channel));
+  renderRanks(sales);
+  renderPulse("scanPulse",Array.isArray(qr.perMin)?qr.perMin:getHourlyScans(qr));
+  renderPulse("salesPulse",sales.timeline.map(function(x){return x.amount}));
+  renderSignals(qr,sales);
+}
+function tick(){
+  state.nextAt=Date.now()+state.refreshMs;
+  Promise.all([
+    fetchJson(CONFIG.qrEndpoint+"?stats=1&t="+Date.now()),
+    fetchJson(CONFIG.salesEndpoint+"?range=today&t="+Date.now())
+  ]).then(function(res){
+    setStatus("good","LIVE");
+    render(res[0],res[1]);
+  }).catch(function(err){
+    setStatus("bad","DATA FAIL");
+    if(state.lastData)render(state.lastData.qr,state.lastData.sales);
+    else {
+      setText("decisionTitle","โหลดข้อมูลไม่สำเร็จ");
+      setText("decisionBody",String(err&&err.message||err||"unknown error"));
+    }
+  });
+}
+function clock(){
+  var left=Math.max(0,Math.ceil((state.nextAt-Date.now())/1000));
+  setText("countdown",pad(Math.floor(left/60))+":"+pad(left%60));
+}
+function setRefresh(ms){
+  state.refreshMs=Number(ms)||15000;
+  Array.prototype.forEach.call(document.querySelectorAll("#refreshTabs button"),function(btn){
+    btn.className=Number(btn.dataset.ms)===state.refreshMs?"on":"";
+  });
+  if(state.timer)clearInterval(state.timer);
+  tick();
+  state.timer=setInterval(tick,state.refreshMs);
+}
+Array.prototype.forEach.call(document.querySelectorAll("#refreshTabs button"),function(btn){
+  btn.addEventListener("click",function(){setRefresh(btn.dataset.ms)});
+});
+state.ticker=setInterval(clock,1000);
+setRefresh(CONFIG.refreshMs);
+</script>
+</body>
+</html>
