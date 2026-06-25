@@ -30,13 +30,13 @@ body{
 .main{padding:14px 16px 26px;min-width:0}
 .topbar{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-bottom:12px}
 .brand{display:flex;align-items:center;gap:14px}.brand h1{font-size:31px;letter-spacing:0;margin:0;font-weight:1000}.brand b{color:var(--cyan)}.tag{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);font-weight:900;color:var(--soft);white-space:nowrap}.dot{width:10px;height:10px;border-radius:50%;background:#19db54;box-shadow:0 0 22px #19db54}.clock{font-size:28px;font-weight:1000;color:var(--cyan)}
-.grid{display:grid;gap:10px}.kpi{grid-template-columns:1.05fr 1.05fr 1.2fr}.mini{grid-template-columns:repeat(4,1fr)}.two{grid-template-columns:1.45fr .95fr}.three{grid-template-columns:repeat(3,1fr)}
+.grid{display:grid;gap:10px}.kpi{grid-template-columns:1.05fr 1.05fr 1.2fr}.mini{grid-template-columns:repeat(6,1fr)}.two{grid-template-columns:1.45fr .95fr}.three{grid-template-columns:repeat(3,1fr)}
 .card{border:1px solid var(--line);border-radius:8px;background:linear-gradient(180deg,rgba(17,26,40,.92),rgba(7,12,20,.96));box-shadow:var(--shadow);padding:18px;min-width:0}
 .cardHead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}.title{font-size:22px;font-weight:1000;display:flex;gap:11px;align-items:center}.title small{font-size:14px;color:var(--muted);font-weight:850}.label{color:var(--muted);font-weight:900;font-size:13px;text-transform:uppercase}.num{font-size:clamp(42px,6vw,72px);line-height:1;font-weight:1000;letter-spacing:0;margin:10px 0}.num.cyan{color:var(--cyan)}.num.green{color:var(--green)}.num.lime{color:var(--lime)}.num.yellow{color:var(--yellow)}.num.red{color:var(--red)}.unit{font-size:18px;color:var(--soft);font-weight:900;margin-left:6px}.sub{color:var(--muted);font-size:14px;font-weight:800}.up{color:var(--green)}.down{color:var(--red)}.warn{color:var(--yellow)}
-.metric{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.metric b{font-size:36px}.metric span{color:var(--muted);font-weight:850}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--soft);font-size:12px;font-weight:900}.pill.good{border-color:rgba(103,229,54,.45);color:var(--green)}.pill.warn{border-color:rgba(255,211,56,.5);color:var(--yellow)}
+.metric{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.metric b{font-size:36px}.mini .metric b{font-size:clamp(24px,2.3vw,36px)}.metric span{color:var(--muted);font-weight:850}.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:5px 9px;color:var(--soft);font-size:12px;font-weight:900}.pill.good{border-color:rgba(103,229,54,.45);color:var(--green)}.pill.warn{border-color:rgba(255,211,56,.5);color:var(--yellow)}
 .chart{height:268px;display:grid;grid-template-columns:52px 1fr;gap:8px}.axis{display:flex;flex-direction:column;justify-content:space-between;align-items:flex-end;color:var(--muted);font-size:11px;font-weight:900;padding:8px 0 28px}.plot{position:relative;border-left:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}.plot:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(to bottom,rgba(157,210,255,.12),rgba(157,210,255,.12) 1px,transparent 1px,transparent 25%)}.bars{position:absolute;inset:12px 8px 26px;display:flex;align-items:end;gap:5px}.bar{flex:1;border-radius:6px 6px 0 0;background:linear-gradient(180deg,var(--cyan),rgba(24,216,255,.16));min-height:2px}.sales .bar{background:linear-gradient(180deg,var(--green),rgba(103,229,54,.14))}.xlabels{position:absolute;left:8px;right:8px;bottom:3px;display:flex;justify-content:space-between;color:var(--muted);font-size:10px;font-weight:900}
 .barsList{display:grid;gap:10px}.rowbar{display:grid;grid-template-columns:minmax(105px,1fr) 1.5fr auto;gap:12px;align-items:center}.rowbar .name{font-weight:900;color:var(--soft);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.track{height:12px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden}.fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--cyan),var(--blue))}.rowbar .value{font-weight:1000;text-align:right;white-space:nowrap}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:10px 7px;text-align:left;font-size:14px}.table th{color:var(--muted);font-size:12px;text-transform:uppercase}.table td:nth-child(n+3),.table th:nth-child(n+3){text-align:right}.insight{border:1px solid rgba(255,211,56,.34);background:rgba(255,211,56,.08);border-radius:8px;padding:14px;color:var(--soft);font-weight:850}.insight b{color:var(--yellow)}.risk{border-color:rgba(255,77,63,.38);background:rgba(255,77,63,.08)}.risk b{color:#ff9b91}
-.footer{margin-top:14px;color:var(--muted);font-size:12px;font-weight:750;text-align:center}.hide{display:none!important}
+.actionList{display:grid;gap:10px}.action{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.035);padding:12px;display:grid;gap:6px}.actionTop{display:flex;align-items:center;justify-content:space-between;gap:10px}.action h3{font-size:16px;line-height:1.25;margin:0;color:var(--ink)}.action p{margin:0;color:var(--soft);font-size:13px;font-weight:800}.action .evidence{color:var(--muted);font-size:12px}.badge{border:1px solid rgba(24,216,255,.32);border-radius:7px;color:var(--cyan);font-size:12px;font-weight:1000;padding:3px 7px;white-space:nowrap}.badge.warn{border-color:rgba(255,211,56,.45);color:var(--yellow)}.badge.good{border-color:rgba(103,229,54,.42);color:var(--green)}.noteGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.noteBox{border:1px solid var(--line);border-radius:8px;padding:12px;background:rgba(24,216,255,.045)}.noteBox b{display:block;font-size:26px;line-height:1;color:var(--cyan);margin-bottom:4px}.noteBox span{color:var(--muted);font-size:12px;font-weight:900}.footer{margin-top:14px;color:var(--muted);font-size:12px;font-weight:750;text-align:center}.hide{display:none!important}
 @media(max-width:1040px){.app{grid-template-columns:1fr}.rail{display:none}.topbar,.kpi,.mini,.two,.three{grid-template-columns:1fr}.clock{font-size:22px}.brand h1{font-size:26px}.num{font-size:50px}.chart{height:220px}}
 </style>
 </head>
@@ -70,8 +70,10 @@ body{
     <section class="grid mini" style="margin-top:10px">
       <div class="card"><div class="label">Transactions</div><div class="metric"><b id="tx">-</b><span>บิล</span></div><div class="sub">Qashier POS</div></div>
       <div class="card"><div class="label">AOV</div><div class="metric"><b id="aov">-</b><span>บาท/บิล</span></div><div class="sub">ยอดขายเฉลี่ยต่อรายการ</div></div>
-      <div class="card"><div class="label">Sales / Head</div><div class="metric"><b id="salesHead">-</b><span>บาท/คน</span></div><div class="sub">POS net / คนเข้างาน</div></div>
-      <div class="card"><div class="label">POS vs Beam</div><div class="metric"><b id="gap">-</b><span>บาท</span></div><div class="sub">ยอด POS ที่ไม่อยู่ใน Beam</div></div>
+      <div class="card"><div class="label">Units Sold</div><div class="metric"><b id="unitsSold">-</b><span>ชิ้น</span></div><div class="sub">รวมจาก SKU rows</div></div>
+      <div class="card"><div class="label">Items / Bill</div><div class="metric"><b id="itemsBill">-</b><span>ชิ้น</span></div><div class="sub">proxy basket size</div></div>
+      <div class="card"><div class="label">Avg Unit</div><div class="metric"><b id="avgUnit">-</b><span>บาท</span></div><div class="sub">ราคาเฉลี่ยต่อชิ้น</div></div>
+      <div class="card"><div class="label">Top 5 SKU Share</div><div class="metric"><b id="top5Share">-</b><span>%</span></div><div class="sub">ความเข้มข้นสินค้า</div></div>
     </section>
 
     <section class="grid two" style="margin-top:10px">
@@ -95,14 +97,38 @@ body{
       <div class="card"><div class="cardHead"><div class="title">Product / Category Signals</div><span class="pill" id="productCoverage">Qashier aggregate</span></div><div id="categoryBars" class="barsList"></div></div>
       <div class="card"><div class="title">Purchase Behavior</div><div class="grid" style="gap:10px;margin-top:10px">
         <div class="insight"><b>Conversion proxy สูงมาก</b><br><span id="convInsight">-</span></div>
-        <div class="insight"><b>ส่วนลดอธิบายยอดต่าง</b><br>Gross ฿847,036 - Discount ฿59,842 = Net ฿787,194</div>
+        <div class="insight"><b>Basket proxy</b><br><span id="basketInsight">-</span></div>
         <div class="insight risk"><b>Discount Alert</b><br><span id="discountInsight">-</span></div>
       </div></div>
     </section>
 
     <section class="grid two" style="margin-top:10px">
       <div class="card">
-        <div class="cardHead"><div class="title">Top Products</div><span class="pill good" id="productRowsPill">182 rows</span></div>
+        <div class="cardHead"><div class="title">Marketing Command Center</div><span class="pill good">action-ready</span></div>
+        <div class="actionList" id="marketingActions"></div>
+      </div>
+      <div class="card">
+        <div class="cardHead"><div class="title">Price Ladder</div><span class="pill">net sales bands</span></div>
+        <div id="priceBands" class="barsList"></div>
+        <div class="sub" id="priceNote" style="margin-top:10px"></div>
+      </div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card">
+        <div class="cardHead"><div class="title">Product Role Matrix</div><span class="pill">revenue / volume / promo</span></div>
+        <table class="table" id="roleTable"></table>
+      </div>
+      <div class="card">
+        <div class="cardHead"><div class="title">Behavior Notes</div><span class="pill warn">proxy only</span></div>
+        <div class="noteGrid" id="behaviorNotes"></div>
+        <div class="sub" id="behaviorCaveat" style="margin-top:10px"></div>
+      </div>
+    </section>
+
+    <section class="grid two" style="margin-top:10px">
+      <div class="card">
+        <div class="cardHead"><div class="title">SKU Drivers</div><span class="pill good" id="productRowsPill">182 rows</span></div>
         <table class="table" id="productTable"></table>
       </div>
       <div class="card">
@@ -133,6 +159,8 @@ const $=id=>document.getElementById(id);
 const fmt=n=>new Intl.NumberFormat('th-TH').format(Math.round(Number(n)||0));
 const money=n=>'฿'+fmt(n);
 const pct=n=>(Number(n)*100).toFixed(1)+'%';
+const dec=(n,d=1)=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 function checkGate(){const key=(location.hash.match(/key=([^&]+)/)||[])[1]||localStorage.getItem('rdfair-key');if(key===KEY){localStorage.setItem('rdfair-key',KEY);$('gate').classList.remove('show');return true}$('gate').classList.add('show');return false}
 $('keyBtn').onclick=()=>{localStorage.setItem('rdfair-key',$('keyInput').value.trim());if(checkGate()) init()};
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('th-TH',{hour12:false})}
@@ -155,23 +183,70 @@ function renderBars(id,rows,opts={}){rows=rows||[];const max=Math.max(...rows.ma
 function renderChart(id,values){const max=Math.max(...values,1);$(id).innerHTML=values.map(v=>`<div class="bar" style="height:${Math.max(2,v/max*100)}%"></div>`).join('')}
 function renderProducts(rows){$('productTable').innerHTML='<tr><th>สินค้า</th><th>หมวด</th><th>Qty</th><th>Net</th><th>Unit</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${r.category}</td><td>${fmt(r.quantity)}</td><td>${money(r.netSales??r.grossSales)}</td><td>${money(r.avgUnitNet||((r.netSales||r.grossSales||0)/(r.quantity||1)))}</td></tr>`).join('')}
 function renderDiscounts(rows){$('discountTable').innerHTML='<tr><th>สินค้า</th><th>Gross</th><th>Disc.</th><th>Net</th></tr>'+rows.map(r=>`<tr><td>${r.product}</td><td>${money(r.grossSales)}</td><td class="down">${pct(r.discountRate)}</td><td>${money(r.netSales)}</td></tr>`).join('')}
+function renderActions(rows){
+  $('marketingActions').innerHTML=(rows||[]).slice(0,5).map(r=>{
+    const warn=String(r.priority||'').includes('discount');
+    const good=String(r.priority||'').includes('winner')||String(r.priority||'').includes('basket');
+    return `<div class="action"><div class="actionTop"><h3>${esc(r.title)}</h3><span class="badge ${warn?'warn':good?'good':''}">${esc(r.metric)}</span></div><p>${esc(r.action)}</p><div class="evidence">${esc(r.evidence)}</div></div>`;
+  }).join('')||'<div class="sub">ไม่มี action</div>';
+}
+function renderRoleTable(roles){
+  const rows=[
+    ['Revenue driver',roles?.revenueDrivers?.[0]],
+    ['Unit driver',roles?.unitDrivers?.[0]],
+    ['Traffic builder',roles?.trafficBuilders?.[0]],
+    ['Premium check',roles?.premiumProducts?.[0]],
+    ['Discount watch',roles?.discountWatch?.[0]]
+  ].filter(r=>r[1]);
+  $('roleTable').innerHTML='<tr><th>Role</th><th>สินค้า</th><th>Qty</th><th>Net</th><th>Unit</th></tr>'+rows.map(([role,r])=>`<tr><td>${esc(role)}</td><td>${esc(r.product)}</td><td>${fmt(r.quantity)}</td><td>${money(r.netSales)}</td><td>${money(r.avgUnitNet)}</td></tr>`).join('');
+}
+function renderBehaviorNotes(behavior,rec){
+  const peak=behavior?.peakSalesHour||{};
+  const notes=[
+    {k:fmt(behavior?.totalUnits),v:'ชิ้นขายรวม'},
+    {k:dec(behavior?.itemsPerTransaction,2),v:'ชิ้น/บิล'},
+    {k:money(behavior?.averageUnitNet),v:'เฉลี่ย/ชิ้น'},
+    {k:pct(behavior?.discountRate),v:'discount rate'},
+    {k:pct(behavior?.promptPaySalesShare),v:'PromptPay share'},
+    {k:`${peak.hour||'-'}`,v:`peak ${money(peak.amount||0)}`}
+  ];
+  $('behaviorNotes').innerHTML=notes.map(n=>`<div class="noteBox"><b>${n.k}</b><span>${n.v}</span></div>`).join('');
+  $('behaviorCaveat').textContent=behavior?.basketProxyNote||'Qashier snapshot นี้เป็น aggregate-only จึงยังวิเคราะห์คู่สินค้าในบิลจริงไม่ได้';
+}
+function timelineSum(qr){return (Array.isArray(qr?.timeline)?qr.timeline:[]).reduce((a,v)=>a+(Number(v)||0),0)}
+function chooseQr(live,snapshot,date){
+  live=live||{}; snapshot=snapshot||{};
+  const liveDateOk=!date||!live.asOf||String(live.asOf).startsWith(date);
+  const snapshotDateOk=!date||!snapshot.asOf||String(snapshot.asOf).startsWith(date);
+  if(liveDateOk&&timelineSum(live)>0)return {...live,_dashboardSource:'live'};
+  if(snapshotDateOk&&timelineSum(snapshot)>0)return {...snapshot,_dashboardSource:'date_snapshot'};
+  if(timelineSum(live)>0)return {...live,_dashboardSource:'live_timeline'};
+  if(timelineSum(snapshot)>0)return {...snapshot,...live,timeline:snapshot.timeline,_dashboardSource:'snapshot_timeline'};
+  return {...snapshot,...live,_dashboardSource:'live_no_timeline'};
+}
 function topHour(values){let ix=0;values.forEach((v,i)=>{if(v>values[ix])ix=i});return {hour:String(ix).padStart(2,'0')+':00',value:values[ix]}}
 function render(data){
-  const q=data.qashier, qr=data.qr||data.day1.qr||{}, day=data.day1||{}, s=q.summary, rec=q.reconciliation||{};
+  const q=data.qashier, day=data.day1||{}, qr=chooseQr(data.qr,day.qr,q.date), s=q.summary, rec=q.reconciliation||{};
   const people=Number(qr.attendance?.people||qr.heads||qr.today?.heads||0), scans=Number(qr.today?.count||qr.count||0);
   $('people').textContent=fmt(people); $('peopleSub').textContent=`${fmt(qr.attendance?.parties||0)} กลุ่ม · เฉลี่ย ${people&&qr.attendance?.parties?(people/qr.attendance.parties).toFixed(2):'-'} คน/กลุ่ม`;
   $('scans').textContent=fmt(scans); $('scanSub').textContent=`วันนี้ ${fmt(qr.today?.count||scans)} scans · as of ${qr.asOf||'-'}`;
   $('posSales').innerHTML=fmt(s.netSales)+'<span class="unit">บาท</span>'; $('salesSub').textContent=`Qashier ${q.reportName} · ${q.asOf}`;
-  $('tx').textContent=fmt(s.transactions); $('aov').textContent=fmt(s.aov); $('salesHead').textContent=people?fmt(s.netSales/people):'-'; $('gap').textContent=fmt(rec.posGapAmount||0);
+  const pa=q.productAnalysis||{}, behavior=pa.behaviorMetrics||{};
+  $('tx').textContent=fmt(s.transactions); $('aov').textContent=fmt(s.aov); $('unitsSold').textContent=fmt(behavior.totalUnits); $('itemsBill').textContent=dec(behavior.itemsPerTransaction,2); $('avgUnit').textContent=fmt(behavior.averageUnitNet); $('top5Share').textContent=(Number(behavior.top5ProductSalesShare||0)*100).toFixed(1);
   const traffic=shiftedTimeline(qr); renderChart('trafficBars',traffic); const peak=topHour(traffic); $('trafficPeak').textContent=`peak ${peak.hour} · ${fmt(peak.value)}`;
   const hourlyRows=(q.posHourly&&q.posHourly.rows)||((day.derived&&day.derived.hourlySales)||day.hourlySales||[]);
   const hourly=hourlyRows.map(r=>Number(r.amount)||0); renderChart('salesBars',hourly); const salesPeak=hourlyRows.slice().sort((a,b)=>(b.amount||0)-(a.amount||0))[0]||{hour:'-',amount:0}; $('salesPeak').textContent=`peak ${salesPeak.hour} · ${money(salesPeak.amount||0)}`;
   const visit=qr.visit||{}; const known=(Number(visit.first)||0)+(Number(visit.loyal)||0); renderBars('visitMix',[{name:'ลูกค้าใหม่',value:Number(visit.first)||0,display:fmt(visit.first||0)+' · '+(known?pct((visit.first||0)/known):'-')},{name:'เคยมาแล้ว',value:Number(visit.loyal)||0,display:fmt(visit.loyal||0)+' · '+(known?pct((visit.loyal||0)/known):'-')}],{colors:['var(--cyan)','var(--green)']}); $('visitNote').textContent='ข้อมูลนี้มาจาก QR ไม่ใช่ Qashier member เพราะ Qashier member = 0';
   const pay=q.paymentMethods.map(r=>({name:r.method,value:r.amount,display:money(r.amount)+' · '+pct(r.amount/s.netSales)})); renderBars('paymentMix',pay,{colors:['var(--green)','var(--blue)','var(--yellow)','var(--cyan)','var(--orange)']});
-  const pa=q.productAnalysis||{}, cats=pa.topCategoriesByNetSales||q.categoryRows||q.categoryVisiblePage||[], products=pa.topProductsByNetSales||q.productRows||q.productVisiblePage||[];
+  const cats=pa.topCategoriesByNetSales||q.categoryRows||q.categoryVisiblePage||[], products=pa.topProductsByNetSales||q.productRows||q.productVisiblePage||[];
   $('productCoverage').textContent=`${pa.productRowCount||products.length} สินค้า · ${pa.categoryRowCount||cats.length} หมวด`;
   $('productRowsPill').textContent=`Top ${Math.min(12,products.length)} / ${pa.productRowCount||products.length} rows`;
   renderBars('categoryBars',cats.slice(0,10).map(r=>({name:r.category,value:r.netSales??r.grossSales,display:`${money(r.netSales??r.grossSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)','var(--orange)']});
+  renderActions(pa.marketingActions||[]);
+  renderBars('priceBands',(pa.priceBands||[]).map(r=>({name:r.label||r.name,value:r.netSales,display:`${money(r.netSales)} · ${pct(r.shareOfSales)}`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)','var(--orange)']});
+  $('priceNote').textContent=(pa.priceBands&&pa.priceBands.length)?'ใช้จัดป้ายราคาและ bundle: entry / core / premium ให้ลูกค้าตัดสินใจเร็ว':'ไม่มี price band';
+  renderRoleTable(pa.productRoles||{});
+  renderBehaviorNotes(behavior,rec);
   renderProducts(products.slice(0,12));
   renderBars('familyBars',(pa.topFamiliesByNetSales||[]).slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--green)','var(--cyan)','var(--blue)','var(--yellow)']});
   renderBars('sizeBars',(pa.sizeMixByNetSales||[]).filter(r=>r.name!=='UNKNOWN').slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)']});
@@ -179,10 +254,11 @@ function render(data){
   $('reconcileNote').textContent=`PromptPay Qashier ${money(rec.qashierPromptPayAmount)} vs Beam ${money(rec.beamAmount)} · gap ${money(rec.promptPayGapAmount)}`;
   const convScan=scans?s.transactions/scans:0, convHead=people?s.transactions/people:0;
   $('convInsight').textContent=`บิล / QR scan = ${pct(convScan)} และ บิล / คนเข้า = ${pct(convHead)} ใช้เป็น proxy ได้ แต่ยังไม่ใช่ match รายคน`;
+  $('basketInsight').textContent=`รวม ${fmt(behavior.totalUnits)} ชิ้น · ${dec(behavior.itemsPerTransaction,2)} ชิ้น/บิล · ราคาเฉลี่ย ${money(behavior.averageUnitNet)} ต่อชิ้น`;
   const d=(pa.discountAlerts||[])[0]; $('discountInsight').textContent=d?`${d.product} discount ${pct(d.discountRate)} · gross ${money(d.grossSales)} เหลือ net ${money(d.netSales)} ต้องเช็คว่าเป็นโปรของแถมหรือ mapping ผิด`:'ไม่มี discount anomaly ใหญ่';
   const sourceLabel=q.__dashboardSource==="bridge"?(q.bridge&&q.bridge.fallback?`POS bridge · ${q.bridge.fallback}`:"POS bridge loaded"):"POS static fallback";
   $('statusText').textContent=sourceLabel;
-  $('foot').textContent=`Sources: Qashier bridge (${q.asOf}) · QR ${qr.asOf||'-'} · Beam reconciliation ${rec.beamUpdatedAt||'-'}`;
+  $('foot').textContent=`Sources: Qashier bridge (${q.asOf}) · QR ${qr.asOf||'-'} (${qr._dashboardSource||'source'}) · Beam reconciliation ${rec.beamUpdatedAt||'-'}`;
 }
 async function init(){
   try{
