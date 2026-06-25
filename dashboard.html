@@ -291,6 +291,18 @@
   .timeline-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
   .timeline-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
   .timeline-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+  .ops-handoff{margin-top:12px;border:1px solid rgba(22,184,107,.24);border-radius:10px;background:rgba(22,184,107,.06);padding:11px;display:grid;gap:9px}
+  .handoff-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .handoff-head small{display:block;color:var(--muted);font-size:10px;font-weight:950;letter-spacing:.06em}
+  .handoff-head b{display:block;color:var(--text);font-size:13px;font-weight:950;text-align:right}
+  .handoff-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+  .handoff-cell{border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(5,10,14,.22);padding:9px;min-height:76px}
+  .handoff-cell small{display:block;color:var(--muted);font-size:10px;font-weight:950;margin-bottom:5px}
+  .handoff-cell b{display:block;color:var(--text);font-size:14px;font-weight:950;line-height:1.15}
+  .handoff-cell span{display:block;color:var(--dim);font-size:10px;font-weight:900;line-height:1.3;margin-top:4px}
+  .handoff-cell.good b{color:var(--green)}
+  .handoff-cell.warn b{color:var(--gold)}
+  .handoff-cell.bad b{color:var(--red)}
   .timeline-list{display:grid;gap:7px}
   .timeline-row{display:grid;grid-template-columns:72px 1fr 116px;gap:9px;align-items:start;border:1px solid rgba(255,255,255,.06);border-radius:8px;background:rgba(255,255,255,.02);padding:8px}
   .timeline-row time{color:var(--muted);font-size:11px;font-weight:950;line-height:1.25}
@@ -521,6 +533,7 @@
     .confidence-grid{grid-template-columns:1fr 1fr}
     .unlock-grid{grid-template-columns:1fr 1fr}
     .incident-grid{grid-template-columns:1fr 1fr}
+    .handoff-grid{grid-template-columns:1fr 1fr}
     .governor-grid{grid-template-columns:1fr 1fr}
     .panel-head{height:auto;min-height:52px;flex-wrap:wrap;padding:12px}
     .suite-grid{grid-template-columns:1fr}
@@ -895,6 +908,11 @@
 	  .operator-timeline{border-color:rgba(24,135,232,.18);background:rgba(255,255,255,.58)}
   .timeline-head b,.timeline-row b{color:#172238}
   .timeline-head small,.timeline-row time{color:#63748c}
+  .ops-handoff{border-color:rgba(22,184,107,.22);background:rgba(255,255,255,.58)}
+  .handoff-cell{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
+  .handoff-head b,.handoff-cell b{color:#172238}
+  .handoff-head small,.handoff-cell small{color:#63748c}
+  .handoff-cell span{color:#8b9bb1}
   .timeline-row{border-color:rgba(112,139,170,.14);background:rgba(255,255,255,.56)}
   .timeline-row span{color:#8b9bb1}
   .command-hero{
@@ -1200,6 +1218,17 @@
             <div class="timeline-head"><small>OPERATOR ACTION TIMELINE</small><b>Incident Log · standby</b></div>
             <div class="timeline-list">
               <div class="timeline-row watch"><time>--:--</time><div><b>รอ action แรก</b><span>ระบบจะบันทึกเมื่อ QR/Beam/AI recommendation มีสถานะใหม่</span></div><em>WATCH</em></div>
+            </div>
+          </div>
+          <div class="ops-handoff" id="opsHandoffChecklist">
+            <div class="handoff-head"><small>4-DAY HANDOFF CHECKLIST</small><b>Shift Handoff · standby</b></div>
+            <div class="handoff-grid">
+              <div class="handoff-cell warn"><small>Phase Gate</small><b>WATCH</b><span>ยืนยัน Day + Phase ก่อนส่งกะ</span></div>
+              <div class="handoff-cell warn"><small>Signal Proof</small><b>WAIT</b><span>QR + Beam ต้องมี sample ล่าสุด</span></div>
+              <div class="handoff-cell warn"><small>Sales/Stock</small><b>WAIT</b><span>ยอดขายและ top size ต้องมีเจ้าของ</span></div>
+              <div class="handoff-cell good"><small>Ads/AI Lock</small><b>LOCKED</b><span>No ad edits · AI recommend only</span></div>
+              <div class="handoff-cell warn"><small>Next Owner</small><b>Ops Lead</b><span>ระบุทีมรับ action รอบถัดไป</span></div>
+              <div class="handoff-cell warn"><small>Day Close</small><b>EVIDENCE</b><span>บันทึก timeline + readiness ก่อนปิดวัน</span></div>
             </div>
           </div>
         </div>
@@ -1777,6 +1806,8 @@ function render(d){
   var att=d.attendance||{parties:0,people:0}, pace=d.pace||{lastHour:0,last15:0}, today=d.today||{count:0,heads:0};
   var mo=calcMomentum(d.perMin||[]);
   var sales=normalizeSales(d&&d.sales), ads=normalizeAds(d&&d.ads);
+  state.sales=sales;
+  state.ads=ads;
   var actions=buildCommandRules(d,mo,sales,ads);
   var total=d.count||0, heads=d.heads||0;
   setText("kAtt",fmt(att.people));
@@ -2343,6 +2374,7 @@ function renderSignalGuard(){
   renderDecisionConfidence();
   renderConnectorUnlock();
   renderIncidentCommand();
+  renderOpsHandoffChecklist();
   var q=qualityStats(["qr","sales"]);
   var required=["qr","sales"], risky=required.filter(function(n){return sourceState(n)==="bad"});
   var waiting=required.filter(function(n){return !state.sources[n].lastOk});
@@ -2507,6 +2539,44 @@ function renderOperatorTimeline(){
     '</div>'
   ].join("");
 }
+function handoffCell(label,item){
+  item=item||{};
+  return '<div class="handoff-cell '+esc(item.cls||"warn")+'"><small>'+esc(label)+'</small><b>'+esc(item.status||"WATCH")+'</b><span>'+esc(item.detail||"รอข้อมูล")+'</span></div>';
+}
+function opsHandoffChecklist(){
+  var q=qualityStats(["qr","sales"]);
+  var top=firstAction(buildCommandRules(state.data||{},calcMomentum((state.data||{}).perMin||[]),state.sales||emptySales(),state.ads||emptyAds()))||{};
+  var sales=state.sales||emptySales();
+  var ssum=sales.summary||{};
+  var phase=state.control.phase==="phase2"?"PHASE 2":"PHASE 1";
+  var phaseReady=state.control.day&&state.control.phase;
+  var signalReady=state.sources.qr.lastOk&&state.sources.sales.lastOk&&!state.cacheFallback&&q.fail===0&&q.flaps===0;
+  var salesReady=state.control.phase==="phase1"||Boolean(ssum.paidAmountToday||ssum.paidOrdersToday||ssum.topSize||ssum.topSku);
+  var owner=top.lane==="critical"?"Critical Owner":top.lane==="next"?"Floor Lead":"Ops Lead";
+  var dayCloseReady=signalReady&&state.actionTimeline.length>0;
+  var head=signalReady&&salesReady?"Shift Handoff · ready":signalReady?"Shift Handoff · watch sales":"Shift Handoff · watch signal";
+  return {
+    head:head,
+    cells:[
+      ["Phase Gate",phaseReady?{cls:"good",status:"DAY "+state.control.day+" · "+phase,detail:"Phase 1/2 ถูกล็อกก่อนส่งกะ"}:{cls:"warn",status:"WATCH",detail:"เลือกวันและ phase ก่อนส่งกะ"}],
+      ["Signal Proof",signalReady?{cls:"good",status:"QR+BEAM OK",detail:"pass "+Math.round(q.passRate*100)+"% · flaps "+q.flaps}:{cls:"warn",status:state.cacheFallback?"LAST GOOD":"WATCH",detail:"รอ QR + Beam live sample ก่อน decision หนัก"}],
+      ["Sales/Stock",salesReady?{cls:"good",status:ssum.topSize?("SIZE "+ssum.topSize):"READY",detail:ssum.topSku?("owner เช็กสินค้า "+ssum.topSku):"Phase 1 ยังไม่บังคับยอดขาย"}:{cls:"warn",status:"WAIT SALE",detail:"Phase 2 ต้องส่งต่อยอดขาย/top size/top SKU"}],
+      ["Ads/AI Lock",{cls:"good",status:"LOCKED",detail:"No ad edits · AI recommend only"}],
+      ["Next Owner",{cls:top.lane==="critical"?"bad":"warn",status:owner,detail:top.title||"รอ action รอบถัดไป"}],
+      ["Day Close",dayCloseReady?{cls:"good",status:"EVIDENCE OK",detail:"timeline + signal proof พร้อมส่งกะ"}:{cls:"warn",status:"EVIDENCE",detail:"ก่อนปิดวันให้รัน readiness และเก็บ operator brief"}]
+    ]
+  };
+}
+function renderOpsHandoffChecklist(){
+  var el=$("opsHandoffChecklist");if(!el)return;
+  var h=opsHandoffChecklist();
+  el.innerHTML=[
+    '<div class="handoff-head"><small>4-DAY HANDOFF CHECKLIST</small><b>'+esc(h.head)+'</b></div>',
+    '<div class="handoff-grid">',
+    h.cells.map(function(row){return handoffCell(row[0],row[1])}).join(""),
+    '</div>'
+  ].join("");
+}
 function pushOperatorTimeline(top,actions,d,sales,ads){
   top=top||{};actions=actions||[];
   var governor=stabilityGovernor(), confidence=decisionConfidence();
@@ -2535,6 +2605,7 @@ function pushOperatorTimeline(top,actions,d,sales,ads){
   state.actionTimeline=rows.slice(-6);
   saveActionTimeline();
   renderOperatorTimeline();
+  renderOpsHandoffChecklist();
 }
 function lensHtml(type,lens){
   var icon=type==="codex"?"bi-terminal":"bi-braces-asterisk";
@@ -2971,6 +3042,7 @@ function boot(){
   ["suiteGoal","suiteLeadVal","suiteConv","suiteAov","suitePerf"].forEach(function(id){$(id).addEventListener("input",function(){if(state.data)renderSuite(state.data,calcMomentum(state.data.perMin||[]))})});
   document.addEventListener("visibilitychange",function(){if(!document.hidden)tick()});
   renderSignalGuard();
+  renderOpsHandoffChecklist();
   clockTick();startLoop();
 }
 (function initGate(){
