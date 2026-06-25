@@ -126,6 +126,7 @@ body{
 .welcome .pad{position:relative;z-index:2;margin:0 18px 0;padding:6px 14px 132px;}
 .welcome .h1,.welcome .deals{background:var(--paper);border:3px solid #8a5f23;box-shadow:0 5px 0 rgba(0,0,0,.58);}
 .welcome .h1{border-radius:4px;padding:18px 12px;}
+.welcome .btn-cta{margin:10px 0 12px;}
 .chips{display:none;}
 .chip{background:var(--ink);color:var(--paper);font-size:12.5px;font-weight:800;padding:7px 12px;border-radius:8px;border:2px solid var(--ink);box-shadow:2px 2px 0 var(--shadow);}
 .fine{
@@ -884,14 +885,14 @@ function buildWelcome(){
         <div class="eyebrow"><span class="blink px">▶</span>&nbsp;<span class="px">PRESS START</span> · ลงทะเบียน 15 วิ</div>
         <h1 class="h1" tabindex="-1" data-focus>15 วิ / 3 ด่าน จบ!<br>รับ <span class="red">2 สิทธิ์น้ำหอม</span></h1>
         <p class="sub">โชว์รหัสที่บูธ แล้วรับสิทธิ์ได้เลย</p>
+        <button class="btn-cta" id="startBtn">▶ เริ่มลงทะเบียน</button>
+        <p class="fine">เล่นจบ รับรหัสทันที</p>
         <div class="deals">
           <div class="deal"><span class="deal-n">1</span><div><b>น้ำหอม ฿${CONFIG.perfumeNormal} เหลือ <span class="hl">฿${CONFIG.perfumeDeal}</span></b><small>ลงทะเบียนก็รับสิทธิ์</small></div></div>
           <div class="deal"><span class="deal-n">2</span><div><b>ซื้อครบ ฿${CONFIG.freeThreshold.toLocaleString()} รับ<span class="save">น้ำหอมฟรี</span></b><small>โชว์รหัสตอนชำระเงิน</small></div></div>
         </div>
         <div class="pitch">🔥 โปรหน้างาน · <span class="save">ยิ่งตุน ยิ่งคุ้ม</span></div>
         <div class="chips"><span class="chip">3 ด่าน</span><span class="chip">15 วิ</span><span class="chip">รับรหัสทันที</span></div>
-        <button class="btn-cta" id="startBtn">▶ เริ่มเล่นเลย</button>
-        <p class="fine">เล่นจบ รับรหัสทันที</p>
       </div>
     </div>`);
   node.querySelector("#startBtn").addEventListener("click",(e)=>{
