@@ -90,7 +90,7 @@ body{
     <section class="grid three" style="margin-top:10px">
       <div class="card"><div class="title">ใหม่ / เคยมาแล้ว</div><div class="barsList" id="visitMix"></div><div class="sub" id="visitNote"></div></div>
       <div class="card"><div class="title">Payment Mix</div><div class="barsList" id="paymentMix"></div></div>
-      <div class="card"><div class="title">Qashier Reconcile</div><div class="insight"><b>POS truth = Qashier net ฿787,194</b><br>Beam ตอนนี้เป็นแหล่งข้อมูลบางช่องทาง จึงห้ามใช้เป็นยอดขายรวม</div><div class="sub" id="reconcileNote" style="margin-top:10px"></div></div>
+      <div class="card"><div class="title">Qashier Reconcile</div><div class="insight"><b id="posTruthText">POS truth = Qashier net</b><br>Beam ตอนนี้เป็นแหล่งข้อมูลบางช่องทาง จึงห้ามใช้เป็นยอดขายรวม</div><div class="sub" id="reconcileNote" style="margin-top:10px"></div></div>
     </section>
 
     <section class="grid two" style="margin-top:10px">
@@ -147,8 +147,11 @@ body{
 </div>
 <script>
 const KEY='rdfair26';
+const STATIC_QASHIER_DATE='2026-06-25';
+const REQUESTED_DATE=new URLSearchParams(location.search).get('date')||bangkokDate();
 const CONFIG={
-  qashierBridge:'https://rudedog-qashier-pos-bridge.rudedog.workers.dev/stats?date=2026-06-25',
+  date:REQUESTED_DATE,
+  qashierBridgeBase:'https://rudedog-qashier-pos-bridge.rudedog.workers.dev/stats',
   qashier:'data/qashier-pos-snapshot-2026-06-25.json',
   day1:'data/day1-snapshot-2026-06-25.json',
   qr:'https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec?stats=1',
@@ -161,21 +164,39 @@ const money=n=>'฿'+fmt(n);
 const pct=n=>(Number(n)*100).toFixed(1)+'%';
 const dec=(n,d=1)=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d});
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+function bangkokDate(){
+  const parts=Object.fromEntries(new Intl.DateTimeFormat('en',{timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
 function checkGate(){const key=(location.hash.match(/key=([^&]+)/)||[])[1]||localStorage.getItem('rdfair-key');if(key===KEY){localStorage.setItem('rdfair-key',KEY);$('gate').classList.remove('show');return true}$('gate').classList.add('show');return false}
 $('keyBtn').onclick=()=>{localStorage.setItem('rdfair-key',$('keyInput').value.trim());if(checkGate()) init()};
 function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('th-TH',{hour12:false})}
 setInterval(tick,1000);tick();
 async function getJson(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()}
 async function getQashierJson(){
+  const requestedUrl=`${CONFIG.qashierBridgeBase}?date=${encodeURIComponent(CONFIG.date)}`;
   try{
-    const d=await getJson(CONFIG.qashierBridge);
+    const d=await getJson(requestedUrl);
     d.__dashboardSource="bridge";
+    d.__requestedDate=CONFIG.date;
     return d;
   }catch(err){
-    const d=await getJson(CONFIG.qashier);
-    d.__dashboardSource="static-fallback";
-    d.__bridgeError=String(err&&err.message||err);
-    return d;
+    try{
+      const latest=await getJson(CONFIG.qashierBridgeBase);
+      latest.__requestedDate=CONFIG.date;
+      latest.__dashboardSource=latest.date===CONFIG.date?"bridge-latest":"bridge-latest-stale";
+      latest.__bridgeError=String(err&&err.message||err);
+      return latest;
+    }catch(latestErr){
+      if(CONFIG.date===STATIC_QASHIER_DATE){
+        const d=await getJson(CONFIG.qashier);
+        d.__dashboardSource="static-fallback";
+        d.__requestedDate=CONFIG.date;
+        d.__bridgeError=String(err&&err.message||err);
+        return d;
+      }
+      throw latestErr;
+    }
   }
 }
 function shiftedTimeline(qr){const raw=Array.isArray(qr?.timeline)?qr.timeline.slice(0,24):[];while(raw.length<24)raw.push(0);const out=Array(24).fill(0);for(let i=0;i<24;i++)out[(i+CONFIG.qrTimelineOffsetHours)%24]=Number(raw[i])||0;return out}
@@ -230,7 +251,8 @@ function render(data){
   const people=Number(qr.attendance?.people||qr.heads||qr.today?.heads||0), scans=Number(qr.today?.count||qr.count||0);
   $('people').textContent=fmt(people); $('peopleSub').textContent=`${fmt(qr.attendance?.parties||0)} กลุ่ม · เฉลี่ย ${people&&qr.attendance?.parties?(people/qr.attendance.parties).toFixed(2):'-'} คน/กลุ่ม`;
   $('scans').textContent=fmt(scans); $('scanSub').textContent=`วันนี้ ${fmt(qr.today?.count||scans)} scans · as of ${qr.asOf||'-'}`;
-  $('posSales').innerHTML=fmt(s.netSales)+'<span class="unit">บาท</span>'; $('salesSub').textContent=`Qashier ${q.reportName} · ${q.asOf}`;
+  const stale=q.date&&q.__requestedDate&&q.date!==q.__requestedDate;
+  $('posSales').innerHTML=fmt(s.netSales)+'<span class="unit">บาท</span>'; $('salesSub').textContent=`Qashier ${q.reportName} · data ${q.date||'-'} · as of ${q.asOf}`;
   const pa=q.productAnalysis||{}, behavior=pa.behaviorMetrics||{};
   $('tx').textContent=fmt(s.transactions); $('aov').textContent=fmt(s.aov); $('unitsSold').textContent=fmt(behavior.totalUnits); $('itemsBill').textContent=dec(behavior.itemsPerTransaction,2); $('avgUnit').textContent=fmt(behavior.averageUnitNet); $('top5Share').textContent=(Number(behavior.top5ProductSalesShare||0)*100).toFixed(1);
   const traffic=shiftedTimeline(qr); renderChart('trafficBars',traffic); const peak=topHour(traffic); $('trafficPeak').textContent=`peak ${peak.hour} · ${fmt(peak.value)}`;
@@ -251,12 +273,13 @@ function render(data){
   renderBars('familyBars',(pa.topFamiliesByNetSales||[]).slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--green)','var(--cyan)','var(--blue)','var(--yellow)']});
   renderBars('sizeBars',(pa.sizeMixByNetSales||[]).filter(r=>r.name!=='UNKNOWN').slice(0,8).map(r=>({name:r.name,value:r.netSales,display:`${money(r.netSales)} · ${fmt(r.quantity)} ชิ้น`})),{colors:['var(--cyan)','var(--green)','var(--yellow)','var(--blue)']});
   renderDiscounts((pa.discountAlerts||[]).slice(0,6));
+  $('posTruthText').textContent=`POS truth = Qashier net ${money(s.netSales)}${stale?` · ล่าสุด ${q.date}`:''}`;
   $('reconcileNote').textContent=`PromptPay Qashier ${money(rec.qashierPromptPayAmount)} vs Beam ${money(rec.beamAmount)} · gap ${money(rec.promptPayGapAmount)}`;
   const convScan=scans?s.transactions/scans:0, convHead=people?s.transactions/people:0;
   $('convInsight').textContent=`บิล / QR scan = ${pct(convScan)} และ บิล / คนเข้า = ${pct(convHead)} ใช้เป็น proxy ได้ แต่ยังไม่ใช่ match รายคน`;
   $('basketInsight').textContent=`รวม ${fmt(behavior.totalUnits)} ชิ้น · ${dec(behavior.itemsPerTransaction,2)} ชิ้น/บิล · ราคาเฉลี่ย ${money(behavior.averageUnitNet)} ต่อชิ้น`;
   const d=(pa.discountAlerts||[])[0]; $('discountInsight').textContent=d?`${d.product} discount ${pct(d.discountRate)} · gross ${money(d.grossSales)} เหลือ net ${money(d.netSales)} ต้องเช็คว่าเป็นโปรของแถมหรือ mapping ผิด`:'ไม่มี discount anomaly ใหญ่';
-  const sourceLabel=q.__dashboardSource==="bridge"?(q.bridge&&q.bridge.fallback?`POS bridge · ${q.bridge.fallback}`:"POS bridge loaded"):"POS static fallback";
+  const sourceLabel=stale?`รอ POS วันนี้ ${q.__requestedDate} · แสดงล่าสุด ${q.date}`:q.__dashboardSource==="bridge"?(q.bridge&&q.bridge.fallback?`POS bridge · ${q.bridge.fallback}`:"POS bridge loaded"):q.__dashboardSource==="bridge-latest"?"POS bridge latest":"POS static fallback";
   $('statusText').textContent=sourceLabel;
   $('foot').textContent=`Sources: Qashier bridge (${q.asOf}) · QR ${qr.asOf||'-'} (${qr._dashboardSource||'source'}) · Beam reconciliation ${rec.beamUpdatedAt||'-'}`;
 }
