@@ -28,7 +28,7 @@ body{
 .logo{width:48px;height:48px;border-radius:14px;border:1px solid var(--line);display:grid;place-items:center;font-size:24px;background:linear-gradient(145deg,rgba(24,216,255,.12),rgba(103,229,54,.10))}
 .nav{display:grid;gap:8px;margin-top:10px;width:100%}.nav a{height:54px;border-radius:12px;color:var(--muted);display:grid;place-items:center;text-decoration:none;border:1px solid transparent}.nav a.active{color:var(--cyan);border-color:rgba(24,216,255,.35);background:rgba(24,216,255,.09)}.nav i{font-size:22px}
 .main{padding:14px 16px 26px;min-width:0}
-.topbar{display:grid;grid-template-columns:1fr auto auto;gap:12px;align-items:center;margin-bottom:12px}
+.topbar{display:grid;grid-template-columns:1fr auto auto auto;gap:12px;align-items:center;margin-bottom:12px}
 .brand{display:flex;align-items:center;gap:14px}.brand h1{font-size:31px;letter-spacing:0;margin:0;font-weight:1000}.brand b{color:var(--cyan)}.tag{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 14px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.03);font-weight:900;color:var(--soft);white-space:nowrap}.dot{width:10px;height:10px;border-radius:50%;background:#19db54;box-shadow:0 0 22px #19db54}.clock{font-size:28px;font-weight:1000;color:var(--cyan)}
 .grid{display:grid;gap:10px}.kpi{grid-template-columns:1.05fr 1.05fr 1.2fr}.mini{grid-template-columns:repeat(6,1fr)}.two{grid-template-columns:1.45fr .95fr}.three{grid-template-columns:repeat(3,1fr)}
 .card{border:1px solid var(--line);border-radius:8px;background:linear-gradient(180deg,rgba(17,26,40,.92),rgba(7,12,20,.96));box-shadow:var(--shadow);padding:18px;min-width:0}
@@ -58,6 +58,7 @@ body{
     <div class="topbar">
       <div class="brand"><h1>RUDEDOG FAIR <b>POS COMMAND</b></h1><span class="pill good"><i class="bi bi-database-check"></i> Qashier truth</span></div>
       <div class="tag"><span class="dot"></span><span id="statusText">กำลังโหลดข้อมูล</span></div>
+      <div class="tag"><i class="bi bi-arrow-repeat"></i><span id="refreshText">refresh -</span></div>
       <div class="tag"><i class="bi bi-clock"></i><span class="clock" id="clock">--:--:--</span></div>
     </div>
 
@@ -156,6 +157,7 @@ const CONFIG={
   day1:'data/day1-snapshot-2026-06-25.json',
   qr:'https://script.google.com/macros/s/AKfycbx5sjYYCm5I1b0s8kTTzFjohyrdXQ5BLZ90MG_TBbW3Pr44JwMSmzEnZIZ-rdfEsjgfZQ/exec?stats=1',
   beam:'https://rudedog-beam-sales-bridge.rudedog.workers.dev/stats?range=today',
+  refreshMs:30000,
   qrTimelineOffsetHours:7
 };
 const $=id=>document.getElementById(id);
@@ -164,13 +166,26 @@ const money=n=>'฿'+fmt(n);
 const pct=n=>(Number(n)*100).toFixed(1)+'%';
 const dec=(n,d=1)=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:d,maximumFractionDigits:d});
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+let refreshTimer=null, refreshInFlight=false, lastRefreshAt=null, lastPosServedAt=null;
 function bangkokDate(){
   const parts=Object.fromEntries(new Intl.DateTimeFormat('en',{timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).map(p=>[p.type,p.value]));
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 function checkGate(){const key=(location.hash.match(/key=([^&]+)/)||[])[1]||localStorage.getItem('rdfair-key');if(key===KEY){localStorage.setItem('rdfair-key',KEY);$('gate').classList.remove('show');return true}$('gate').classList.add('show');return false}
-$('keyBtn').onclick=()=>{localStorage.setItem('rdfair-key',$('keyInput').value.trim());if(checkGate()) init()};
-function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('th-TH',{hour12:false})}
+$('keyBtn').onclick=()=>{localStorage.setItem('rdfair-key',$('keyInput').value.trim());if(checkGate()) startRealtime()};
+function ageText(date){
+  if(!date)return '-';
+  const diff=Math.max(0,Date.now()-date.getTime());
+  if(diff<5000)return 'เมื่อกี้';
+  if(diff<60000)return `${Math.floor(diff/1000)} วิที่แล้ว`;
+  return `${Math.floor(diff/60000)} นาทีที่แล้ว`;
+}
+function updateRefreshText(){
+  const refreshPart=lastRefreshAt?`refresh ${ageText(lastRefreshAt)}`:'refresh -';
+  const posPart=lastPosServedAt?`POS bridge ${ageText(lastPosServedAt)}`:'POS bridge -';
+  $('refreshText').textContent=`${refreshPart} · ${posPart} · ทุก ${Math.round(CONFIG.refreshMs/1000)} วิ`;
+}
+function tick(){const d=new Date();$('clock').textContent=d.toLocaleTimeString('th-TH',{hour12:false});updateRefreshText()}
 setInterval(tick,1000);tick();
 async function getJson(url){const r=await fetch(url+(url.includes('?')?'&':'?')+'t='+Date.now(),{cache:'no-store'});if(!r.ok)throw new Error(url+' '+r.status);return r.json()}
 async function getQashierJson(){
@@ -283,16 +298,29 @@ function render(data){
   $('statusText').textContent=sourceLabel;
   $('foot').textContent=`Sources: Qashier bridge (${q.asOf}) · QR ${qr.asOf||'-'} (${qr._dashboardSource||'source'}) · Beam reconciliation ${rec.beamUpdatedAt||'-'}`;
 }
-async function init(){
+async function init(opts={}){
+  if(refreshInFlight)return;
+  refreshInFlight=true;
+  if(!opts.silent)$('statusText').textContent='กำลังโหลดข้อมูล';
+  updateRefreshText();
   try{
     const [qashier,day1,qrLive,beamLive]=await Promise.allSettled([getQashierJson(),getJson(CONFIG.day1),getJson(CONFIG.qr),getJson(CONFIG.beam)]);
     if(qashier.status!=='fulfilled')throw qashier.reason;
     const data={qashier:qashier.value,day1:day1.value||{},qr:qrLive.value||(day1.value&&day1.value.qr)||null,beam:beamLive.value||null};
     if(data.beam&&data.qashier.reconciliation){data.qashier.reconciliation.beamAmount=Number(data.beam.amount||data.beam.paidAmountToday||data.qashier.reconciliation.beamAmount)||0;data.qashier.reconciliation.beamOrders=Number(data.beam.orders||data.beam.paidOrdersToday||data.qashier.reconciliation.beamOrders)||0}
     render(data);
+    lastRefreshAt=new Date();
+    lastPosServedAt=data.qashier.bridge?.servedAt?new Date(data.qashier.bridge.servedAt):null;
+    updateRefreshText();
   }catch(err){$('statusText').textContent='โหลดข้อมูลไม่ได้';console.error(err)}
+  finally{refreshInFlight=false}
 }
-if(checkGate()) init();
+function startRealtime(){
+  init();
+  if(refreshTimer)return;
+  refreshTimer=setInterval(()=>init({silent:true}),CONFIG.refreshMs);
+}
+if(checkGate()) startRealtime();
 </script>
 </body>
 </html>
