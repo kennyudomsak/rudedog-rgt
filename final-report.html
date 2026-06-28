@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>RUDEDOG FAIR 2026 — สรุปจบงาน</title>
+<style>
+  :root{
+    --bg1:#FBF8F1; --bg2:#EFE6D3; --card:#FFFFFF;
+    --ink:#1A140E; --ink2:#5A4F42; --muted:#8C8073; --muted2:#A99C8B;
+    --red:#E23A1E; --red2:#B62A12; --gold:#D99A2B; --green:#2E9E5B; --green2:#1F7D45; --sky:#3E7BD9; --violet:#8B5CD6; --brick:#C8500C;
+    --line:#ECE2CD; --line2:#F4EEDF;
+    --r:20px; --sh:0 12px 34px rgba(70,48,18,.10),0 3px 8px rgba(70,48,18,.05); --sh-sm:0 4px 14px rgba(70,48,18,.07);
+    --ff:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Thai",system-ui,"Helvetica Neue",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--ff);color:var(--ink);min-height:100vh;padding:18px;line-height:1.45;
+    background:linear-gradient(165deg,var(--bg1),var(--bg2));background-attachment:fixed;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;}
+  .wrap{max-width:1280px;margin:0 auto;}
+  .tab{font-variant-numeric:tabular-nums;}
+
+  .top{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-bottom:22px;}
+  .logo{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--red),var(--red2));display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 6px 16px rgba(226,58,30,.3);}
+  .ttl h1{font-size:21px;font-weight:900;letter-spacing:-.3px;} .ttl .r{color:var(--red);}
+  .ttl p{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.3px;}
+  .top .sp{flex:1;} .badge{background:var(--ink);color:#fff;font-weight:800;font-size:13px;padding:8px 15px;border-radius:999px;}
+  .badge b{color:var(--gold);}
+
+  .grid{display:grid;gap:16px;} .g2{grid-template-columns:repeat(2,1fr);} .g3{grid-template-columns:repeat(3,1fr);} .g4{grid-template-columns:repeat(4,1fr);}
+  @media(max-width:1000px){.g4{grid-template-columns:repeat(2,1fr);}.g3{grid-template-columns:1fr;}}
+  @media(max-width:600px){.g4,.g2{grid-template-columns:1fr;}}
+
+  .card{background:var(--card);border-radius:var(--r);padding:20px;box-shadow:var(--sh);border:1px solid var(--line2);}
+  .lbl{font-size:11.5px;font-weight:800;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:7px;}
+  .num{font-size:38px;font-weight:900;letter-spacing:-1.5px;margin-top:8px;line-height:1;}
+  .sub{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:8px;} .sub b{color:var(--ink);font-weight:800;}
+  .kpi-hero{background:linear-gradient(135deg,#fff,#F2FBF4);border-color:#CDEBD6;}
+  .kpi-hero .num{font-size:46px;background:linear-gradient(120deg,var(--green2),var(--green));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+
+  .sec{margin:30px 2px 6px;display:flex;align-items:center;gap:11px;flex-wrap:wrap;}
+  .sec .n{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff;}
+  .sec h2{font-size:18px;font-weight:900;letter-spacing:-.3px;} .sec .hint{font-size:12px;color:var(--muted2);font-weight:700;}
+  .a-sale .n{background:var(--green);} .a-att .n{background:var(--red);} .a-ad .n{background:var(--sky);} .a-x .n{background:var(--gold);color:var(--ink);} .a-note .n{background:var(--muted2);}
+
+  /* funnel */
+  .funnel{display:flex;align-items:stretch;gap:0;flex-wrap:wrap;}
+  .fstep{flex:1;min-width:150px;text-align:center;padding:8px 6px;position:relative;}
+  .fstep .fn{font-size:30px;font-weight:900;letter-spacing:-1px;} .fstep .fl{font-size:12px;color:var(--muted);font-weight:700;margin-top:3px;}
+  .fstep .fi{font-size:22px;margin-bottom:2px;}
+  .farrow{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 4px;}
+  .farrow .pc{font-size:13px;font-weight:900;color:var(--green);} .farrow .ar{font-size:18px;color:var(--muted2);}
+  @media(max-width:760px){.funnel{flex-direction:column;}.farrow{flex-direction:row;gap:8px;padding:6px 0;}.farrow .ar{transform:rotate(90deg);}}
+
+  /* bars */
+  .bar{display:grid;grid-template-columns:130px 1fr 92px;align-items:center;gap:10px;margin:10px 0;}
+  .bar .l{font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .bar .t{height:13px;background:var(--line2);border-radius:999px;overflow:hidden;}
+  .bar .f{height:100%;border-radius:999px;min-width:3px;}
+  .bar .v{font-size:12.5px;font-weight:800;text-align:right;} .bar .v small{color:var(--muted2);font-weight:700;font-size:10.5px;margin-left:3px;}
+
+  /* product list */
+  .plist{display:flex;flex-direction:column;}
+  .prow{display:flex;align-items:center;gap:11px;padding:9px 0;border-bottom:1px solid var(--line2);}
+  .prow:last-child{border-bottom:none;} .prank{width:22px;height:22px;border-radius:7px;background:var(--bg2);color:var(--ink2);font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .prow:nth-child(1) .prank{background:var(--gold);color:#fff;} .prow:nth-child(2) .prank{background:#C9B68A;color:#fff;} .prow:nth-child(3) .prank{background:#E3D2A8;}
+  .pname{flex:1;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;} .pname small{color:var(--muted2);font-weight:700;}
+  .pval{font-size:12.5px;font-weight:900;}
+
+  /* donut */
+  .donut{width:120px;height:120px;flex:none;} .dwrap{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:4px;}
+  .leg{display:flex;flex-direction:column;gap:8px;} .lg{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;} .sw{width:12px;height:12px;border-radius:4px;} .lg b{font-weight:900;}
+
+  /* day chart */
+  .daychart{display:flex;align-items:flex-end;gap:14px;height:210px;padding-top:6px;}
+  .daycol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
+  .dc-val{font-size:18px;font-weight:900;letter-spacing:-.5px;margin-bottom:7px;}
+  .dc-bar{width:100%;max-width:80px;border-radius:11px 11px 4px 4px;background:linear-gradient(180deg,#F2691E,var(--red));box-shadow:0 6px 14px rgba(226,58,30,.22);min-height:6px;}
+  .daycol.peak .dc-bar{background:linear-gradient(180deg,var(--gold),#C98A1E);box-shadow:0 6px 14px rgba(217,154,43,.28);}
+  .dc-meta{margin-top:11px;text-align:center;} .dc-day{font-size:12.5px;font-weight:900;} .dc-date{font-size:10.5px;color:var(--muted);font-weight:700;} .dc-reg{font-size:10px;color:var(--muted2);font-weight:700;margin-top:2px;}
+
+  .ins{border-left:3px solid var(--gold);padding:12px 15px;background:#FFFBF1;border-radius:0 13px 13px 0;margin:11px 0;}
+  .ins h4{font-size:13.5px;font-weight:900;margin-bottom:4px;} .ins p{font-size:12.5px;color:var(--ink2);line-height:1.6;font-weight:600;} .ins .pin{font-weight:900;}
+  .ins.win{border-color:var(--green);background:#F2FBF5;} .ins.win .pin{color:var(--green2);}
+  .ins.red{border-color:var(--red);background:#FFF4F1;} .ins.red .pin{color:var(--red);}
+  .ins.sky{border-color:var(--sky);background:#F1F6FE;} .ins.sky .pin{color:var(--sky);}
+
+  .dq{background:linear-gradient(135deg,#FFF8E8,#FFF3D6);border:1px solid #F0DFA8;border-radius:var(--r);padding:16px 18px;}
+  .dq h3{font-size:13.5px;font-weight:900;color:#A9781A;margin-bottom:9px;} .dq ul{list-style:none;display:flex;flex-direction:column;gap:7px;}
+  .dq li{font-size:12.5px;color:var(--ink2);font-weight:600;line-height:1.5;padding-left:19px;position:relative;} .dq li::before{content:"•";position:absolute;left:4px;color:var(--gold);font-weight:900;} .dq li b{color:var(--ink);}
+  .foot{margin:30px 0 10px;text-align:center;color:var(--muted2);font-size:11.5px;font-weight:700;line-height:1.7;}
+  .pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 10px;border-radius:999px;background:var(--bg2);color:var(--ink2);margin:2px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="logo">🐶</div>
+    <div class="ttl"><h1><span class="r">RUDEDOG</span> FAIR 2026 — สรุปจบงาน</h1><p>โกดังแตก · รายงานฉบับสมบูรณ์ 3 มุม</p></div>
+    <div class="sp"></div>
+    <div class="badge">📅 <b>4 วัน</b> · 25–28 มิ.ย. 69</div>
+  </div>
+
+  <!-- HERO KPI -->
+  <div class="grid g4">
+    <div class="card kpi-hero">
+      <div class="lbl">💰 ยอดขายสุทธิ</div>
+      <div class="num tab">฿2.50M</div>
+      <div class="sub">เต็ม <b>฿2,499,247</b> · gross ฿2.84M</div>
+    </div>
+    <div class="card">
+      <div class="lbl">🧾 จำนวนบิล</div>
+      <div class="num tab">2,452</div>
+      <div class="sub">เฉลี่ย <b>฿1,019</b> / บิล</div>
+    </div>
+    <div class="card">
+      <div class="lbl">👣 คนเข้างาน (door)</div>
+      <div class="num tab" style="color:var(--red)">6,641</div>
+      <div class="sub"><b>2,884</b> กลุ่ม · ลงทะเบียน <b>3,001</b></div>
+    </div>
+    <div class="card">
+      <div class="lbl">💎 เบอร์เข้าลิสต์</div>
+      <div class="num tab" style="color:var(--sky)">+3,001</div>
+      <div class="sub">ยินยอม 100% · seed Lookalike</div>
+    </div>
+  </div>
+
+  <!-- FUNNEL (cross angle) -->
+  <div class="sec a-x"><span class="n">∞</span><h2>ภาพรวม Funnel — โฆษณา → เข้างาน → ยอดขาย</h2></div>
+  <div class="card">
+    <div class="funnel">
+      <div class="fstep"><div class="fi">📣</div><div class="fn tab" style="color:var(--sky)">~2,167</div><div class="fl">มาจากแอด (FB+TikTok)</div></div>
+      <div class="farrow"><span class="ar">→</span></div>
+      <div class="fstep"><div class="fi">📝</div><div class="fn tab">3,001</div><div class="fl">ลงทะเบียน (เก็บเบอร์)</div></div>
+      <div class="farrow"><span class="pc">82%</span><span class="ar">→</span></div>
+      <div class="fstep"><div class="fi">🛍️</div><div class="fn tab" style="color:var(--red)">2,452</div><div class="fl">เกิดการซื้อ (บิล)</div></div>
+      <div class="farrow"><span class="ar">→</span></div>
+      <div class="fstep"><div class="fi">💰</div><div class="fn tab" style="color:var(--green2)">฿2.50M</div><div class="fl">ยอดขายสุทธิ</div></div>
+    </div>
+    <div class="ins win" style="margin-top:14px"><h4>🎯 ทุกการลงทะเบียน = ยอดขาย <span class="pin">฿833</span></h4><p><span class="pin">82%</span> ของคนที่ลงทะเบียนเกิดการซื้อ (2,452 บิล / 3,001 ลงทะเบียน) · ฿376 ต่อหัวคนเข้างาน — เครื่อง RGT เชื่อมโฆษณา→คน→ยอดได้จริง</p></div>
+  </div>
+
+  <!-- ============ มุม 1: ยอดขาย ============ -->
+  <div class="sec a-sale"><span class="n">1</span><h2>มุมยอดขาย</h2><span class="hint">ข้อมูลจริงจาก POS · เชื่อถือได้ 100%</span></div>
+  <div class="grid g4">
+    <div class="card"><div class="lbl">📦 หมวดขายดีสุด</div><div class="num tab" style="font-size:26px">เสื้อยืด</div><div class="sub"><b>฿506,842</b> · 2,678 ชิ้น</div></div>
+    <div class="card"><div class="lbl">🏷️ ส่วนลดรวม</div><div class="num tab" style="font-size:26px;color:var(--red)">฿339k</div><div class="sub">12% ของ gross</div></div>
+    <div class="card"><div class="lbl">💳 ช่องทางจ่ายหลัก</div><div class="num tab" style="font-size:26px">PromptPay</div><div class="sub"><b>53%</b> · บัตร 34% · เงินสด 13%</div></div>
+    <div class="card"><div class="lbl">📈 กำไรขั้นต้น (ตามระบบ)</div><div class="num tab" style="font-size:26px;color:var(--muted)">฿2.34M*</div><div class="sub">*COGS บันทึกไม่ครบ → ดูหมายเหตุ</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><div class="lbl">🏆 หมวดหมู่ยอดขายสูงสุด</div><div id="catBars" style="margin-top:10px"></div></div>
+    <div class="card"><div class="lbl">🥇 สินค้าขายดี Top 10 (ยอดขาย)</div><div class="plist" id="prodList" style="margin-top:6px"></div></div>
+    <div class="card"><div class="lbl">💳 สัดส่วนวิธีชำระเงิน</div><div class="dwrap"><div id="payDonut"></div><div class="leg" id="payLeg"></div></div></div>
+    <div class="card"><div class="lbl">👤 ยอดขายตามแคชเชียร์</div><div id="staffBars" style="margin-top:10px"></div>
+      <div class="ins" style="margin-top:8px"><h4>💡 Cashier03 บิลใหญ่สุด</h4><p>฿1,148/บิล (เฉลี่ยรวม ฿1,019) — เก่ง upsell · เอาเทคนิคไปเทรนทีม</p></div>
+    </div>
+  </div>
+
+  <!-- ============ มุม 2: การเข้างาน ============ -->
+  <div class="sec a-att"><span class="n">2</span><h2>มุมการเข้างาน</h2><span class="hint">จาก RGT (door=คนเข้างาน) · ภาพรวมเชื่อได้ ดูหมายเหตุ</span></div>
+  <div class="card"><div class="lbl">📊 คนเข้างานรายวัน (หัวคน · door) — พีคเสาร์-อาทิตย์</div><div class="daychart" id="dayChart"></div></div>
+  <div class="grid g4" style="margin-top:16px">
+    <div class="card"><div class="lbl">🔁 ใหม่ vs ประจำ</div><div class="dwrap"><div id="visitDonut"></div><div class="leg" id="visitLeg"></div></div></div>
+    <div class="card"><div class="lbl">📍 จังหวัด (Top)</div><div id="provBars" style="margin-top:10px"></div></div>
+    <div class="card"><div class="lbl">👨‍👩‍👧 มากันกี่คน</div><div id="grpBars" style="margin-top:10px"></div></div>
+    <div class="card">
+      <div class="lbl">🚪 จุดสแกน</div>
+      <div class="num tab" style="font-size:30px;margin-top:6px">97.5%</div>
+      <div class="sub">หน้าประตู (2,884) · โต๊ะ+โปสเตอร์แค่ 117</div>
+      <div class="ins red" style="margin-top:8px"><h4>🪧 โต๊ะ/โปสเตอร์เกือบไม่มีผล</h4><p>คนสแกน "หน้าประตู" เป็นหลัก — จุดอื่นแทบไม่ถูกใช้</p></div>
+    </div>
+  </div>
+
+  <!-- ============ มุม 3: โฆษณา ============ -->
+  <div class="sec a-ad"><span class="n">3</span><h2>มุมโฆษณา &amp; ดาต้า</h2><span class="hint">ช่องทาง + สินทรัพย์ที่ได้</span></div>
+  <div class="grid g2">
+    <div class="card"><div class="lbl">📣 มาจากช่องทางไหน (สัดส่วน)</div><div id="chBars" style="margin-top:10px"></div>
+      <div class="ins sky" style="margin-top:8px"><h4>🏆 Facebook นำ (40%)</h4><p>FB 1,191 > TikTok 976 · ป้ายหน้าโกดัง 620 (สื่อฟรีคุ้มมาก) · งบควรหนัก FB + ป้าย</p></div>
+    </div>
+    <div class="card">
+      <div class="lbl">🎁 ของแถม "น้ำหอม ฿89" = แม่เหล็กดึงคน</div>
+      <div id="perfBox"></div>
+      <div class="ins red" style="margin-top:8px"><h4>⚠️ น้ำหอม = ตัวล่อ ไม่ใช่กำไร</h4><p>ขาย <span class="pin">1,436 ขวด</span> แต่ลดราคารวม <span class="pin">-฿188k</span> (มาร์กดาวน์ ~67%) · BloomingGrace แทบแจกฟรี → ทำหน้าที่ "ดึงคนเข้างาน" สำเร็จ กำไรไปทำที่เสื้อผ้า/กระเป๋า</p></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;background:linear-gradient(135deg,#F1F6FE,#fff);border-color:#CFE0F8">
+    <div class="lbl">💎 สินทรัพย์ที่ได้จากงาน (ของจริงระยะยาว)</div>
+    <div class="grid g3" style="margin-top:12px">
+      <div><div class="num tab" style="font-size:32px;color:var(--sky)">3,001</div><div class="sub">เบอร์ first-party (ยินยอม PDPA)</div></div>
+      <div><div class="num tab" style="font-size:32px;color:var(--sky)">74%</div><div class="sub">นนทบุรี → geo-target ชัด</div></div>
+      <div><div class="num tab" style="font-size:32px;color:var(--sky)">Pixel</div><div class="sub">Meta+TikTok+GA4 เก็บ retarget pool</div></div>
+    </div>
+    <div class="ins sky" style="margin-top:12px"><h4>🚀 ใช้ต่อปลายปี</h4><p>อัป 3,001 เบอร์เป็น Custom Audience → Lookalike เจาะคนคล้ายลูกค้าจริง · ลดค่าแอดงานหน้าได้มาก</p></div>
+  </div>
+
+  <!-- DEEP INSIGHTS -->
+  <div class="sec a-x"><span class="n">★</span><h2>วิเคราะห์เชิงลึก — 6 ข้อสรุปใช้ต่อ</h2></div>
+  <div class="grid g2">
+    <div class="card">
+      <div class="ins win"><h4>1. งานทำเงิน ฿2.5M / 4 วัน · AOV ฿1,019</h4><p>เฉลี่ย ฿625k/วัน · บิลใหญ่กว่าค้าปลีกทั่วไป (สตรีทแวร์ขายเป็นชุด)</p></div>
+      <div class="ins"><h4>2. เสื้อยืด = พระเอกกำไร</h4><p>หมวด TS ฿507k ส่วนลดน้อยมาก · F-โปโล ขาย 1,489 ตัว — สต๊อกให้พอปีหน้า</p></div>
+      <div class="ins red"><h4>3. ของแถมน้ำหอม = loss-leader ที่เวิร์ค</h4><p>ดึงคน 6,641 หัวเข้างาน แต่กำไรน้ำหอมแทบ 0 — โมเดลถูก: ใช้ของถูกล่อ ขายของแพงข้างใน</p></div>
+    </div>
+    <div class="card">
+      <div class="ins sky"><h4>4. แอด FB ยังเป็นเบอร์ 1 + งานไฮเปอร์โลคอล</h4><p>FB 40% · นนทบุรี 74% → ปีหน้าเจาะ FB + geo รัศมีนนทบุรี/กทม. ตัดงบ broad</p></div>
+      <div class="ins win"><h4>5. RGT พิสูจน์คุ้มค่า</h4><p>เก็บ 3,001 เบอร์ + เชื่อมยอดขาย (฿833/ลงทะเบียน) + วัดคนเข้าได้ — เครื่องมือนี้ทำซ้ำได้ทุกงาน</p></div>
+      <div class="ins"><h4>6. พีคเสาร์-อาทิตย์ชัด</h4><p>วัน 4 (อา.) 2,254 หัว · วัน 1-2 (พฤ.-ศ.) เบากว่า → จัดคน/สต๊อก/โปรหนักวันหยุด</p></div>
+    </div>
+  </div>
+
+  <!-- DATA QUALITY -->
+  <div class="sec a-note"><span class="n">!</span><h2>หมายเหตุความถูกต้อง</h2></div>
+  <div class="dq">
+    <h3>⚠️ อ่านก่อนใช้ตัวเลขตัดสินใจ</h3>
+    <ul>
+      <li><b>ยอดขาย/บิล/หมวด/ชำระเงิน = เชื่อได้ 100%</b> (export จาก POS โดยตรง)</li>
+      <li><b>"กำไร ฿2.34M" สูงเกินจริง</b> — POS บันทึก COGS แค่ ฿157k (สินค้าส่วนใหญ่ต้นทุน=0) → กำไรจริงต่ำกว่านี้มาก ต้องใส่ต้นทุนให้ครบก่อนสรุปกำไร</li>
+      <li><b>คนเข้างาน (RGT) = ใช้ระดับภาพรวม</b> — ยอดรายวัน/ช่องทาง/จังหวัดสอดคล้องงานจริง + conversion สมเหตุสมผล แต่ timestamp ในชีตยังเพี้ยน + เคยมี test ปน (กรองออกแล้ว) เลยไม่เป๊ะ 100%</li>
+      <li><b>มุมโฆษณายังขาด "ค่าแอดจริง"</b> — ถ้าใส่งบ FB/TikTok ที่ใช้ จะคำนวณ ROAS / ต้นทุนต่อคนเข้างานได้</li>
+    </ul>
+  </div>
+
+  <div class="foot">RUDEDOG FAIR 2026 · สรุปจบงาน 4 วัน (25–28 มิ.ย. 69) · ยอดขายจาก POS · คนเข้างาน/โฆษณาจาก RGT (fair.rudedog.co)<br>จัดทำโดย Claude สำหรับบอสเคน 🐾</div>
+</div>
+
+<script>
+var SALE={
+  cat:[{n:"เสื้อยืด (TS)",v:506842},{n:"กระเป๋า (Bag)",v:304894},{n:"น้ำหอม",v:280735},{n:"หมวก (Hat)",v:205684},{n:"โอเวอร์ไซส์ (TSO)",v:145300},{n:"โปโล F (Z-F)",v:138427},{n:"เสื้อ TSF",v:129059},{n:"แขนยาว (LC)",v:123379},{n:"เด็ก (Kids)",v:98020},{n:"TSVR",v:91598}],
+  prod:[{n:"เสื้อยืดแขนสั้น(N)-L",v:125475,q:525},{n:"F-โปโล คละแบบ",v:102741,q:1489},{n:"เสื้อยืดแขนสั้น(N)-S",v:95062,q:638},{n:"เสื้อยืดแขนสั้น(N)-M",v:93688,q:392},{n:"เสื้อเด็ก TS",v:91936,q:544},{n:"กางเกงขาสั้น CityChill",v:82472,q:488},{n:"น้ำหอม Classic 10ml",v:82404,q:436},{n:"น้ำหอม Viva 10ml",v:77868,q:412},{n:"RSS กางเกงยีนส์",v:69894,q:302},{n:"น้ำหอม BloomingGrace",v:54999,q:291}],
+  pay:[{n:"PromptPay",v:1320874},{n:"Visa",v:592994},{n:"เงินสด",v:332856},{n:"Mastercard",v:240410},{n:"อื่นๆ",v:12113}],
+  staff:[{n:"Cashier02",v:971349,txn:1001},{n:"Cashier01",v:942343,txn:941},{n:"Cashier03",v:585555,txn:510}]
+};
+var ATT={
+  days:[{d:"25 มิ.ย.",l:"วัน 1",h:1416,reg:708},{d:"26 มิ.ย.",l:"วัน 2",h:1017,reg:507},{d:"27 มิ.ย.",l:"วัน 3",h:1954,reg:857},{d:"28 มิ.ย.",l:"วัน 4",h:2254,reg:929}],
+  visit:{first:1889,loyal:1112},
+  prov:[{n:"นนทบุรี",v:2226},{n:"กรุงเทพฯ",v:510},{n:"ปทุมธานี",v:78},{n:"อื่นๆ",v:87}],
+  group:{"1":532,"2":1606,"3":505,"4":203,"5":85,"6+":70}
+};
+var AD={ ch:[{n:"Facebook",v:1191},{n:"TikTok",v:976},{n:"ป้ายหน้าโกดัง",v:620},{n:"เพื่อนชวน/อื่นๆ",v:214}] };
+var PAL=["#D99A2B","#E23A1E","#3E7BD9","#2E9E5B","#8B5CD6","#C8500C","#A99C8B"];
+var $=function(id){return document.getElementById(id);};
+var fmt=function(n){return (Math.round(Number(n)||0)).toLocaleString("en-US");};
+function baht(n){n=Number(n)||0; if(n>=1e6)return"฿"+(n/1e6).toFixed(2)+"M"; if(n>=1e3)return"฿"+Math.round(n/1e3)+"k"; return"฿"+fmt(n);}
+
+function bars(elId,arr,share,unit){
+  var sum=arr.reduce(function(a,e){return a+e.v;},0)||1, max=share?sum:Math.max.apply(null,arr.map(function(e){return e.v;}))||1;
+  $(elId).innerHTML=arr.map(function(e,i){var w=(e.v/max*100).toFixed(1),p=Math.round(e.v/sum*100),c=e.c||PAL[i%PAL.length];
+    return '<div class="bar"><div class="l" title="'+e.n+'">'+e.n+'</div><div class="t"><div class="f" style="width:'+w+'%;background:'+c+'"></div></div><div class="v tab">'+(unit==="baht"?baht(e.v):fmt(e.v))+'<small>'+p+'%</small></div></div>';}).join("");
+}
+function donut(elId,segs,topTxt,botTxt){
+  var r=52,c=2*Math.PI*r,tot=segs.reduce(function(a,s){return a+s.v;},0)||1,off=0;
+  var arcs=segs.map(function(s){var len=s.v/tot*c,el='<circle cx="65" cy="65" r="'+r+'" fill="none" stroke="'+s.c+'" stroke-width="15" stroke-dasharray="'+len.toFixed(1)+' '+(c-len).toFixed(1)+'" stroke-dashoffset="'+(-off).toFixed(1)+'" transform="rotate(-90 65 65)"/>';off+=len;return el;}).join("");
+  $(elId).innerHTML='<svg viewBox="0 0 130 130" class="donut"><circle cx="65" cy="65" r="'+r+'" fill="none" stroke="#EFE7D5" stroke-width="15"/>'+arcs+'<text x="65" y="61" font-size="22" font-weight="900" fill="#1A140E" text-anchor="middle">'+topTxt+'</text><text x="65" y="80" font-size="10" font-weight="800" fill="#8C8073" text-anchor="middle">'+botTxt+'</text></svg>';
+}
+function leg(elId,items){ $(elId).innerHTML=items.map(function(it){return '<div class="lg"><span class="sw" style="background:'+it.c+'"></span>'+it.n+' <b>'+(it.t||fmt(it.v))+'</b></div>';}).join(""); }
+
+// sales
+bars("catBars",SALE.cat.map(function(e){return{n:e.n,v:e.v};}),false,"baht");
+$("prodList").innerHTML=SALE.prod.map(function(p,i){return '<div class="prow"><div class="prank">'+(i+1)+'</div><div class="pname">'+p.n+' <small>('+fmt(p.q)+' ชิ้น)</small></div><div class="pval tab">'+baht(p.v)+'</div></div>';}).join("");
+donut("payDonut",SALE.pay.map(function(e,i){return{v:e.v,c:PAL[i%PAL.length]};}),"53%","PromptPay");
+leg("payLeg",SALE.pay.map(function(e,i){var tot=2499247;return{n:e.n,c:PAL[i%PAL.length],t:Math.round(e.v/tot*100)+"%"};}));
+bars("staffBars",SALE.staff.map(function(e){return{n:e.n+" ("+fmt(e.txn)+" บิล)",v:e.v};}),false,"baht");
+
+// attendance
+(function(){var max=Math.max.apply(null,ATT.days.map(function(d){return d.h;}))||1;
+  $("dayChart").innerHTML=ATT.days.map(function(d){var h=Math.max(6,d.h/max*160),peak=(d.h===max);
+    return '<div class="daycol'+(peak?'':' peak')+'"><div class="dc-val">'+fmt(d.h)+'</div><div class="dc-bar" style="height:'+h.toFixed(0)+'px"></div><div class="dc-meta"><div class="dc-day">'+d.l+'</div><div class="dc-date">'+d.d+'</div><div class="dc-reg">ลงทะเบียน '+fmt(d.reg)+'</div></div></div>';}).join("");
+})();
+donut("visitDonut",[{v:ATT.visit.first,c:"#E23A1E"},{v:ATT.visit.loyal,c:"#D99A2B"}],Math.round(ATT.visit.first/(ATT.visit.first+ATT.visit.loyal)*100)+"%","ใหม่");
+leg("visitLeg",[{n:"มาครั้งแรก",c:"#E23A1E",v:ATT.visit.first},{n:"ขาประจำ",c:"#D99A2B",v:ATT.visit.loyal}]);
+bars("provBars",ATT.prov.map(function(e){return{n:e.n,v:e.v};}),true);
+bars("grpBars",["1","2","3","4","5","6+"].map(function(k){return{n:k+" คน",v:ATT.group[k]};}),true);
+
+// advertising
+bars("chBars",AD.ch.map(function(e){return{n:e.n,v:e.v};}),true);
+$("perfBox").innerHTML='<div style="display:flex;gap:18px;margin-top:8px;flex-wrap:wrap"><div><div class="num tab" style="font-size:30px">1,436</div><div class="sub">ขวดน้ำหอมที่ขาย</div></div><div><div class="num tab" style="font-size:30px;color:var(--red)">-฿188k</div><div class="sub">ส่วนลดน้ำหอมรวม (~67%)</div></div></div>';
+</script>
+</body>
+</html>
